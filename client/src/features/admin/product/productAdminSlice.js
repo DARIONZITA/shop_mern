@@ -1,6 +1,8 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const url = "http://localhost:7001/api/products/";
+// const url = "http://localhost:7001/api/products/";
+
+const url = "https://goodal-mern.onrender.com/api/products/";
 
 const initialState = {
   productData: {
@@ -78,7 +80,9 @@ export const readAdminProducts = createAsyncThunk(
     const { sortOrder, search, filterCategory } =
       thunkAPI.getState().productsAdmin;
 
-    let base_url = "http://localhost:7001/api/products";
+    // let base_url = "http://localhost:7001/api/products";
+
+    let base_url = "https://goodal-mern.onrender.com/api/products";
 
     try {
       base_url = `${base_url}?sort=${sortOrder}&category=${filterCategory.toString()}&search=${search}`;
