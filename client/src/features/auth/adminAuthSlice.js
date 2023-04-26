@@ -12,12 +12,8 @@ const initialState = {
 export const adminSignup = createAsyncThunk(
   "admin/adminSignup",
   async (dataObj, thunkAPI) => {
-    // let base_url = "http://localhost:7001/api/admin/signup"
-
-    let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
-
     try {
-      const response = await fetch(base_url, {
+      const response = await fetch("http://localhost:7001/api/admin/signup", {
         method: "POST",
         body: JSON.stringify(dataObj),
         headers: {
@@ -47,12 +43,8 @@ export const adminSignup = createAsyncThunk(
 export const adminLogin = createAsyncThunk(
   "admin/adminLogin",
   async (dataObj, thunkAPI) => {
-    // let base_url = "http://localhost:7001/api/admin/login"
-
-    let base_url = "https://goodal-mern.onrender.com/api/admin/login";
-
     try {
-      const response = await fetch(base_url, {
+      const response = await fetch("http://localhost:7001/api/admin/login", {
         method: "POST",
         body: JSON.stringify(dataObj),
         headers: {
