@@ -146,7 +146,7 @@ const Navbar = () => {
       <header
         className={`bg-${
           navColor ? "bgcolor" : "bgcolor2"
-        } fixed z-50 w-full transition duration-200 ease-in-out `}
+        } fixed z-40 w-full transition duration-200 ease-in-out `}
       >
         <nav className="container mx-auto">
           <div className="flex items-center justify-between border-b border-zinc-200 py-4 px-6 lg:px-16">

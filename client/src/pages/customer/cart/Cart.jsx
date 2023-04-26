@@ -15,12 +15,12 @@ const Cart = ({ handleCartNav }) => {
     <>
       {/* overlay */}
       {cartState ? (
-        <div className="fixed top-0 left-0 z-10 h-screen w-full bg-black/70"></div>
+        <div className="fixed top-0 left-0 z-50 h-screen w-full bg-black/70"></div>
       ) : null}
 
       {/* cart menu */}
       <div
-        className={`fixed top-0 z-10 flex h-screen w-[300px] flex-col justify-between bg-[#FFFFFF] duration-300 md:w-[500px]
+        className={`fixed top-0 z-50 flex h-screen w-[300px] flex-col justify-between bg-[#FFFFFF] duration-300 md:w-[500px]
           ${cartState ? "right-0 " : "right-[-100%]"}`}
       >
         {/* top */}

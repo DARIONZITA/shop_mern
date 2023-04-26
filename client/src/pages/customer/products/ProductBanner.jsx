@@ -5,7 +5,7 @@ export const ProductBanner = ({ filteredBanners }) => {
     <>
       {filteredBanners.category === "All" ? (
         <div className="relative flex items-center justify-end pt-24 md:pt-16">
-          <h1 className="absolute mr-6 font-urbanist text-lg font-bold uppercase text-primary sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-20 lg:text-5xl">
+          <h1 className="absolute mr-6 font-urbanist text-lg font-bold uppercase text-primary sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-52 lg:text-5xl">
             {filteredBanners.name}
           </h1>
 
@@ -25,7 +25,7 @@ export const ProductBanner = ({ filteredBanners }) => {
               className={
                 item.category === "Apple Aha" || item.category === "Heart Leaf"
                   ? "absolute font-urbanist text-lg font-bold uppercase text-primary sm:text-3xl md:text-4xl lg:text-5xl"
-                  : "absolute mr-6 font-urbanist text-lg font-bold uppercase text-primary sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-20 lg:text-5xl"
+                  : "absolute mr-6 font-urbanist text-lg font-bold uppercase text-primary sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-52 lg:text-5xl"
               }
             >
               {item.name}

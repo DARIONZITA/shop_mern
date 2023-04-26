@@ -21,8 +21,11 @@ export const ProductGrid = ({ products, handleAddToCart }) => {
       {products.productsData?.map((item) => (
         <div key={item._id} className="space-y-3 text-center">
           <div className="relative">
-            <div className="group relative flex h-44 justify-center md:h-72">
-              <Link to={`/products/${item._id}`} state={{ item }}>
+            <div className="group relative flex h-44 justify-center md:h-80">
+              <Link
+                to={`/products/${item.name.toLowerCase().replace(/\s+/g, "-")}`}
+                state={{ item }}
+              >
                 <img
                   className="absolute inset-0 h-full w-full object-cover transition duration-500 ease-in-out group-hover:opacity-0 "
                   src={item.imgOne.url}
