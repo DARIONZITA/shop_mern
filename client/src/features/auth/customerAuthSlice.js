@@ -12,17 +12,18 @@ const initialState = {
 export const customerSignup = createAsyncThunk(
   "customer/customerSignup",
   async (dataObj, thunkAPI) => {
+    // let base_url = "http://localhost:7001/api/customer/signup"
+
+    let base_url = "https://goodal-mern.onrender.com/api/customer/signup";
+
     try {
-      const response = await fetch(
-        "http://localhost:7001/api/customer/signup",
-        {
-          method: "POST",
-          body: JSON.stringify(dataObj),
-          headers: {
-            "Content-Type": "application/json",
-          },
-        }
-      );
+      const response = await fetch(base_url, {
+        method: "POST",
+        body: JSON.stringify(dataObj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
 
       const data = await response.json();
 
@@ -46,8 +47,12 @@ export const customerSignup = createAsyncThunk(
 export const customerLogin = createAsyncThunk(
   "customer/customerLogin",
   async (dataObj, thunkAPI) => {
+    // let base_url = "http://localhost:7001/api/customer/login"
+
+    let base_url = "https://goodal-mern.onrender.com/api/customer/login";
+
     try {
-      const response = await fetch("http://localhost:7001/api/customer/login", {
+      const response = await fetch(base_url, {
         method: "POST",
         body: JSON.stringify(dataObj),
         headers: {
