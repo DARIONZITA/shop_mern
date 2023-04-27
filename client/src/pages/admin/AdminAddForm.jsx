@@ -26,15 +26,16 @@ export const AdminAddForm = () => {
   // fetch the data that will be edited
   // will populate the form with the data
   useEffect(() => {
+    // const url = "http://localhost:7001/api/products/";
+
+    const url = "https://goodal-mern.onrender.com/api/products/";
+
     const fecthUpdatingProduct = async () => {
-      const response = await fetch(
-        "http://localhost:7001/api/products/" + currentId,
-        {
-          headers: {
-            Authorization: `Bearer ${admin.token}`,
-          },
-        }
-      );
+      const response = await fetch(url + currentId, {
+        headers: {
+          Authorization: `Bearer ${admin.token}`,
+        },
+      });
 
       const data = await response.json();
 
