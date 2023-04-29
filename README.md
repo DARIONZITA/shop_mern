@@ -6,4 +6,4 @@
 E-commerce website design that list all of goodal products on offer. Built using MERN stack, Tailwind Css for the styling and Redux Toolkit for state management.
 ```
 
-![Goodal](hhttps://github.com/yusof29/goodal_mern/blob/cb5415dd24ab3566e67242a5b7185fff104152b7/client/src/assets/readme/goodal.png "Goodal")
+![Goodal](https://github.com/yusof29/goodal_mern/blob/6d13cb34b08dc855796b2e8a6dc0e9b318d1abbf/client/src/assets/readme/goodal.png "Goodal")
