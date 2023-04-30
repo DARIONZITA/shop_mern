@@ -39,9 +39,9 @@ const CartFilled = ({
 
   return (
     <div className="flex-1 border-b border-zinc-300">
-      <div className="grid grid-cols-4 gap-3 p-4 font-urbanist">
+      <div className="grid grid-cols-5 gap-3 p-4 font-urbanist">
         {/* image */}
-        <div className="group relative col-span-1 flex items-center">
+        <div className="group relative col-span-2 flex items-center">
           <img
             src={imgOne.url}
             alt={name}
@@ -57,11 +57,13 @@ const CartFilled = ({
 
         {/* name */}
         <div className="col-span-3 space-y-3">
-          <h1 className="text-xs font-bold text-primary md:text-2xl">{name}</h1>
+          <h1 className="text-base font-bold text-primary md:text-2xl">
+            {name}
+          </h1>
 
-          <p className="text-xs text-primary md:text-2xl">{category}</p>
+          <p className="text-base text-primary md:text-2xl">{category}</p>
 
-          <h2 className="text-xs font-bold text-primary md:text-2xl">
+          <h2 className="text-base font-bold text-primary md:text-2xl">
             {formatPrice(price * quantity)}
           </h2>
 

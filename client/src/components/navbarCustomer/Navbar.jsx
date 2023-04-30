@@ -101,7 +101,7 @@ const Navbar = () => {
         })
       );
 
-      document.body.style.overflow = "unset";
+      // document.body.style.overflow = "unset";
     } else {
       dispatch(
         setOpenCart({
@@ -109,9 +109,9 @@ const Navbar = () => {
         })
       );
 
-      if (typeof window != "undefined" && window.document) {
-        document.body.style.overflow = "hidden";
-      }
+      // if (typeof window != "undefined" && window.document) {
+      //   document.body.style.overflow = "hidden";
+      // }
 
       setMobileNav(false);
       setSearchNav(false);
@@ -146,10 +146,10 @@ const Navbar = () => {
       <header
         className={`bg-${
           navColor ? "bgcolor" : "bgcolor2"
-        } fixed z-40 w-full transition duration-200 ease-in-out `}
+        } fixed z-40 w-full border-b border-zinc-200 transition duration-200 ease-in-out`}
       >
-        <nav className="container mx-auto">
-          <div className="flex items-center justify-between border-b border-zinc-200 py-4 px-6 lg:px-16">
+        <nav className="container mx-auto ">
+          <div className="flex items-center justify-between  py-4 px-6 lg:px-16">
             <div className="flex items-center justify-center space-x-3 md:hidden">
               {/* mobile nav */}
               <div
@@ -200,7 +200,7 @@ const Navbar = () => {
 
                     {dropdown && (
                       <div
-                        className={`absolute z-10 mt-6 w-48 rounded-md shadow-md bg-${
+                        className={`absolute z-10 mt-6 rounded-md shadow-md bg-${
                           navColor ? "bgcolor2" : "bgcolor"
                         } ring-1 ring-slate-400 transition duration-200 ease-in-out`}
                       >
@@ -212,12 +212,12 @@ const Navbar = () => {
                             </span>
                           </div>
 
-                          <NavLink
-                            to="/profile-settings"
+                          {/* <NavLink
+                            to="/customer/settings"
                             className="block px-6 py-2 transition duration-200 ease-in-out hover:text-primary"
                           >
                             Settings
-                          </NavLink>
+                          </NavLink> */}
 
                           <button
                             onClick={handleLogout}
@@ -302,10 +302,10 @@ const Navbar = () => {
 
           {/* filter and sort nav */}
           {isProductsPage && (
-            <div className="flex text-sm md:hidden">
+            <div className="flex border-t border-zinc-200 text-sm md:hidden">
               <button
                 onClick={handleFilterNav}
-                className="flex w-full items-center justify-center space-x-2 border-r border-b border-zinc-200 py-4 px-6 lg:px-16"
+                className="flex w-full items-center justify-center space-x-2 border-r border-zinc-200 py-4 px-6 lg:px-16"
               >
                 <RiFilterOffFill />
                 <p>Filter</p>
@@ -313,7 +313,7 @@ const Navbar = () => {
 
               <button
                 onClick={handleSortNav}
-                className="flex w-full items-center justify-center space-x-2 border-l border-b border-zinc-200 py-4 px-6 lg:px-16"
+                className="flex w-full items-center justify-center space-x-2 py-4 px-6 lg:px-16"
               >
                 <p>Sort by</p>
                 <FaSort />
@@ -324,7 +324,7 @@ const Navbar = () => {
 
         {/* mobile search */}
         {searchNav && (
-          <div className="container mx-auto border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+          <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
               <input
                 type="text"
@@ -339,7 +339,7 @@ const Navbar = () => {
 
         {/* mobile sort */}
         {sortNav && (
-          <div className="container mx-auto border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+          <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
               <button
                 onClick={() => {
@@ -365,7 +365,7 @@ const Navbar = () => {
 
         {/* mobile filter */}
         {filterNav && (
-          <div className="container mx-auto border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+          <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
               <button onClick={() => onClickCat("All")}>All</button>
               {products.categories?.map((cat) => (
@@ -379,7 +379,7 @@ const Navbar = () => {
 
         {/* mobile menu */}
         {mobileNav && (
-          <div className="container mx-auto border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+          <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
               <li>
                 <NavLink

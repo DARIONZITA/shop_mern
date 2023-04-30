@@ -15,7 +15,10 @@ const Cart = ({ handleCartNav }) => {
     <>
       {/* overlay */}
       {cartState ? (
-        <div className="fixed top-0 left-0 z-50 h-screen w-full bg-black/70"></div>
+        <div
+          onClick={handleCartNav}
+          className="fixed top-0 left-0 z-50 h-screen w-full bg-black/70"
+        ></div>
       ) : null}
 
       {/* cart menu */}

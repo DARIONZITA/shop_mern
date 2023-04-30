@@ -13,3 +13,4 @@ export { AdminSharedLayout } from "./AdminSharedLayout";
 
 export { CustomerSignupLayout } from "./CustomerSignupLayout";
 export { CustomerLoginLayout } from "./CustomerLoginLayout";
+export { SettingsLayout } from "./SettingsLayout";

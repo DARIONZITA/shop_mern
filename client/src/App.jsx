@@ -19,6 +19,7 @@ import {
   AdminDashboardLayout,
   CustomerSignupLayout,
   CustomerLoginLayout,
+  SettingsLayout,
 } from "./routes";
 
 function App() {
@@ -56,6 +57,8 @@ function App() {
             path="/customer/login"
             element={!customer ? <CustomerLoginLayout /> : <Navigate to="/" />}
           />
+
+          {/* <Route path="/customer/settings" element={<SettingsLayout />} /> */}
 
           {/* <Route path="/cart" element={<CartLayout />} /> */}
           <Route path="*" element={<Error />} />
