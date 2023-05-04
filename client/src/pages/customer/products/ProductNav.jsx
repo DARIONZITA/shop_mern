@@ -9,7 +9,7 @@ export const ProductNav = ({ onClickCat, products }) => {
 
       <ul className="px-3 font-urbanist text-base text-secondary md:text-lg lg:text-xl">
         <li
-          className="cursor-pointer rounded-lg py-3 px-5 transition duration-300 ease-in-out hover:bg-[#3f3e36] hover:text-bgcolor2"
+          className="cursor-pointer rounded-lg py-3 px-5 transition duration-300 ease-in-out hover:bg-all hover:text-bgcolor2"
           onClick={() => onClickCat("All")}
         >
           All

@@ -40,11 +40,9 @@ const NavbarAdmin = () => {
   return (
     <>
       <header
-        className={
-          navColor
-            ? "fixed z-10 w-full bg-bgcolor drop-shadow-lg transition duration-200 ease-in-out"
-            : "fixed z-10 w-full bg-bgcolor2 transition duration-200 ease-in-out"
-        }
+        className={`${
+          navColor ? "border-b border-zinc-200 bg-bgcolor2" : "bg-bgcolor"
+        } fixed z-20 w-full transition duration-200 ease-in-out`}
       >
         <nav className="container mx-auto flex items-center justify-between py-4 px-6 lg:px-16 ">
           {/* mobile nav */}

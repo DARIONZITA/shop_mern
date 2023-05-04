@@ -166,9 +166,9 @@ export const AdminAddForm = () => {
   };
 
   return (
-    <div className="col-span-1 max-h-[850px] overflow-y-auto bg-green-200 p-5 font-urbanist">
+    <div className="max-h-[820px] overflow-y-auto border border-zinc-200 bg-green-200 p-5 shadow-md rounded-lg">
       <form
-        className="flex flex-col items-center gap-5 rounded-lg bg-bgcolor p-5 shadow-2xl"
+        className="col-span-1 flex flex-col items-center gap-5 font-urbanist"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold text-primary md:text-3xl lg:text-4xl">
@@ -280,7 +280,7 @@ export const AdminAddForm = () => {
               <button
                 type="button"
                 onClick={() => handleRemoveDescription(index)}
-                className="max-w-xs rounded-md bg-red-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-2 md:px-3"
+                className="max-w-xs rounded-md bg-red-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-red-400 md:py-2 md:px-3"
               >
                 Remove
               </button>
@@ -293,7 +293,7 @@ export const AdminAddForm = () => {
           onClick={handleAddDescription}
           className="w-full rounded-md bg-blue-300 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-3 md:px-6"
         >
-          Add Description
+          Add more Description
         </button>
 
         {currentId ? (

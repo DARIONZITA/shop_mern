@@ -126,12 +126,13 @@ export const AdminProducts = () => {
   }
 
   return (
-    <div className="col-span-2 max-h-[850px] space-y-5 overflow-y-auto bg-pink-200 p-5 font-urbanist">
-      {/* filter navs */}
-      <div>
+    <div className="col-span-2 space-y-5 font-urbanist">
+      {/*  nav */}
+      <div className="space-y-5 rounded-lg border border-zinc-200 bg-green-200 p-5 shadow-md">
+        {/* filter */}
         <ul className="flex justify-center space-x-3 text-base font-bold tracking-wide text-bgcolor3 md:text-lg lg:text-xl">
           <li
-            className="cursor-pointer rounded-lg bg-[#535144] py-3 px-5 shadow-lg transition duration-300 ease-in-out hover:bg-[#3f3e36]"
+            className="cursor-pointer rounded-lg bg-all2 py-3 px-5 shadow-lg transition duration-300 ease-in-out hover:bg-all"
             onClick={() => onClickCat("All")}
           >
             All Product
@@ -139,79 +140,81 @@ export const AdminProducts = () => {
 
           {products.categories?.map((cat) => (
             <li
-              className={`cursor-pointer rounded-lg bg-${
-                cat == "Green Tangerine" && "[#6b660f]"
-              } bg-${cat == "Apple Aha" && "[#E8545C]"} bg-${
-                cat == "Heart Leaf" && "[#aaa80f]"
-              } py-3 px-5 shadow-lg transition duration-300 ease-in-out hover:bg-${
-                cat == "Green Tangerine" && "[#615d0d]"
-              } hover:bg-${cat == "Apple Aha" && "[#dd434b]"} hover:bg-${
-                cat == "Heart Leaf" && "[#9c9a0d]"
-              }`}
               key={cat}
               onClick={() => onClickCat(cat)}
+              className={`cursor-pointer rounded-lg ${
+                cat == "Green Tangerine" && "bg-green_tangerine2"
+              } ${cat == "Apple Aha" && "bg-apple_aha2"} ${
+                cat == "Heart Leaf" && "bg-heart_leaf2"
+              } ${
+                cat == "Apricot Collagen" && "bg-apricot_collagen2"
+              } py-3 px-5 shadow-lg transition duration-300 ease-in-out ${
+                cat == "Green Tangerine" && "hover:bg-green_tangerine"
+              } ${cat == "Apple Aha" && "hover:bg-apple_aha"} ${
+                cat == "Heart Leaf" && "hover:bg-heart_leaf"
+              } ${cat == "Apricot Collagen" && "hover:bg-apricot_collagen"}`}
             >
               {cat}
             </li>
           ))}
         </ul>
-      </div>
 
-      {/* dropdown */}
-      <div className="flex items-center space-x-3">
-        <select
-          value={sortOrder}
-          onChange={handleSortOrderChange}
-          className="rounded shadow-lg focus:outline-none md:py-2 md:px-2"
-        >
-          <option value="newest">Newest first</option>
-          <option value="oldest">Oldest first</option>
-        </select>
+        {/* dropdown, seacrh, total */}
+        <div className="flex items-center space-x-3">
+          <select
+            value={sortOrder}
+            onChange={handleSortOrderChange}
+            className="rounded shadow-lg focus:outline-none md:py-2 md:px-2"
+          >
+            <option value="newest">Newest first</option>
+            <option value="oldest">Oldest first</option>
+          </select>
 
-        <div className="relative font-urbanist">
-          <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
-            <FiSearch className="h-5 w-5 text-gray-500" />
+          <div className="relative font-urbanist">
+            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
+              <FiSearch className="h-5 w-5 text-gray-500" />
+            </div>
+            <input
+              type="text"
+              value={search}
+              onChange={handleSearchChange}
+              className="block w-full rounded-lg border border-gray-300 bg-gray-50 py-4 px-11 text-sm text-gray-900 focus:outline-none"
+              placeholder="Search Products, etc..."
+            />
           </div>
-          <input
-            type="text"
-            value={search}
-            onChange={handleSearchChange}
-            className="block w-full rounded-lg border border-gray-300 bg-gray-50 py-4 px-11 text-sm text-gray-900 focus:outline-none"
-            placeholder="Search Products, etc..."
-          />
-        </div>
 
-        {/* <span>{products.length} Products</span> */}
+          {/* <span>{products.length} Products</span> */}
 
-        {filterCategory === "All" ? (
-          categoryCount.length > 0 ? (
-            <p className="font-bold text-secondary">
-              There are a total of {categoryTotal} products.
-            </p>
-          ) : (
-            <p className="font-bold text-secondary">Product not available.</p>
-          )
-        ) : (
-          <>
-            {categoryCount.length > 0 ? (
-              categoryCount
-                .filter((count) => count.category === filterCategory)
-                .map((count, i) => (
-                  <p key={i} className="font-bold text-secondary">
-                    There are {count.count} {count.category} products.
-                  </p>
-                ))
+          {filterCategory === "All" ? (
+            categoryCount.length > 0 ? (
+              <p className="font-bold text-secondary">
+                There are a total of {categoryTotal} products.
+              </p>
             ) : (
-              <p>Product not available.</p>
-            )}
-          </>
-        )}
+              <p className="font-bold text-secondary">Product not available.</p>
+            )
+          ) : (
+            <>
+              {categoryCount.length > 0 ? (
+                categoryCount
+                  .filter((count) => count.category === filterCategory)
+                  .map((count, i) => (
+                    <p key={i} className="font-bold text-secondary">
+                      There are {count.count} {count.category} products.
+                    </p>
+                  ))
+              ) : (
+                <p>Product not available.</p>
+              )}
+            </>
+          )}
+        </div>
       </div>
 
       {/* products */}
 
       {!viewProduct ? (
-        <div className="grid grid-cols-2 gap-9 md:grid-cols-3 ">
+        <div className="grid max-h-[618px] grid-cols-2 gap-9 overflow-y-auto rounded-lg border border-zinc-200 bg-bgcolor2 p-5 shadow-md md:grid-cols-3">
           {products.productsData?.map((product) => (
             <div key={product._id} className="space-y-3 text-center ">
               {/*  img */}
@@ -228,28 +231,19 @@ export const AdminProducts = () => {
                   alt={product.imgTwo.url}
                 />
               </div>
+
               {/*  name */}
               <div className="flex h-16 items-center justify-center">
                 <p className="font-urbanist text-base text-secondary md:text-lg lg:text-xl">
                   {product.name}
                 </p>
               </div>
-              {/*  price & view */}
-              <div className="flex items-center justify-center gap-3">
-                <span className="font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl">
-                  {formatPrice(product.price)}
-                </span>
 
-                <button
-                  type="button"
-                  onClick={() => handleView(product)}
-                  className="flex cursor-pointer items-center rounded bg-primary py-1 px-2 text-bgcolor transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary"
-                >
-                  <p className="text-base md:text-[16px]">View Product</p>
+              {/*  price */}
+              <span className="font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl">
+                {formatPrice(product.price)}
+              </span>
 
-                  <BsArrowRight className="h-6 w-6 p-1" />
-                </button>
-              </div>
               {/*  edit & del */}
               <div className="flex items-center justify-center gap-3">
                 <button
@@ -271,12 +265,22 @@ export const AdminProducts = () => {
 
                   <MdOutlineDelete className="h-6 w-6 p-1" />
                 </button>
+
+                <button
+                  type="button"
+                  onClick={() => handleView(product)}
+                  className="flex cursor-pointer items-center rounded bg-primary py-1 px-2 text-bgcolor transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary"
+                >
+                  <p className="text-base md:text-[16px]">View</p>
+
+                  <BsArrowRight className="h-6 w-6 p-1" />
+                </button>
               </div>
             </div>
           ))}
         </div>
       ) : (
-        <>
+        <div className="max-h-[614px] overflow-y-auto p-5">
           <div className="flex justify-center gap-3">
             <div className="group relative flex h-52 justify-center md:h-64 md:w-64">
               <img
@@ -330,7 +334,7 @@ export const AdminProducts = () => {
               ))}
             </div>
           </div>
-        </>
+        </div>
       )}
     </div>
   );
