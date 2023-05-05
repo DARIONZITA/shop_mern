@@ -1,6 +1,8 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 
+import { ImSpinner2 } from "react-icons/im";
+
 import { bannerImages } from "../../../assets/product/banner/bannerImages";
 
 import { setAddItemToCart } from "../../../features/customer/cart/cartSlice";
@@ -132,10 +134,18 @@ const Products = () => {
             </div>
 
             {/* products grid */}
-            <ProductGrid
-              products={products}
-              handleAddToCart={handleAddToCart}
-            />
+            {!products.productsData?.length > 0 ? (
+              <div className="flex h-80 items-center justify-center">
+                <span className="flex items-center justify-center gap-2">
+                  Loading... please wait <ImSpinner2 className="animate-spin" />
+                </span>
+              </div>
+            ) : (
+              <ProductGrid
+                products={products}
+                handleAddToCart={handleAddToCart}
+              />
+            )}
 
             <ProductPagination
               page={page}
