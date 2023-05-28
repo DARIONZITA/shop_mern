@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const validator = require("validator");
+import mongoose from "mongoose"
+import bcrypt from "bcrypt";
+import validator from "validator";
 
 const Schema = mongoose.Schema;
 
@@ -109,4 +109,4 @@ customerSchema.statics.login = async function (email, password) {
   return customer;
 };
 
-module.exports = mongoose.model("Customer", customerSchema);
+export default mongoose.model("Customer", customerSchema);

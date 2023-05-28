@@ -1,4 +1,4 @@
-const mongoose = require("mongoose");
+import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
 const productSchema = new Schema(
@@ -51,7 +51,7 @@ const productSchema = new Schema(
   { timestamps: true }
 );
 
-module.exports = mongoose.model("Product", productSchema);
+export default mongoose.model("Product", productSchema);
 
 // imgOne: {
 //   public_id: {

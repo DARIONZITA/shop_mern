@@ -1,12 +1,12 @@
-const express = require("express");
+import { Router } from "express" ;
 
 // controllers
-const {
+import {
   customerSignup,
   customerLogin,
-} = require("../controllers/customerController");
+} from "../controllers/customerController.js";
 
-const router = express.Router();
+const router = Router();
 
 // SIGNUP
 router.post("/signup", customerSignup);
@@ -14,4 +14,4 @@ router.post("/signup", customerSignup);
 // LOGIN
 router.post("/login", customerLogin);
 
-module.exports = router;
+export default router;

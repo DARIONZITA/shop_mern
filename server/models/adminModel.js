@@ -1,6 +1,7 @@
-const mongoose = require("mongoose");
-const bcrypt = require("bcrypt");
-const validator = require("validator");
+import mongoose from "mongoose"
+import bcrypt from "bcrypt";
+import validator from "validator";
+
 
 const Schema = mongoose.Schema;
 
@@ -95,4 +96,4 @@ AdminSchema.statics.login = async function (email, password) {
   return admin;
 };
 
-module.exports = mongoose.model("Admin", AdminSchema);
+export default mongoose.model("Admin", AdminSchema);

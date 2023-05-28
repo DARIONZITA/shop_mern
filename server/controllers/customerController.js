@@ -1,5 +1,5 @@
-const Customer = require("../models/customerModel");
-const jwt = require("jsonwebtoken");
+import Customer from "../models/customerModel.js";
+import jwt from "jsonwebtoken";
 
 // create token function. we can use this function many times
 // userid + secret = token
@@ -46,7 +46,7 @@ const customerLogin = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   customerSignup,
   customerLogin,
 };

@@ -1,6 +1,6 @@
-const mongoose = require("mongoose");
-const Product = require("../models/productModel");
-const cloudinary = require("../utils/cloudinary");
+import mongoose from "mongoose";
+import Product from "../models/productModel.js";
+import cloudinary from "../utils/cloudinary.js";
 
 // CREATE
 const createProduct = async (req, res) => {
@@ -283,7 +283,7 @@ const deleteProduct = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   createProduct,
   readProducts,
   readProduct,

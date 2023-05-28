@@ -1,5 +1,5 @@
-const User = require("../models/adminModel");
-const jwt = require("jsonwebtoken");
+import User from "../models/adminModel.js";
+import jwt from "jsonwebtoken";
 
 const requireAuth = async (req, res, next) => {
   if (req.method === "GET") {
@@ -47,4 +47,4 @@ const isAdmin = (req, res, next) => {
   next();
 };
 
-module.exports = { requireAuth, isAdmin };
+export { requireAuth, isAdmin };

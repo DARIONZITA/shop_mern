@@ -1,5 +1,5 @@
-const Admin = require("../models/adminModel");
-const jwt = require("jsonwebtoken");
+import Admin from "../models/adminModel.js";
+import jwt from "jsonwebtoken";
 
 // create token function. we can use this function many times
 // userid + secret = token
@@ -37,7 +37,7 @@ const adminLogin = async (req, res) => {
   }
 };
 
-module.exports = {
+export {
   adminSignup,
   adminLogin,
 };

@@ -41,6 +41,7 @@ function App() {
   }, []);
 
   return (
+    
     <Wrapper>
       <Routes>
         <Route path="/" element={<SharedLayout />}>
@@ -64,7 +65,8 @@ function App() {
           <Route path="*" element={<Error />} />
         </Route>
 
-        <Route path="/" element={<AdminSharedLayout />}>
+        <Route path="/admin" element={<AdminSharedLayout />}>
+          <Route index element={<HomeLayout />} />
           <Route
             path="/admin/dashboard"
             element={
@@ -90,6 +92,7 @@ function App() {
         </Route>
       </Routes>
     </Wrapper>
+    
   );
 }
 

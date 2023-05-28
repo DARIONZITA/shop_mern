@@ -1,13 +1,21 @@
-require("dotenv").config();
+import dotenv from "dotenv";
+dotenv.config()
+//connect db
+import connectDb from "./database/db.js"
+
+// connect to db
+
+connectDb()
 
 // imports
-const express = require("express");
-const mongoose = require("mongoose");
-const cors = require("cors");
-const productRoutes = require("./routes/productRoutes");
-const adminRoutes = require("./routes/adminRoutes");
-const customerRoutes = require("./routes/customerRoutes");
+import express from "express";
 
+import cors from "cors"
+import productRoutes from "./routes/productRoutes.js";
+import adminRoutes from "./routes/adminRoutes.js";
+import customerRoutes from "./routes/customerRoutes.js";
+
+const port=process.env.PORT || 3000
 // store it in app const
 const app = express();
 
@@ -16,21 +24,15 @@ const app = express();
 app.use(express.json({ limit: "50mb" }));
 app.use(cors());
 
+
 // routes
 app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
-app.use("/api/customer", customerRoutes);
+app.use("/api/customer", customerRoutes)
 
-// connect to db
-mongoose
-  .connect(process.env.MONG_URI)
-  .then(() => {
-    // app.listen will only run after we succesfully connected to the db
-    // to run this on terminal -> nodemon server.js
-    app.listen(process.env.PORT, () => {
-      console.log("database connected & port is running!", process.env.PORT);
-    });
-  })
-  .catch((error) => {
-    console.log(error);
-  });
+
+app.listen(port, () => {
+  console.log("port is running!", port);
+});
+
+

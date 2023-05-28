@@ -1,17 +1,18 @@
-const express = require("express");
+import { Router } from "express" ;
+
 
 // controllers
-const {
+import {
   createProduct,
   readProducts,
   readProduct,
   updateProduct,
   deleteProduct,
-} = require("../controllers/productController");
+} from "../controllers/productController.js";
 
-const { requireAuth, isAdmin } = require("../middleware/requireAuth");
+import { requireAuth, isAdmin } from "../middleware/requireAuth.js";
 
-const router = express.Router();
+const router = Router();
 
 // run this middleware function before the crud operations below
 // we need to protect those routes below
@@ -34,4 +35,4 @@ router.patch("/:id", updateProduct);
 // DELETE
 router.delete("/:id", deleteProduct);
 
-module.exports = router;
+export default router;
