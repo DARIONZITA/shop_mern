@@ -12,7 +12,7 @@ export const SharedLayout = () => {
       <Navbar />
       <Outlet />
       <NewsLetter />
-      <FacebookChat/>
+      <FacebookChat />
       <Footer />
     </>
   );
