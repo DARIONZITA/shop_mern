@@ -4,7 +4,7 @@ const Schema = mongoose.Schema;
 const productSchema = new Schema(
   {
     category: {
-      type: String,
+      type: Array,
       required: true,
     },
     name: {
@@ -14,6 +14,11 @@ const productSchema = new Schema(
     price: {
       type: Number,
       required: true,
+    },
+    stock: {
+      type: Number,
+      required: true,
+      min:0
     },
     imgOne: {
       public_id: {

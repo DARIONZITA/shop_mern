@@ -8,6 +8,22 @@
   </head>
   <body class="font-urbanist">
     <div id="root"></div>
+    <script>
+      window.fbAsyncInit = function() {
+        FB.init({
+          appId:'758465522653440',
+          autoLogAppEvents: true,
+          xfbml: true,
+          version: 'v15.0'
+        });
+      };
+    </script>
+    <script 
+      async defer crossorigin="anonymous" 
+      src="https://connect.facebook.net/en_US/sdk.js#xfbml=1&version=v15.0&appId=758465522653440&autoLogAppEvents=1" 
+      nonce="9dad69dc749c58686634266c9d624da3">
+    </script>
+
     <script type="module" src="/src/main.jsx"></script>
   </body>
 </html>
