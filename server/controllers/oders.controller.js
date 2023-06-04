@@ -49,10 +49,11 @@ const createOrder=async(req, res)=>{
   // adding data to db
   try {
    
-    const order = await Order.create({
+    const orderCreated = await Order.create({
       user: _id,
       ...post
-    });
+    })
+    const order=await Order.findById(orderCreated._id).populate('user').populate('products.productId')
     if(!order){
       return res.status(400).send({error: "error to create,try again"})
     }

@@ -47,6 +47,15 @@ const orderSchema = new Schema(
       default: false
 
     },
+    contact:{
+      type: String,
+      default:'WhatsApp'
+    },
+    orderDate:{
+      type:Date,
+      require:true,
+      default: Date.now
+    },
     createdAt: { 
       type: Date,
       default: Date.now,
