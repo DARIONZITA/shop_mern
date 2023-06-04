@@ -77,11 +77,25 @@ const createCustomer=(
         password,
         numberPhone
     )
-    const CustomerLogin=(email,password)=>Customer.login(email,password)
+    const CustomerLoginService=(email,password)=>Customer.login(email,password)
+    
+const addPendingOrder= (idCustomer,orderId)=> 
+Customer.findByIdAndUpdate(idCustomer,{$push:{pendingOrders:orderId}},{ new: true })
+const removePendingOrder= (idCustomer,orderId)=> {
+  try {
+  return Customer.findByIdAndUpdate(idCustomer,{$pull:{pendingOrders:orderId}})
+  
+  } catch (error) {
+    console.error("Ocorreu um erro ao remover o elemento:", error);
+  }
+}
+
  export {
     CustomerService,
     findInPending,
     deleteInPending,
     createCustomer,
-    CustomerLogin
+    CustomerLoginService,
+    addPendingOrder,
+    removePendingOrder
 }

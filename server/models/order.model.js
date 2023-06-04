@@ -1,20 +1,30 @@
 import mongoose from "mongoose";
 const Schema = mongoose.Schema;
 
-const productSchema = new Schema(
+const orderSchema = new Schema(
   {
-    products: {
-      type: Array,
-      required: true,
-    },
+    products: [
+      {
+        _id: false,
+        productId:{
+          type: mongoose.Schema.Types.ObjectId,
+          ref:'Product',
+          require:true
+        },
+        quantity:{
+          type:Number,
+          require:true
+        }
+      }
+    ],
     user: {
         type: mongoose.Schema.Types.ObjectId,
         ref:'Customer',
         require: true
     },
     frete: {
-      type: String,
-      required: [true, "Please add a product Name"],
+      type: Number,
+      required: true,
     },
     prices: {
        priceTotal:{
@@ -23,7 +33,8 @@ const productSchema = new Schema(
        },     
        pricePaid:{
         type: Number,
-        required: true
+        required: true,  
+        default:0
        }
     },
     coordinates: {
@@ -36,9 +47,13 @@ const productSchema = new Schema(
       default: false
 
     },
+    createdAt: { 
+      type: Date,
+      default: Date.now,
+      expires: "30d"
+      }
     
-  },
-  { timestamps: true }
+  }
 );
 
-export default mongoose.model("Product", productSchema);
+export default mongoose.model("Order", orderSchema);

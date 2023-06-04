@@ -2,7 +2,7 @@ import User from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
 
-const requireAuth = async (req, res, next) => {
+const adminAuth = async (req, res, next) => {
   if (req.method === "GET") {
     return next();
   }
@@ -32,7 +32,7 @@ const requireAuth = async (req, res, next) => {
     // attach the user id into the req
     // so that it can be accesible on other handler functions
     // this is the ser currently login
-    req.user = await Customer.findOne({ _id }).select("_id");
+    req.user = await User.findOne({ _id }).select("_id");
     next();
   } catch (error) {
     console.log(error);
@@ -41,5 +41,12 @@ const requireAuth = async (req, res, next) => {
   }
 };
 
+const isAdmin = (req, res, next) => {
+  if (req.user.role === 0) {
+    return res.status(401).json({ error: "must be an admin" });
+  }
 
-export { requireAuth };
+  next();
+};
+
+export { adminAuth, isAdmin };

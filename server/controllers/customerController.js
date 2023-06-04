@@ -1,9 +1,10 @@
+import Customer from "../models/customerModel.js";
 import {
    CustomerService,
    findInPending,
    deleteInPending,
    createCustomer,
-   CustomerLogin
+   CustomerLoginService
   } from "../servers/customer.server.js"
 import jwt from "jsonwebtoken";
 
@@ -18,7 +19,7 @@ const customerSignup = async (req, res) => {
   const { firstName, lastName, email, password, numberPhone } = req.body;
 
   try {
-    const customer = await CustomerService(
+    await CustomerService(
       firstName,
       lastName,
       email,
@@ -26,7 +27,7 @@ const customerSignup = async (req, res) => {
       numberPhone
     );
 
-    const customerfirstName = customer.firstName;
+
 
     res.status(200).json({ message: `Enviado o código de confirmação para o ${email}` });
 
@@ -65,20 +66,60 @@ const customerLogin = async (req, res) => {
   const { email, password } = req.body;
 
   try {
-    const customer = await CustomerLogin(email, password);
+    const customer = await CustomerLoginService(email, password);
 
     const customerfirstName = customer.firstName;
-
+    
     const token = createToken(customer._id);
-
+    console.log(customer._id)
     res.status(200).json({ customerfirstName, email, token });
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
 };
 
+const customerUpadate = async(req,res)=>{
+  
+  const post = req.body;
+
+  // for errors
+  let Fields = [];
+
+  if (post.firstName) {
+    Fields.push("firstName");
+  }
+  if (post.lastName) {
+    Fields.push("lastName");
+  }
+  if (post.numberPhone) {
+    Fields.push("numberPhone");
+  }
+  
+
+  if (Fields.length < 1) {
+    return res.status(400).json({ error: "Fill in all fields.", Fields });
+  }
+
+  try {
+    const user = req.user;
+ 
+    const data = {
+      ...post,
+    };
+
+
+    const customer = await Customer.findByIdAndUpdate(user._id, data, { new: true });
+
+    res.status(200).json(customer);
+  } catch (error) {
+    res.status(400).json({ error: error.message });
+  }
+
+}
+
 export {
   customerSignup,
   customerSignupConfirm,
   customerLogin,
+  customerUpadate
 };

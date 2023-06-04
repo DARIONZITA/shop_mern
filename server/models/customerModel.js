@@ -28,6 +28,10 @@ const customerSchema = new Schema({
     required: true,
     unique:true 
   },
+  pendingOrders:{
+    type:Array,
+    default:[]
+  }
   
 });
 
@@ -60,8 +64,8 @@ customerSchema.statics.login = async function (email, password) {
 
   // find the user that has the same value as the email
   // this will return the whole user document
-  const customer = await this.findOne({ email });
-
+  const customer = await this.findOne({ email }).select("+password");
+  
   // check if the email doesn't exist
   // if user tries to log in with an email that doesnt exist or incorrect ..
   // it throws an error
@@ -69,11 +73,14 @@ customerSchema.statics.login = async function (email, password) {
     throw Error("Email doesn't exist or Incorrect Email");
   }
 
+
   // macthing the password
   // password from user types in login form and password from the database
   // bcrypt will return true (match) or false (not match)
+  // bcrypt will return true (match) or false (not match)  const match = await bcrypt.compare(password, customer.password);
+  
   const match = await bcrypt.compare(password, customer.password);
-
+  
   // check if it doesnt match
   if (!match) {
     throw Error("Password doesn't exist or Incorrect Password");

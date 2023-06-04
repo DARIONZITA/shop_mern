@@ -1,7 +1,7 @@
-import mongoose from "mongoose";
+ import mongoose from "mongoose";
 import Product from "../models/productModel.js";
 import cloudinary from "../utils/cloudinary.js";
-
+import {updateProducts} from "../servers/product.service.js"
 // CREATE
 const createProduct = async (req, res) => {
   // console.log({ detailOne });
@@ -22,6 +22,9 @@ const createProduct = async (req, res) => {
   if (!post.price) {
     emptyFields.push("price");
   }
+  if (!post.stock) {
+    emptyFields.push("stock");
+  }
   if (!post.imgOne) {
     emptyFields.push("imgOne");
   }
@@ -29,22 +32,21 @@ const createProduct = async (req, res) => {
     emptyFields.push("imgTwo");
   }
 
-  // if (!post.description[0].detailOne) {
-  //   emptyFields.push("detailOne");
-  // }
-  // if (!post.description[0].detailTwo) {
-  //   emptyFields.push("detailTwo");
-  // }
+  //if (!post.description[0].detailOne) {
+    // emptyFields.push("detailOne");
+   //}
+  //if (!post.description[1].detailTwo) {
+    // emptyFields.push("detailTwo");
+   //}
 
-  post.description.forEach((desc, index) => {
-    if (!desc.detailOne) {
+  post.description.forEach((value, index) => {
+    if (!value.detailOne) {
       emptyFields.push(`description[${index}].detailOne`);
     }
-    if (!desc.detailTwo) {
+    if (!value.detailTwo) {
       emptyFields.push(`description[${index}].detailTwo`);
     }
   });
-
   if (emptyFields.length > 0) {
     return res.status(400).json({ error: "Fill in all fields.", emptyFields });
   }
@@ -52,13 +54,13 @@ const createProduct = async (req, res) => {
   // adding data to db
   try {
     // Upload an image to Cloudinary
-    const result1 = await cloudinary.uploader.upload(post.imgOne, {
-      folder: "goodal-products",
-    });
+    const result1 ={public_id:'example.1.1',secure_url:'example.1.2'} //await cloudinary.uploader.upload(post.imgOne, {
+      //folder: "goodal-products",
+    //});
 
-    const result2 = await cloudinary.uploader.upload(post.imgTwo, {
-      folder: "goodal-products",
-    });
+    const result2 ={public_id:'example.2.1',secure_url:'example.2.2'} //await cloudinary.uploader.upload(post.imgTwo, {
+      //folder: "goodal-products",
+    //});
 
     const product = await Product.create({
       ...post,
@@ -72,7 +74,7 @@ const createProduct = async (req, res) => {
       },
     });
 
-    res.status(200).json(product);
+    res.status(201).json(product);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
@@ -87,6 +89,8 @@ const readProducts = async (req, res) => {
     const search = req.query.search || "";
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 9;
+    const maxPrice= parseInt(req.query.maxPrice) || 1000000
+
 
     let category = req.query.category || "All";
 
@@ -98,9 +102,9 @@ const readProducts = async (req, res) => {
 
     const productsData = await Product.find({
       name: { $regex: search, $options: "i" },
+      price: { $lte: maxPrice },
+      category: { $in: category }
     })
-      .where("category")
-      .in(category)
       .sort(sortObject)
       .skip(page * limit)
       .limit(limit);
@@ -108,6 +112,7 @@ const readProducts = async (req, res) => {
     const total = await Product.countDocuments({
       category: { $in: [...category] },
       name: { $regex: search, $options: "i" },
+      price: { $lte: maxPrice } 
     });
 
     const response = {
@@ -158,35 +163,39 @@ const updateProduct = async (req, res) => {
   }
 
   // for errors
-  let emptyFields = [];
+  let Fields = [];
 
-  if (!post.category) {
-    emptyFields.push("category");
+  if (post.category) {
+    Fields.push("category");
   }
-  if (!post.name) {
-    emptyFields.push("name");
+  if (post.name) {
+    Fields.push("name");
   }
-  if (!post.price) {
-    emptyFields.push("price");
+  if (post.stock) {
+    Fields.push("stock");
   }
-  if (!post.imgOne) {
-    emptyFields.push("imgOne");
+  if (post.price) {
+    Fields.push("price");
   }
-  if (!post.imgTwo) {
-    emptyFields.push("imgTwo");
+  if (post.imgOne) {
+    Fields.push("imgOne");
+  }
+  if (post.imgTwo) {
+    Fields.push("imgTwo");
   }
 
-  post.description.forEach((desc, index) => {
-    if (!desc.detailOne) {
-      emptyFields.push(`description[${index}].detailOne`);
+  post.description?.forEach((desc, index) => {
+    console.log('passou')
+    if (desc.detailOne) {
+      Fields.push(`description[${index}].detailOne`);
     }
-    if (!desc.detailTwo) {
-      emptyFields.push(`description[${index}].detailTwo`);
+    if (desc.detailTwo) {
+      Fields.push(`description[${index}].detailTwo`);
     }
   });
 
-  if (emptyFields.length > 0) {
-    return res.status(400).json({ error: "Fill in all fields.", emptyFields });
+  if (Fields.length < 1) {
+    return res.status(400).json({ error: "Fill in all fields.", Fields });
   }
 
   try {
@@ -199,56 +208,84 @@ const updateProduct = async (req, res) => {
     if (!currentProduct) {
       return res.status(400).json({ error: "product not found" });
     }
+  
 
-    if (post.imgOne !== "") {
+    if (post.imgOne) {
       const imgId1 = currentProduct.imgOne.public_id;
 
       // if the current image is same as the image in the input
-      //  we will upload a new image
-      if (imgId1 !== post.imgOne.public_id) {
+      //  we will upload a new 
+    if(post.imgOne.public_id){
+      if (imgId1 !== post.imgOne.public_id ) {
         if (imgId1) {
-          await cloudinary.uploader.destroy(imgId1);
+            await cloudinary.uploader.destroy(imgId1);
+          }
         }
+    }
+      
+    
 
         // Upload an image to Cloudinary
-        const newImage1 = await cloudinary.uploader.upload(post.imgOne, {
-          folder: "goodal-products",
-        });
+        const newImage1 = {public_id:'example.4.1',secure_url:'example.4.2'}//await cloudinary.uploader.upload(post.imgOne, {
+          //folder: "goodal-products",
+        //});
 
         data.imgOne = {
           public_id: newImage1.public_id,
           url: newImage1.secure_url,
         };
       }
-    }
+    
 
-    if (post.imgTwo !== "") {
+    if (post.imgTwo) {
       const imgId2 = currentProduct.imgTwo.public_id;
-
-      if (imgId2 !== post.imgTwo.public_id) {
-        if (imgId2) {
-          await cloudinary.uploader.destroy(imgId2);
-        }
+      if(post.imgOne.public_id){
+        if (imgId2 !== post.imgTwo.public_id) {
+            if (imgId2) {
+              await cloudinary.uploader.destroy(imgId2);
+            }}}
+          
 
         // Upload an image to Cloudinary
-        const newImage2 = await cloudinary.uploader.upload(post.imgTwo, {
-          folder: "goodal-products",
-        });
+        const newImage2 = {public_id:'example.3.1',secure_url:'example.3.2'}//await cloudinary.uploader.upload(post.imgTwo, {
+         // folder: "goodal-products",
+        //});
 
         data.imgTwo = {
           public_id: newImage2.public_id,
           url: newImage2.secure_url,
         };
       }
+    
+
+    const product = await updateProducts(id, data);
+
+    res.status(200).json(product);
+  } catch (error) {
+    res.status(500).json({ error: error.message });
+  }
+}
+
+const updateCategory = async(req, res)=>{
+  const { id } = req.params;
+  const newCategory = req.body.category;
+
+  if (!mongoose.Types.ObjectId.isValid(id)) {
+    return res.status(400).json({ error: "id is not valid" });
+  }
+  try {
+    const currentProduct = await Product.findById(id);
+
+    if (!currentProduct) {
+      return res.status(400).json({ error: "product not found" });
     }
 
-    const product = await Product.findByIdAndUpdate(id, data, { new: true });
-
+    const product = await Product.findByIdAndUpdate({_id: id},{$push:{category:newCategory}}, { new: true });
     res.status(200).json(product);
   } catch (error) {
     res.status(400).json({ error: error.message });
   }
-};
+} 
 
 // DELETE
 const deleteProduct = async (req, res) => {
@@ -288,5 +325,6 @@ export {
   readProducts,
   readProduct,
   updateProduct,
+  updateCategory,
   deleteProduct,
 };
