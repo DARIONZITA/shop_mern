@@ -21,8 +21,8 @@ const CustomerService=async(
   }
 
   // validation .. check if password is a strong email
-  if (!validator.isStrongPassword(password)) {
-    throw Error("Password is weak");
+  if (!validator.isStrongPassword(password,{minLength:6,minSymbols:0,minUppercase:0,minLowercase:0})) {
+    throw Error("Password é fraca");
   }
 
   // find the user that has the same value as the email

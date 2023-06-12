@@ -21,13 +21,14 @@ import {
   AdminDashboardLayout,
   CustomerSignupLayout,
   CustomerLoginLayout,
+  CustomerConfirmLayout,
   SettingsLayout,
 } from "./routes";
 
 function App() {
   const dispatch = useDispatch();
   const { admin } = useSelector((store) => store.admin);
-  const { customer } = useSelector((store) => store.customer);
+  const { customer, customerPending } = useSelector((store) => store.customer);
 
   const Wrapper = ({ children }) => {
     const location = useLocation();
@@ -54,7 +55,7 @@ function App() {
 
           <Route
             path="/customer/signup"
-            element={!customer ? <CustomerSignupLayout /> : <Navigate to="/" />}
+            element={customerPending ? <CustomerConfirmLayout/> : customer ? <Navigate to="/" /> : <CustomerSignupLayout />}
           />
           <Route
             path="/customer/login"

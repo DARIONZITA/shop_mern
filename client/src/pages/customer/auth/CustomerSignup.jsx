@@ -1,7 +1,7 @@
 import { useState } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { customerSignup } from "../../../features/auth/customerAuthSlice";
-
+import validator from 'validator'
 // image
 import loginphoto from "../../../assets/loginphoto.jpg";
 import { NavLink } from "react-router-dom";
@@ -11,16 +11,30 @@ export const CustomerSignup = () => {
   const [lastName, setLastName] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
+  const [phone, setPhone] = useState("")
+  const [isValidatorPassword,setIsValidatorPassword]= useState(true)
 
   const dispatch = useDispatch();
   const { loading, errorSignUp, customer } = useSelector(
     (store) => store.customer
   );
+  const passwordValidator=(password)=>{
+    setPassword(password)
+    if(!validator.isStrongPassword(password,{minLength:6,minSymbols:0,minUppercase:0,minLowercase:0})){
+      setIsValidatorPassword(false)
+    } 
+    else{
+      setIsValidatorPassword(true)
+    }
+
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
-    dispatch(customerSignup({ firstName, lastName, email, password }));
+    let phoneOnly=phone.replace('+244','')
+    const numberPhone=Number(phoneOnly)
+    
+    dispatch(customerSignup({ firstName, lastName, email, password ,numberPhone}));
   };
 
   return (
@@ -32,15 +46,14 @@ export const CustomerSignup = () => {
             onSubmit={handleSubmit}
           >
             <h3 className="mb-3 font-urbanist text-xl font-bold text-primary md:text-3xl">
-              Please fill in the fields below
+              Cadastre-se
             </h3>
-
             <input
               type="text"
               name="firstname"
               value={firstName}
               onChange={(e) => setFirstName(e.target.value)}
-              placeholder="First name"
+              placeholder="Primeiro Nome"
               className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
             />
 
@@ -49,7 +62,7 @@ export const CustomerSignup = () => {
               name="lastname"
               value={lastName}
               onChange={(e) => setLastName(e.target.value)}
-              placeholder="Last name"
+              placeholder=" Último Nome"
               className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
             />
 
@@ -61,31 +74,43 @@ export const CustomerSignup = () => {
               placeholder="E-mail"
               className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
             />
-
+            <input
+              type="tel"
+              name="numberPhone"
+              pattern="(\+244)?9\d{8}"
+              onChange={(e) => setPhone(e.target.value)}
+              value={phone}
+              placeholder="Número de Telefone"
+              className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
+              required
+            />
             <input
               type="password"
               name="password"
-              onChange={(e) => setPassword(e.target.value)}
+              onChange={(e) => passwordValidator(e.target.value)}
               value={password}
               placeholder="Password"
               className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
             />
+            {!isValidatorPassword && (
+              <small className="text-red-400">A password deve ter pelo menos 6 caracteres conter números e letras</small>
+            )}
 
             <button
               disabled={loading}
               className="w-full rounded-md bg-[#c6f6f8] py-2 px-5 font-urbanist font-extrabold text-secondary shadow-md ring-2 ring-[#abecee] transition duration-300 ease-in hover:bg-[#abecee] hover:text-primary md:py-3 md:px-6"
             >
-              SIGNUP
+              Cadastrar
             </button>
 
             <div className="flex items-center justify-center space-x-2 font-urbanist text-base font-semibold text-gray-600">
-              <h4>Already have an account?</h4>
+              <h4>Voçê já tem uma conta?</h4>
 
               <NavLink
                 to="/customer/login"
                 className="underline transition duration-300 ease-in hover:text-primary"
               >
-                Login
+                Entrar
               </NavLink>
             </div>
 

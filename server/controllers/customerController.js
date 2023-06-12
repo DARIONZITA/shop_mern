@@ -29,7 +29,7 @@ const customerSignup = async (req, res) => {
 
 
 
-    res.status(200).json({ message: `Enviado o código de confirmação para o ${email}` });
+    res.status(200).json({email: email});
 
 
   } catch (error) {
@@ -53,9 +53,9 @@ const customerSignupConfirm = async (req, res) =>{
     user.email,
     user.password,
     user.numberPhone)
-
+  const customerfirstName=user.firstNameName 
   await deleteInPending(user._id)
-  res.send(201)
+  res.status(200).json({ customerfirstName, email, token });
 
   // Responder ao cliente com sucesso
   

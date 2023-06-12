@@ -10,7 +10,7 @@ export { AdminDashboardLayout } from "./AdminDashboardLayout";
 export { AdminSignupLayout } from "./AdminSignupLayout";
 export { AdminLoginLayout } from "./AdminLoginLayout";
 export { AdminSharedLayout } from "./AdminSharedLayout";
-
+export { CustomerConfirmLayout } from "./CustomerConfirmLayout";
 export { CustomerSignupLayout } from "./CustomerSignupLayout";
 export { CustomerLoginLayout } from "./CustomerLoginLayout";
 export { SettingsLayout } from "./SettingsLayout";
