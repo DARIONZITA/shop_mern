@@ -9,12 +9,36 @@ const initialState = {
   cartTotalAmount: 0,
   cartTotalQuantity: 0,
   testQuant: 1,
+  municipio:null,
+  distrito:null,
+  municipiosData:[
+    ['Luanda',[-8.81325111124297, 13.221118923737603]],
+    ['Icolo e Bengo',[-9.134046086451265, 13.85180583998985]],
+    ['Quissama',[-9.80221127503039, 13.785082749208081]],
+    ['Belas',[-9.08460689167123, 13.127493808981736]],
+    ['Cacuaco',[-8.769686413771812, 13.374024727091367]],
+    ['Cazenga',[-8.834847447077802, 13.295358763072393]],
+    ['Viana',[-8.895269268278861, 13.349961594590395]],
+    ['Kilamba Kiaxy',[-8.874350825594194, 13.25014362289606]],
+    ['Talatona',[-8.90449613098244, 13.190319414290986]]
+  ]
 };
 
 const cartSlice = createSlice({
   initialState,
   name: "cart",
   reducers: {
+    setMunicipioAndDistrito: (state, action)=>{
+      if (action.payload.municipio){
+        state.municipio = action.payload.municipio;
+      }
+      if (action.payload.distrito){
+        state.distrito = action.payload.distrito;
+      }
+    },
+    deleteDistrito:(state)=>{
+     state.distrito=null
+    },
     setOpenCart: (state, action) => {
       state.cartState = action.payload.cartState;
     },
@@ -179,5 +203,7 @@ export const {
   setPreAdd,
   setPreDecrease,
   setAddItemToCartTwo,
+  setMunicipioAndDistrito,
+  deleteDistrito
 } = cartSlice.actions;
 export default cartSlice.reducer;

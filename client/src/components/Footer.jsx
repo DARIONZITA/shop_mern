@@ -8,7 +8,7 @@ const Footer = () => {
     <footer className="w-full bg-bgcolor">
       <div className="container mx-auto flex items-center justify-between py-7 px-6 lg:px-16">
         <p className="font-urbanist text-sm text-primary md:text-base">
-          Copyright © 2022 goodal
+          Copyright © 2023 goodal
         </p>
 
         <div>

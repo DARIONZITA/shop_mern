@@ -6,6 +6,7 @@ const initialState = {
   customer: null,
   errorSignUp: null,
   errorLogIn: null,
+
 };
 
 // Sign Up
@@ -93,7 +94,6 @@ export const checkCustomer = () => (dispatch) => {
     dispatch(setCustomer(customer));
   }
 };
-
 const customerAuthSlice = createSlice({
   initialState,
   name: "customer",

@@ -1,6 +1,14 @@
 import React, { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
+//materials
+
+import IconButton from '@mui/material/IconButton';
+import Badge from '@mui/material/Badge';
+import NotificationsIcon from '@mui/icons-material/Notifications';
+
+
+
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCloseCart,
@@ -16,6 +24,7 @@ import { FaSort } from "react-icons/fa";
 import { RiFilterOffFill } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
 import { MdOutlineAccountCircle } from "react-icons/md";
+
 
 import { Cart } from "../../pages/customer/cart/index.js";
 import { customerLogOut } from "../../features/auth/customerAuthSlice";
@@ -217,7 +226,7 @@ const Navbar = () => {
                       >
                         <div className="py-1">
                           <div className="flex flex-col border-b border-slate-400 px-6 py-2">
-                            <span className="text-base">Customer</span>
+                            <span className="text-base">Usuário</span>
                             <span className="text-sm font-medium">
                               {customer.email}
                             </span>
@@ -234,7 +243,7 @@ const Navbar = () => {
                             onClick={handleLogout}
                             className="block w-full px-6 py-2 text-left transition duration-200 ease-in-out hover:text-primary"
                           >
-                            Logout
+                            Sair da conta
                           </button>
                         </div>
                       </div>
@@ -242,7 +251,9 @@ const Navbar = () => {
                   </li>
                 ) : (
                   <>
+                  
                     <li className="space-x-2 font-urbanist font-bold text-zinc-600">
+                   
                       <button
                         onClick={handleDropdown}
                         className={`${
@@ -252,7 +263,7 @@ const Navbar = () => {
                             : null
                         } flex items-center space-x-0.5 transition duration-200 ease-in-out hover:text-primary`}
                       >
-                        <span>Account</span>
+                        <span>Conta</span>
                         <IoIosArrowDown />
                       </button>
 
@@ -263,6 +274,7 @@ const Navbar = () => {
                           } ring-1 ring-slate-400 transition duration-200 ease-in-out`}
                         >
                           <div className="py-1">
+                         
                             <button
                               onClick={() => {
                                 if (dropdown) {
@@ -277,7 +289,7 @@ const Navbar = () => {
                                   isActive ? "text-primary" : null
                                 }
                               >
-                                Signup
+                                Cadastrar
                               </NavLink>
                             </button>
 
@@ -295,13 +307,14 @@ const Navbar = () => {
                                   isActive ? "text-primary" : null
                                 }
                               >
-                                Login
+                                Entrar
                               </NavLink>
                             </button>
                           </div>
                         </div>
                       )}
                     </li>
+                  
                   </>
                 )}
 
@@ -317,7 +330,7 @@ const Navbar = () => {
                     }
                     to="/about"
                   >
-                    About
+                     Sobre Nós
                   </NavLink>
                 </li>
                 <li className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
@@ -332,11 +345,12 @@ const Navbar = () => {
                     }
                     to="/products"
                   >
-                    Products
+                     Produtos
                   </NavLink>
                 </li>
+                
               </ul>
-
+           
               <div className="flex items-center justify-center space-x-3 md:space-x-0">
                 {/* mobile account logo*/}
                 <div
@@ -351,12 +365,21 @@ const Navbar = () => {
                   onClick={handleCartNav}
                   className="relative flex cursor-pointer items-center justify-end text-xl text-zinc-600 hover:text-primary"
                 >
-                  <HiOutlineShoppingBag size={25} />
+                  <Badge badgeContent={cartTotalQuantity} color="primary">
+                     <HiOutlineShoppingBag size={25} />
 
-                  <span className="absolute top-4 left-2 flex h-5 w-5 items-center justify-center rounded-full bg-slate-900 text-[0.65rem] text-slate-100">
-                    {cartTotalQuantity}
-                  </span>
+                  </Badge>
+                  
                 </div>
+                <IconButton
+                      size="large"
+                      aria-label="show 17 new notifications"
+                      color="inherit">
+                      
+                      <Badge badgeContent={17} color="success">
+                        <NotificationsIcon />
+                      </Badge>
+                 </IconButton>
               </div>
             </div>
           </div>

@@ -54,13 +54,13 @@ const createProduct = async (req, res) => {
   // adding data to db
   try {
     // Upload an image to Cloudinary
-    const result1 ={public_id:'example.1.1',secure_url:'example.1.2'} //await cloudinary.uploader.upload(post.imgOne, {
-      //folder: "goodal-products",
-    //});
+    const result1 = await cloudinary.uploader.upload(post.imgOne, {
+      folder: "shope",
+    });
 
-    const result2 ={public_id:'example.2.1',secure_url:'example.2.2'} //await cloudinary.uploader.upload(post.imgTwo, {
-      //folder: "goodal-products",
-    //});
+    const result2 = await cloudinary.uploader.upload(post.imgTwo, {
+      folder: "shope",
+    });
 
     const product = await Product.create({
       ...post,
@@ -226,9 +226,9 @@ const updateProduct = async (req, res) => {
     
 
         // Upload an image to Cloudinary
-        const newImage1 = {public_id:'example.4.1',secure_url:'example.4.2'}//await cloudinary.uploader.upload(post.imgOne, {
-          //folder: "goodal-products",
-        //});
+        const newImage1 = await cloudinary.uploader.upload(post.imgOne, {
+          folder: "shope",
+        });
 
         data.imgOne = {
           public_id: newImage1.public_id,
@@ -247,9 +247,9 @@ const updateProduct = async (req, res) => {
           
 
         // Upload an image to Cloudinary
-        const newImage2 = {public_id:'example.3.1',secure_url:'example.3.2'}//await cloudinary.uploader.upload(post.imgTwo, {
-         // folder: "goodal-products",
-        //});
+        const newImage2 = await cloudinary.uploader.upload(post.imgTwo, {
+          folder: "shope",
+        });
 
         data.imgTwo = {
           public_id: newImage2.public_id,

@@ -5,6 +5,8 @@ import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { checkAdmin } from "./features/auth/adminAuthSlice";
 import { checkCustomer } from "./features/auth/customerAuthSlice";
 
+
+
 import {
   SharedLayout,
   HomeLayout,
