@@ -12,7 +12,7 @@ export const ProductSearch = ({ search, handleSearchChange }) => {
         value={search}
         onChange={handleSearchChange}
         className="block w-full rounded-lg border border-gray-300 bg-gray-50 py-4 px-11 text-sm text-gray-900 focus:outline-none"
-        placeholder="Search Products, etc..."
+        placeholder="Pesquisar produtos, etc..."
       />
     </div>
   );

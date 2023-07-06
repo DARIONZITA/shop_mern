@@ -2,13 +2,409 @@ import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
 const initialState = {
   signUpStatus: "idle",
+  ordersStatus: "idle",
+  markStatus:"idle",
   loading: false,
-  customer: null,
-  customerPending:{email:'dariozongogarcinzita@gmail.com'},
+  customer: { firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
+  customerPending: null,
+  dataMarks:null,
+  orderPending: [
+    {
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      _id:"123",
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    },
+    {
+      _id:"123",
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    },
+    {
+      _id:"123",
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    }, {
+      _id:"123",
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    }, {
+      _id:"123",
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    }, {
+      _id:"123",
+      prices:{
+        priceTotal:1000,
+        pricePaid: 5000
+      },
+      products:[
+        {
+          productId:{
+            name:'totoloto'
+          },
+          quantity:2
+        },
+        {
+          productId:{
+            name:'olimpiadas'
+          },
+          quantity:5
+        },
+        {
+          productId:{
+            name:'never give up'
+          },
+          quantity:9
+        },
+        {
+          productId:{
+            name:'wanna be rich'
+          },
+          quantity:2
+        } 
+      ]
+    }
+  ] ,
   errorSignUp: null,
   errorLogIn: null,
+}
 
-};
+
+
+export const CreateMarks = createAsyncThunk(
+  "customer/CreateMarks",
+  async (datap, thunkAPI) => {
+         
+     let base_url = "http://localhost:3000/api/marks/add";
+
+    //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
+
+    try {
+      
+      console.log(base_url);
+
+      const response = await fetch(base_url, {
+        method: "POST",
+        body: JSON.stringify(datap),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      let data = await response.json();
+
+      if (response.ok) {
+        return true;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
+export const getAllMarks = createAsyncThunk(
+  "customer/getAllMarks",
+  async (data, thunkAPI) => {
+     let search= data ? `?search=${data.search}` : ''
+
+
+     let base_url = "http://localhost:3000/api/marks/getAll";
+
+    //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
+
+    try {
+      base_url=`${base_url}${search}`
+      
+      console.log(base_url);
+
+      const response = await fetch(base_url);
+      const data = await response.json();
+
+      if (response.ok) {
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
+export const RemoveMark = createAsyncThunk(
+  "customer/RemoveMark",
+  async (markId, thunkAPI) => {
+     let base_url = "http://localhost:3000/api/marks/cancel";
+
+    //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
+    
+    try {
+      base_url=`${base_url}/${markId}`
+      
+      console.log(base_url);
+
+      const response = await fetch(base_url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      if (response.ok) {
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
+export const CancelOrder = createAsyncThunk(
+  "customer/CancelOrder",
+  async (orderId, thunkAPI) => {
+    
+
+    // let base_url = "http://localhost:7001/api/products";
+
+    let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
+
+    try {
+      base_url=`${base_url}/${orderId}`
+      
+      console.log(base_url);
+
+      const response = await fetch(base_url, {
+        method: "DELETE",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        return true;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
+export const UpadateOrderPending =  createAsyncThunk(
+  "customer/UpdateOrderPending",
+  async (_, thunkAPI) => {
+    
+
+    // let base_url = "http://localhost:7001/api/products";
+
+    let base_url ="https://goodal-mern.onrender.com/api/customer/myOrders";
+
+    try {
+      
+      console.log(base_url);
+
+      const response = await fetch(base_url);
+      const data = await response.json();
+
+      console.log(data);
+
+      if (response.ok) {
+        return data?.myOrders.pendingOrders;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
+export const changeData = createAsyncThunk(
+  "customer/changeData",
+  async (dataObj, thunkAPI) => {
+    // let base_url = "http://localhost:7001/api/customer/signup"
+   
+    let base_url ="https://goodal-mern.onrender.com/api/customer/update";
+
+    try {
+      const response = await fetch(base_url, {
+        method: "PATCH",
+        body: JSON.stringify(dataObj),
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        // save the user to local storage
+        let customerOld=JSON.parse(localStorage.getItem("customer"))
+        customerOld.numberPhone=data.numberPhone
+        customerOld.firstName=data.firstName
+        customerOld.email=data.email
+
+        localStorage.setItem("customer", JSON.stringify(customerOld));
+
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+);
 
 // Sign Up
 export const customerSignup = createAsyncThunk(
@@ -128,12 +524,14 @@ export const cancelConfirm = () => (dispatch) => {
 export const checkCustomer = () => (dispatch) => {
   const customer = JSON.parse(localStorage.getItem("customer"));
   const customerPending= JSON.parse(localStorage.getItem("customerPending"));
+  
   if (customer) {
     dispatch(setCustomer(customer));
   }
   if(customerPending){
-    dispatch(setCustomerPending(customer));
+    dispatch(setCustomerPending(customerPending));
   }
+  
 };
 const customerAuthSlice = createSlice({
   initialState,
@@ -141,6 +539,9 @@ const customerAuthSlice = createSlice({
   reducers: {
     customerLogOutAction: (state) => {
       state.customer = null;
+    },
+    setPendingOrders: (state,action) =>{
+      state.customer= action.payload
     },
     setCustomer: (state, action) => {
       state.customer = action.payload;
@@ -173,6 +574,27 @@ const customerAuthSlice = createSlice({
         state.customerPending = null;
         state.errorSignUp = action.payload.error;
       })
+      //remove marks
+      .addCase(RemoveMark.fulfilled, (state, action) => {
+        state.dataMarks = action.payload;
+      })
+      //get marks
+      .addCase(getAllMarks.pending, (state) => {
+        state.markStatus="loading"
+        state.loading = true;
+        state.dataMarks = null;
+      })
+      .addCase(getAllMarks.fulfilled, (state, action) => {
+        state.markStatus="succeeded"
+        state.loading = false;
+        state.dataMarks = action.payload;
+      })
+      .addCase(getAllMarks.rejected, (state, action) => {
+        state.markStatus="failed"
+        state.loading = false;
+        state.dataMarks = null;
+      })
+      
       //confirm
       .addCase(customerConfirm.pending, (state) => {
         state.signUpStatus = "loading";
@@ -202,6 +624,7 @@ const customerAuthSlice = createSlice({
       .addCase(customerLogin.fulfilled, (state, action) => {
         state.signUpStatus = "succeeded";
         state.loading = false;
+
         state.customer = action.payload;
         state.errorLogIn = null;
       })
@@ -210,10 +633,41 @@ const customerAuthSlice = createSlice({
         state.loading = false;
         state.customer = null;
         state.errorLogIn = action.payload.error;
-      });
-  },
+      })
+      // update
+      .addCase(changeData.pending, (state) => {
+        state.loading = true;
+        state.customer = null;
+      })
+      .addCase(changeData.fulfilled, (state, action) => {
+        state.loading = false;
+        state.customer = action.payload;
+      })
+      .addCase(changeData.rejected, (state, action) => {
+        state.loading = false;
+        state.customer = null;
+      })
+      //news orders
+      .addCase(UpadateOrderPending.pending, (state) => {
+        state.ordersStatus = "loading";
+        state.loading = true;
+        //state.orderPending = null;
+      })
+      .addCase(UpadateOrderPending.fulfilled, (state, action) => {
+        state.ordersStatus='succeeded'
+        state.loading = false;
+        state.orderPending = action.payload;
+      })
+      .addCase(UpadateOrderPending.rejected, (state, action) => {
+        state.ordersStatus='failed'
+        state.loading = false;
+        //state.orderPending = null;
+        //state.errorSignUp = action.payload.error;
+      })
+      
+  }
 });
 
 
-export const { customerLogOutAction, setCustomer,setCustomerPending ,customerCancelSignUp,} = customerAuthSlice.actions;
+export const { customerLogOutAction,setPendingOrders,setCustomer,setCustomerPending ,customerCancelSignUp,} = customerAuthSlice.actions;
 export default customerAuthSlice.reducer;

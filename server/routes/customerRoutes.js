@@ -5,7 +5,8 @@ import {
   customerSignup,
   customerSignupConfirm,
   customerLogin,
-  customerUpadate
+  customerUpadate,
+  MyOrders
 } from "../controllers/customerController.js";
 import { requireAuth } from "../middleware/requireAuth.js";
 const router = Router();
@@ -17,7 +18,7 @@ router.post("/signup/verifyEmail", customerSignup);
 // LOGIN
 router.post("/login", customerLogin);
 
-router.use(requireAuth);
 //UPDATE
-router.patch('/update',customerUpadate)
+router.patch('/update',requireAuth,customerUpadate)
+router.get('/myOrders',requireAuth,MyOrders)
 export default router;

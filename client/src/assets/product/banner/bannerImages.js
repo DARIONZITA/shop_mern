@@ -7,7 +7,7 @@ import apricot_banner from "./apricot_banner.jpg";
 export const bannerImages = [
   {
     id: 1,
-    name: "All Product",
+    name: "Perfumes e Cosméticos",
     category: "All",
     image: all_banner,
   },

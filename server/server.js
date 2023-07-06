@@ -16,6 +16,7 @@ import productRoutes from "./routes/productRoutes.js";
 import adminRoutes from "./routes/adminRoutes.js";
 import customerRoutes from "./routes/customerRoutes.js";
 import orderRoutes from "./routes/orders.routes.js"
+import marksRoutes from "./routes/marks.routes.js"
 const port=process.env.PORT || 3000
 // store it in app const
 const app = express();
@@ -31,6 +32,7 @@ app.use("/api/products", productRoutes);
 app.use("/api/admin", adminRoutes);
 app.use("/api/customer", customerRoutes)
 app.use("/api/orders", orderRoutes)
+app.use("/api/marks", marksRoutes)
 
 
 app.listen(port, () => {

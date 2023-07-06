@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector } from "react-redux";
+import ModalOrder from "../../../components/modalorder";
 
 const CartBottom = () => {
   const { cartTotalAmount } = useSelector((store) => store.cart);
@@ -11,7 +12,7 @@ const CartBottom = () => {
     // Format the price value using the user's locale and currency
     const formattedPrice = Number(price).toLocaleString(userLocale, {
       style: "currency",
-      currency: "USD",
+      currency: "AOA",
     });
 
     return formattedPrice;
@@ -29,10 +30,8 @@ const CartBottom = () => {
       <div className="grid items-center justify-items-center gap-2">
         <p className="text-center text-sm font-medium md:text-lg">
           Taxes and Shipping Will Calculate At Shipping
-        </p>
-        <button className="rounded bg-primary py-1 px-2 text-sm text-white transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary md:text-base">
-          Check Out
-        </button>
+        </p>    
+        <ModalOrder />
       </div>
     </div>
   );

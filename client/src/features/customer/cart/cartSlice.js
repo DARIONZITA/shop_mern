@@ -1,6 +1,9 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createAsyncThunk, createSlice } from "@reduxjs/toolkit";
 import toast from "react-hot-toast";
+import { useDispatch } from "react-redux";
+import { UpadateOrderPending } from "../../auth/customerAuthSlice";
 
+const dispatch=useDispatch
 const initialState = {
   cartState: false,
   cartItems: localStorage.getItem("cart")
@@ -9,7 +12,16 @@ const initialState = {
   cartTotalAmount: 0,
   cartTotalQuantity: 0,
   testQuant: 1,
+  contact:'whatsapp',  
+  dateOrder:null,
+  central:{
+    name:'Sequele',
+    coordinates:[-8.889359001463491, 13.484934588357318]
+  },  
+  frete:null,
+  selectedPlace:null,
   municipio:null,
+  showMapa:false,
   distrito:null,
   municipiosData:[
     ['Luanda',[-8.81325111124297, 13.221118923737603]],
@@ -24,6 +36,38 @@ const initialState = {
   ]
 };
 
+export const createOrder = createAsyncThunk(
+  "cart/createOrder",
+   async (dataobj,thunkAPI) => {
+    let base_url='http://localhost:7001/api/order/'
+    try {
+      const response = await fetch(base_url,{
+        method: "POST",
+        body: JSON.stringify(dataobj),
+        headers: {
+          "Content-Type": "application/json",
+        }
+      }) 
+      const data = response.json()
+      if(response.ok){
+        dispatch(UpadateOrderPending())
+        dispatch(setClearCart)
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+      
+    }
+   }
+)
+
+const distanceToCenter = (coordinates,state ) => {
+  return ((state.central.coordinates[0]-coordinates[0])**2+(state.central.coordinates[1]-coordinates[1])**2)**1/2
+ }
+
 const cartSlice = createSlice({
   initialState,
   name: "cart",
@@ -36,17 +80,47 @@ const cartSlice = createSlice({
         state.distrito = action.payload.distrito;
       }
     },
+    setContact:(state, action) =>{
+      state.contact=action.payload.contact
+    },
+    setPlaceAndfrete: (state, action) =>{
+      state.selectedPlace=action.payload.selectedPlace
+      let num= distanceToCenter(action.payload.selectedPlace.coordinates,state)
+      let add=0
+
+      //calculo maluco e aleatorio (gambiarra) do frete
+      num=(Math.log10(num+1)*10**5).toFixed(0)
+      num=num/100
+      num = num.toFixed(0)
+      add=num*100 
+      if(add < 300){
+        add=300
+      }
+      if(add > 1000){
+        add=((5*10**3)*Math.log(add/500)-1000)/(Math.log10(3*add))
+        add=add/100
+        add=add.toFixed(0)
+        if(add % 2 !== 0){
+          add--
+        }
+        add*=100
+        
+            }
+      state.frete=add
+
+    },
+    setDateOrder:(state, action) =>{
+      state.dateOrder=action.payload.dateOrder
+    },
     deleteDistrito:(state)=>{
      state.distrito=null
     },
     setOpenCart: (state, action) => {
       state.cartState = action.payload.cartState;
     },
-
     setCloseCart: (state, action) => {
       state.cartState = action.payload.cartState;
     },
-
     setAddItemToCartTwo: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
@@ -69,7 +143,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setPreAdd: (state, action) => {
       state.testQuant += 1;
 
@@ -77,7 +150,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setPreDecrease: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
@@ -90,7 +162,9 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
+    setShowMapa: (state, action) => {
+      state.showMapa=action.payload
+    },
     setAddItemToCart: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
@@ -111,7 +185,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setIncreaseItemQTY: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
@@ -124,7 +197,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setDecreaseItemQTY: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
@@ -137,7 +209,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setRemoveItemFromCart: (state, action) => {
       const removeItem = state.cartItems.filter(
         (item) => item._id !== action.payload._id
@@ -149,7 +220,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setClearCart: (state) => {
       state.cartItems = [];
 
@@ -157,7 +227,6 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-
     setGetTotals: (state) => {
       let { totalAmount, totalQuantity } = state.cartItems.reduce(
         (cartTotal, cartItem) => {
@@ -189,8 +258,7 @@ const cartSlice = createSlice({
       // state.cartTotalQuantity = totalQuantity;
     },
   },
-});
-
+ })
 export const {
   setOpenCart,
   setCloseCart,
@@ -202,8 +270,12 @@ export const {
   setGetTotals,
   setPreAdd,
   setPreDecrease,
+  setShowMapa,
   setAddItemToCartTwo,
   setMunicipioAndDistrito,
-  deleteDistrito
+  deleteDistrito,
+  setPlaceAndfrete,
+  setDateOrder,
+  setContact
 } = cartSlice.actions;
 export default cartSlice.reducer;

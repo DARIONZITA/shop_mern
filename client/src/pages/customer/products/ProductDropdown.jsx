@@ -8,8 +8,8 @@ export const ProductDropdown = ({ sortOrder, handleSortOrderChange }) => {
         onChange={handleSortOrderChange}
         className="block w-full rounded-lg border border-gray-300 bg-gray-50 p-4 text-sm text-gray-900 focus:outline-none"
       >
-        <option value="newest">Newest first</option>
-        <option value="oldest">Oldest first</option>
+        <option value="newest">Recentes</option>
+        <option value="oldest">Mais antigos</option>
       </select>
     </div>
   );

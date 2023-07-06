@@ -10,9 +10,9 @@ export const ProductTotal = ({
     <div>
       {filterCategory === "All" ? (
         categoryCount.length > 0 ? (
-          <p>There are a total of {categoryTotal} products.</p>
+          <p>{categoryTotal} Produtos.</p>
         ) : (
-          <p>Product not available.</p>
+          <p>buscando por produtos...</p>
         )
       ) : (
         <>

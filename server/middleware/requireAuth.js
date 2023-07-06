@@ -3,9 +3,9 @@ import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
 
 const requireAuth = async (req, res, next) => {
-  if (req.method === "GET") {
-    return next();
-  }
+  //if (req.method === "GET") {
+    //return next();
+  //}
 
   // authorization contains the token
   const { authorization } = req.headers;
@@ -33,6 +33,7 @@ const requireAuth = async (req, res, next) => {
     // so that it can be accesible on other handler functions
     // this is the ser currently login
     req.user = await Customer.findOne({ _id }).select("_id");
+
     next();
   } catch (error) {
     console.log(error);

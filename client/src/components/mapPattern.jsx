@@ -1,0 +1,194 @@
+import React, { useEffect, useState,useRef } from 'react';
+import { Icon } from 'leaflet';
+import { MapContainer, TileLayer, Marker,Popup} from 'react-leaflet';
+import 'leaflet/dist/leaflet.css';
+import {setMunicipioAndDistrito, deleteDistrito,setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
+
+import { useDispatch, useSelector } from "react-redux";
+import { getAllMarks } from '../features/auth/customerAuthSlice.js';
+
+
+export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
+     
+  // Defina o ícone personalizado
+  const customIcon = new Icon({
+    iconUrl: '../src/assets/gps (3).png',
+    iconSize: [45, 55],
+    iconAnchor: [32, 41],
+  }); 
+  const patternCenter= {
+    coordinates:[-8.8218393,13.2699647],
+    name: 'Luanda',
+    zoom: 11
+  }
+      
+  const dispatch = useDispatch();
+  const mapRef = useRef(null);
+
+ 
+  const {loading,dataMarks,markStatus}= useSelector(store => store.customer);
+
+  const {municipio,municipiosData,distrito} = useSelector((store) => store.cart);
+  const [locationCenter,setlocationCenter]=useState(patternCenter)
+  const [geojsonData, setGeojsonData] = useState(null);  
+
+
+  
+  const changeMunicipio=(event)=>{
+      const {name,coordinates}=JSON.parse(event.target.value)
+      const Mzoom= (name=='Icolo e Bengo')||(name=='Quissama') ? 10 : 12
+      if(distrito){ dispatch( deleteDistrito( ) ) }
+      dispatch(setMunicipioAndDistrito(
+      {
+       municipio:{
+        coordinates,
+        name,
+        zoom: Mzoom
+       }
+  
+      }
+    ))
+  }
+  const changeDistrito=(event)=>{
+    const {name,coordinates}=JSON.parse(event.target.value)
+    
+    const Dzoom= 15
+      dispatch(setMunicipioAndDistrito(
+      {
+       distrito:{
+        coordinates,
+        name,
+        zoom: Dzoom
+       }
+  
+      }
+    ))
+  }
+
+  
+  
+  if(markStatus==='idle'){
+      
+        dispatch(getAllMarks())
+      }
+
+
+  useEffect(()=>{
+    const center = distrito ? distrito : municipio;
+    if (center && center.coordinates) {
+      setlocationCenter(center);}
+      const moveMapToCoordinates = () => {
+    if (mapRef.current) {
+      const map = mapRef.current; // Substitua com as novas coordenadas desejadas
+
+      map.setView(locationCenter.coordinates, locationCenter.zoom); // Substitua 'zoom' pelo nível de zoom desejado
+    }
+  };
+
+  moveMapToCoordinates();
+  },[changeMunicipio])
+  useEffect(() => {
+    
+    fetch('../LuandaMarkers.geojson')
+      .then(response => response.json())
+      .then(data => {
+        setGeojsonData(data.features);
+    
+      })
+      .catch(error => {
+        console.log('Error fetching GeoJSON:', error);
+      });
+    
+  }, [])
+    
+    return(
+        <>
+            <div className={municipio && 'fixed top-20 grid justify-center w-full left-0 m-4 z-10'}>
+            {showMapa && (
+            
+            <label className='font-bold text-center text-lg block '>
+            <select onChange={changeMunicipio} className='p-3 rounded-md text-center'>
+                <option disabled selected value> -- Selecione o Município -- </option>
+
+                {municipiosData.map((feature)=>{
+                return (
+                    <option   
+                    key={feature[1][0]+feature[1][0]} 
+                    value={JSON.stringify({ name: feature[0], coordinates: feature[1] })}>
+                        {feature[0]}
+                    </option>
+                    )
+                })}
+            </select>
+            </label>
+            
+            )}
+            
+            {(geojsonData && municipio && showMapa) && (
+            <label className='font-bold text-center text-lg block '>
+            
+            <select 
+                className='p-3 rounded-md text-center m-4' 
+                value={distrito ? (JSON.stringify({ name: distrito.name, coordinates: distrito.coordinates})):'main'} 
+                onChange={changeDistrito}>
+                
+                <option 
+                disabled 
+                selected 
+                value='main'>  Selecione o Distrito  </option>
+                {geojsonData.filter(( feature ) => feature.properties.county === municipio.name ).map((feature,key)=>{
+           
+                return (
+                    <>
+                    <option 
+                    key={feature.id} 
+                    value={JSON.stringify({ name: feature.properties.name, coordinates: feature.geometry.coordinates})}>
+                    {feature.properties.name}
+                    </option>
+                    </>
+                    )
+                })}
+            </select>
+            <p className='text-white bg-zinc-900 rounded-sm text-lg font-semibold m-2'>Selecione um ponto de encontro</p>
+            </label>
+            )
+            }
+        
+            </div>
+            {(showMapa && municipio) && 
+            (
+            <div className='w-screen h-screen absolute'>
+            <MapContainer 
+                ref={mapRef} 
+                center={locationCenter.coordinates} 
+                zoom={locationCenter.zoom} 
+                style={{height:'50vh', width:'100vw'}}
+                className='fixed bottom-0 left-0 rounded-t-[25%] border-blue-500 border-solid border-2 z-10'
+                >
+
+            <TileLayer 
+                url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
+                />
+
+            {myCoordinates && (
+                <Marker position={[myCoordinates.latitude,myCoordinates.longitude] } icon={customIcon}/>
+                )}
+
+            {dataMarks?.marksData.map((feature)=>(
+                <Marker 
+                key={feature._id}
+                position={feature.coordinates}
+                eventHandlers={{ click: () => handleMarkerClick(feature.name,feature.coordinates)}}
+                >
+                <Popup>
+                    {feature.name}
+                </Popup>
+                </Marker> )
+                )}
+
+            </MapContainer>
+            </div>
+            )}
+        </>
+    )
+}

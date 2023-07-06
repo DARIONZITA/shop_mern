@@ -5,6 +5,7 @@
 @tailwind components;
 @tailwind utilities;
 
+
 /* * {
   outline: red solid 1px;
 } */
@@ -20,7 +21,15 @@
 /* ::-webkit-scrollbar {
   display: none;
 } */
-
+@layer base {
+  
+  tr:nth-child(even) {
+    @apply bg-gray-300
+  }
+  th , td {
+    @apply border-2 border-solid border-gray-600 p-1 text-gray-800  
+  }
+}
 @layer components {
   .btn-primary {
     @apply rounded-sm bg-[#FEEB8A] py-3 px-4 font-bold text-primary shadow-lg transition duration-300 ease-in hover:bg-[rgb(255,231,109)];

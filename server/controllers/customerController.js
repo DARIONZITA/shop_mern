@@ -53,9 +53,13 @@ const customerSignupConfirm = async (req, res) =>{
     user.email,
     user.password,
     user.numberPhone)
-  const customerfirstName=user.firstNameName 
+  const firstName=user.firstNameName 
+  const lastName=user.lastName 
+  const numberPhone= user.numberPhone
+
   await deleteInPending(user._id)
-  res.status(200).json({ customerfirstName, email, token });
+  const token = createToken(user._id);
+  res.status(200).json({ firstName,lastName,email, numberPhone, token });
 
   // Responder ao cliente com sucesso
   
@@ -68,13 +72,14 @@ const customerLogin = async (req, res) => {
   try {
     const customer = await CustomerLoginService(email, password);
 
-    const customerfirstName = customer.firstName;
-    
+    const firstName = customer.firstName;
+    const lastName=customer.lastName 
+    const numberPhone= customer.numberPhone
     const token = createToken(customer._id);
     console.log(customer._id)
-    res.status(200).json({ customerfirstName, email, token });
+    res.status(200).json({ firstName,lastName, email, numberPhone, token });
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(500).json({ error: error.message });
   }
 };
 
@@ -117,9 +122,26 @@ const customerUpadate = async(req,res)=>{
 
 }
 
+const MyOrders = async(req, res)=>{
+  const userId= req.user
+  const myOrders= await Customer.findById(userId).select('pendingOrders')
+    .populate({
+      path: 'pendingOrders',
+      select: 'prices products',
+      populate: {
+        path: 'products.productId',
+        model: 'Product',
+        select:'name'
+      }
+    })
+
+  res.send({myOrders})
+}
+
 export {
   customerSignup,
   customerSignupConfirm,
   customerLogin,
-  customerUpadate
+  customerUpadate,
+  MyOrders
 };

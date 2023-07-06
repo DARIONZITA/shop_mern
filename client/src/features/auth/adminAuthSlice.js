@@ -1,12 +1,88 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
+import { useDispatch } from "react-redux";
 
 const initialState = {
+  whatShow: 'orders',
   signUpStatus: "idle",
+  ordersStatus: "idle",
+  
   loading: false,
-  admin: null,
+  admin: { firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
   errorSignUp: null,
+  orders:null,
   errorLogIn: null,
 };
+export const orderDone = createAsyncThunk(
+  "admin/orderDone",
+  async (id, thunkAPI) => {
+     let base_url = "http://localhost:3000/api/orders/done"
+
+    //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
+
+    try {
+      base_url=`${base_url}/${id}`
+      const response = await fetch(base_url, {
+        method: "PATCH",
+        headers: {
+          "Content-Type": "application/json",
+        },
+      });
+
+      const data = await response.json();
+
+      if (response.ok) {
+        console.log(data)
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
+
+export const readOrder = createAsyncThunk(
+  "customer/readOrder",
+  async (data, thunkAPI) => {
+    let page=''
+    let done=false
+    if(data){
+      if(data.page){
+        page=`&page=${data.page}`
+      }
+      if(data.done){
+        done=true
+      }
+    }
+
+     let base_url = "http://localhost:3000/api/orders/getAll";
+
+   // let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
+
+    try {
+      base_url=`${base_url}?isDone=${done}${page}`
+      console.log(base_url);
+
+      const response = await fetch(base_url);
+      const data = await response.json();
+
+     
+
+      if (response.ok) { 
+        console.log(data);
+        return data;
+      } else {
+        return thunkAPI.rejectWithValue({
+          error: data.error,
+        });}
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error.message });
+    }
+  }
+)
 
 // Sign Up
 export const adminSignup = createAsyncThunk(
@@ -101,9 +177,15 @@ const adminAuthSlice = createSlice({
     adminLogOutAction: (state) => {
       state.admin = null;
     },
+    setOrders: (state, action) =>{
+      state.orders=action.payload
+    },
     setAdmin: (state, action) => {
       state.admin = action.payload;
     },
+    setWhatShow: (state, action) => {
+      state.whatShow= action.payload
+    }
   },
   extraReducers: (builder) => {
     builder
@@ -145,9 +227,38 @@ const adminAuthSlice = createSlice({
         state.loading = false;
         state.admin = null;
         state.errorLogIn = action.payload.error;
-      });
+      })
+      //done order
+      .addCase(orderDone.pending, (state) => {
+        state.loading = true;
+        })
+      .addCase(orderDone.fulfilled, (state, action) => {
+        state.loading = false;
+        })
+      .addCase(orderDone.rejected, (state, action) => {
+        state.loading = true;
+       })
+      //get orders
+      .addCase(readOrder.pending, (state) => {
+        state.ordersStatus = "loading";
+        state.loading = true;
+        state.orders = null;
+        state.errorSignUp = null;
+      })
+      .addCase(readOrder.fulfilled, (state, action) => {
+        state.ordersStatus = "succeeded";
+        state.loading = false;
+        state.orders = action.payload;
+        state.errorSignUp = null;
+      })
+      .addCase(readOrder.rejected, (state, action) => {
+        state.ordersStatus = "failed";
+        state.loading = false;
+        state.orders = null;
+        state.errorSignUp = action.payload.error;
+      })
   },
 });
 
-export const { adminLogOutAction, setAdmin } = adminAuthSlice.actions;
+export const { adminLogOutAction,setWhatShow, setAdmin } = adminAuthSlice.actions;
 export default adminAuthSlice.reducer;

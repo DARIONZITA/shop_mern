@@ -2,12 +2,14 @@ import React, { useEffect, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 //materials
-
+import Backdrop from '@mui/material/Backdrop';
+import Modal from '@mui/material/Modal';
+import {DialogTitle,DialogContentText,DialogContent,DialogActions,Dialog,TextField,Button,Fade,} from '@mui/material';
 import IconButton from '@mui/material/IconButton';
 import Badge from '@mui/material/Badge';
 import NotificationsIcon from '@mui/icons-material/Notifications';
-
-
+import CloseIcon from '@mui/icons-material/Close';
+import Popover from '@mui/material/Popover';
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -24,10 +26,10 @@ import { FaSort } from "react-icons/fa";
 import { RiFilterOffFill } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
 import { MdOutlineAccountCircle } from "react-icons/md";
-
+import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Cart } from "../../pages/customer/cart/index.js";
-import { customerLogOut } from "../../features/auth/customerAuthSlice";
+import { CancelOrder, UpadateOrderPending, changeData, customerLogOut } from "../../features/auth/customerAuthSlice";
 import {
   setFilterCategory,
   setSearch,
@@ -36,6 +38,33 @@ import {
 
 const Navbar = () => {
   const location = useLocation();
+  //modal confirm
+  const [textConfirm, setTextConfirm] = useState('')
+  const [openConfirm, setOpenConfirm] = useState(null);
+
+  const handleClickOpen = (key,OrderId) => {
+    
+    setOpenConfirm({key,OrderId});
+  };
+
+  const handleCloseConfirm = () => {
+    setOpenConfirm(null);
+    setTextConfirm('')
+  };
+  //modal pending order
+  const [anchorEl, setAnchorEl] = useState(null);
+
+  const handleClick = (event) => {
+    setAnchorEl(event.currentTarget);
+  };
+
+  const handleCloseOrder = () => {
+    setAnchorEl(null);
+  };
+
+  const openOrder = Boolean(anchorEl);
+  const id = openOrder ? 'simple-popover' : undefined;
+  
   // Check if the user is on the products page
   const isProductsPage = location.pathname === "/products";
 
@@ -49,9 +78,40 @@ const Navbar = () => {
 
   const dispatch = useDispatch();
   const { cartState, cartTotalQuantity } = useSelector((store) => store.cart);
-  const { customer } = useSelector((store) => store.customer);
-  const { products, search } = useSelector((store) => store.productsCustomer);
+  const { customer, orderPending, ordersStatus} = useSelector((store) => store.customer);
+  const { products, search, categoryStatic } = useSelector((store) => store.productsCustomer);
+  //change data
+  const [showInput,setShowInput]= useState(null)
+  let [number, setNumber] = useState(customer?.numberPhone)
+  const [firstName, setFirstName] = useState(customer?.firstName)
+  const [lastName, setLastName]=useState(customer?.lastName)
+  //modal user
+  const [open, setOpen] = useState(false);
+  const handleOpen = () => setOpen(true);
+  const handleClose = () => setOpen(false);
+  const inputStyle='bg-gray-300 outline-indigo-300 p-2 m-3 rounded-sm'
+  const [isValidPhoneNumber,setIsValidatorNumber]=useState(true) 
+  const Update=()=>{
+    if(showInput==='name'){
+      dispatch(changeData({
+        firstName,
+        lastName
+      }))
+      //setShowInput(null)
 
+    }
+    if(showInput==='number'){
+      if(number.toString().length===9){
+          dispatch(changeData({
+        numberPhone:Number(number)
+      }))
+      }else{setIsValidatorNumber(false)}
+     
+      //setShowInput(null)
+   
+    }
+   
+  }
   // mobile dropdown
   const handleDropdown = () => {
     setDropdown(!dropdown);
@@ -91,7 +151,16 @@ const Navbar = () => {
     setFilterNav(false); // hide filter nav when sort nav is shown
     setDropdown(false);
   };
+  const changeNumber=(event)=>{
+    const numberPhone=event.target.value
+    const IsValidPhone=/^\d+$/.test(numberPhone);
+    let phoneOnly=numberPhone.replace('+244','')
+    if(IsValidPhone){
+      setNumber(phoneOnly)
+    }
+    
 
+  }
   // mobile searchNav
   const handleSearchNav = () => {
     setSearchNav(!searchNav);
@@ -137,7 +206,7 @@ const Navbar = () => {
       setSearchNav(false);
       setFilterNav(false);
       setSortNav(false);
-      setDropdown(false);
+      setDropdown(false); 
     }
   };
 
@@ -148,8 +217,24 @@ const Navbar = () => {
       setNavColor(false);
     }
   };
+  // cancelar encomenda
+  const cancelOrder=(idOrder) => {
+    setOpenConfirm(null);
+    setTextConfirm('')
+    dispatch(CancelOrder(idOrder))
+    window.location.reload(true);
+    
+    
+  }
 
+  useEffect(()=>{
+    if(ordersStatus=='idle'){
+      
+      dispatch(UpadateOrderPending())
+    }
+  },[ordersStatus,dispatch])
   useEffect(() => {
+    
     window.addEventListener("scroll", changeBackground);
 
     return () => {
@@ -214,7 +299,7 @@ const Navbar = () => {
                       onClick={handleDropdown}
                       className="flex items-center space-x-0.5 transition duration-200 ease-in-out hover:text-primary"
                     >
-                      <span>{customer.customerfirstName}</span>
+                      <span>{customer.firstName}</span>
                       <IoIosArrowDown />
                     </button>
 
@@ -227,9 +312,91 @@ const Navbar = () => {
                         <div className="py-1">
                           <div className="flex flex-col border-b border-slate-400 px-6 py-2">
                             <span className="text-base">Usuário</span>
-                            <span className="text-sm font-medium">
+                            <span 
+                              className="text-sm font-medium">
+
                               {customer.email}
                             </span>
+                            <button onClick={handleOpen} className="btn-secondary">Detalhes</button>
+                            <Modal
+                                  aria-labelledby="transition-modal-title"
+                                  aria-describedby="transition-modal-description"
+                                  open={open}
+                                  onClose={handleClose}
+                                  closeAfterTransition
+                                  slots={{ backdrop: Backdrop }}
+                                  slotProps={{
+                                    backdrop: {
+                                      timeout: 500,
+                                    },
+                                  }}
+                                >
+                                  <Fade in={open}>
+                                    <div className='w-screen h-screen grid justify-center absolute content-center'>
+                                      <div className='grid p-6 bg-white border-black border-solid border-2 h-min max-w-2xl rounded-md justify-center'>
+                                      <button onClick={handleClose} className='justify-self-end'><CloseIcon /></button>
+                                      <h2 className='text-2xl m-2 text-center font-bold text-white bg-gray-800 rounded-md'>
+                                        PERFIL
+                                      </h2>
+                                      <div className="text-lg p-3">Nome: <strong>{customer.firstName} {customer.lastName}</strong> </div>
+                                      {showInput==='name' && (
+                                        <>
+                                        <label 
+                                          className="text-center"
+                                          htmlFor="firstName">
+                                            Primeiro:  
+                                            <input 
+                                              onChange={
+                                                (e)=>setFirstName(e.target.value)
+                                                }   
+                                              type="text" 
+                                              name="firstName"
+                                              className={inputStyle} 
+                                              value={firstName} /> 
+                                        </label>
+                                        <label htmlFor="lastName"  className="text-center margin-auto">
+                                          Último:  
+                                          <input onChange={
+                                            (e)=>setLastName(e.target.value)
+                                            } 
+                                            type="text" 
+                                            name="lastName" 
+                                            value={lastName}
+                                            className={inputStyle} 
+                                            /> 
+                                        </label>
+                                        <div className="flex justify-around">
+                                          <button className="btn-secondary bg-red-300" onClick={()=>setShowInput(null)}>Cancelar</button>
+                                          <button className="btn-secondary " onClick={Update}>Confirmar</button>
+                                          
+                                        </div>
+                                        </>
+                                      )}
+                                      <Button onClick={()=>setShowInput('name')}>Alterar Nome</Button>
+                                      <div className='text-lg p-3'>Número de telefone: <strong>{customer.numberPhone}</strong></div>
+                                      {showInput==='number' && (
+                                        <>
+                                        <input className={inputStyle} type="tel" pattern="(\+244)?9\d{8}"  value={number} onChange={changeNumber} />
+                                        {!isValidPhoneNumber && (
+                                          <small className="text-red-400">Número de telefone invalido </small>
+                                        )}
+                                        <div className="flex justify-around">
+                                          <button className="btn-secondary bg-red-300" onClick={()=>setShowInput(null)}>Cancelar</button>
+                                          <button className="btn-secondary" onClick={Update}>Confirmar</button>
+                                          
+                                        </div>
+                                        </>
+                                      )}
+                                      <Button onClick={()=>setShowInput('number')} >Alterar Número</Button>
+                                      <div className='text-lg p-3'>E-mail: <strong>{customer.email}</strong></div>
+
+                                    
+                                      </div>
+                                    </div>
+                                  
+                                  </Fade>
+                            </Modal>
+
                           </div>
 
                           {/* <NavLink
@@ -371,16 +538,113 @@ const Navbar = () => {
                   </Badge>
                   
                 </div>
-                <IconButton
+                {(orderPending && orderPending.length!==0) && 
+                (
+                <>
+                  <IconButton
+                      aria-describedby={id} 
+                      variant="contained" 
+                      onClick={handleClick}
                       size="large"
                       aria-label="show 17 new notifications"
                       color="inherit">
-                      
-                      <Badge badgeContent={17} color="success">
+                      <Badge badgeContent={orderPending.length} color="success">
                         <NotificationsIcon />
                       </Badge>
                  </IconButton>
-              </div>
+                 <Popover
+                    classes='w-96'
+                    id={id}
+                    open={openOrder}
+                    anchorEl={anchorEl}
+                    onClose={handleCloseOrder}
+                    anchorOrigin={{
+                      vertical: 'bottom',
+                      horizontal: 'left',
+                    }}
+                  >
+                    
+                  <div className="w-96 h-auto">
+                    {orderPending.map((oneOrder,k)=>( 
+                    
+                  <div key={`${oneOrder._Id} ${k}`} className="relative m-5 mt-10 bg-slate-200 rounded-md p-2
+                  ">
+                    
+                    <div className="relative">
+                      <span className="absolute -top-3 right-4 z-20">
+                        <IconButton
+                          onClick={() => handleClickOpen(k,oneOrder._Id)}
+                          aria-label="delete" 
+                          color="error">
+                          <DeleteIcon fontSize='large' />
+                        </IconButton>
+                      </span>
+                      <h1 className=" text-center font-semibold text-lg m-2 text-gray-600">Encomenda {k+1}</h1>
+                      
+                    
+                      
+
+                    </div>
+                          
+                        <span className="absolute opacity-70 top-0 left-4 bg-gray-800  rounded-md p-2 m-2 text-lg text-white text-bold z-20">{oneOrder.prices.priceTotal} Kz</span>
+                        <div className=" m-2 p-2 h-32 overflow-y-auto border-solid border-{0.2} border-gray-400 shadow-inner shadow-gray-400 rounded-md" >
+                        
+                          {oneOrder.products.map((product,key)=>(
+                       
+                       
+                        <div key={Math.log10(key)} className="flex justify-between m-4 font-semibold pr-2">
+                       
+                          <span>
+                            {product.productId.name}
+                          </span>
+                          <span>
+                            {product.quantity}
+                          </span>
+                          </div>
+                      
+                        ))}
+                        </div>
+                     </div>
+                     
+                    )
+                  )}
+
+                  </div>
+                  </Popover>
+                  {(openConfirm!==null) && (
+                    <div>
+                    <Dialog open={openConfirm!==null} onClose={handleCloseConfirm}>
+                      <DialogTitle>Cancelar encomenda</DialogTitle>
+                      <DialogContent>
+                        <DialogContentText>
+                          Para cancelares esta encomenda digite <strong>Encomenda {openConfirm.key + 1}</strong>
+                        </DialogContentText>
+                        <TextField
+                          autoFocus
+                          margin="dense"
+                          id="name"
+                          value={textConfirm}
+                          onChange={(e)=>setTextConfirm(e.target.value)}
+                          label="Digite aqui"
+                          type="text"
+                          fullWidth
+                          color="error"
+                          variant="standard"
+                        />
+                      </DialogContent>
+                      <DialogActions>
+                        <Button color="warning" onClick={handleCloseConfirm}>Cancelar</Button>
+                        <Button disabled={textConfirm!==`Encomenda ${openConfirm.key + 1}`} color="warning" onClick={()=>cancelOrder(openConfirm.OrderId)}>Confirmar</Button>
+                      </DialogActions>
+                    </Dialog>
+                  </div>
+                  )}
+                  
+                </>
+                  
+                )
+                }
+                </div>
             </div>
           </div>
 
@@ -452,6 +716,8 @@ const Navbar = () => {
           <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
               <button onClick={() => onClickCat("All")}>All</button>
+       
+         
               {products.categories?.map((cat) => (
                 <button key={cat} onClick={() => onClickCat(cat)}>
                   {cat}

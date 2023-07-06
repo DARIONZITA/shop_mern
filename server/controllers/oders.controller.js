@@ -76,7 +76,7 @@ const getAllOrders=async(req, res) => {
           req.query.sort === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
     
         const page = parseInt(req.query.page) - 1 || 0;
-        const limit = parseInt(req.query.limit) || 9;
+        const limit = parseInt(req.query.limit) || 6;
         const { user, product, isDone } = req.query;
 
         // Crie um objeto de filtro vazio inicialmente
@@ -89,25 +89,41 @@ const getAllOrders=async(req, res) => {
         if (product) {
         filter['products.productId'] = product;
         }
-        if (isDone !== undefined) {
+        if (isDone) {
         filter.isDone = isDone === 'true';
+      
         }
 
 
       
-        const orderData = await Order.find({
+        const orderData = await Order.find(
           filter
-        })
+        )
+              .populate(
+                {
+                  path: 'products.productId',
+                  model: 'Product',
+                  select:'name price'
+              
+                }
+              )
+            .populate(
+              {
+              path: 'user',
+              select: 'firstName lastName email numberPhone'      
+              }
+            )
           .sort(sortObject)
           .skip(page * limit)
           .limit(limit);
-    
-        const total = await Order.countDocuments({
+
+        const total = await Order.countDocuments(
           filter
-        });
+        );
     
         const response = {
           error: false,
+          isDone: filter.isDone ,
           total,
           page: page + 1,
           limit,

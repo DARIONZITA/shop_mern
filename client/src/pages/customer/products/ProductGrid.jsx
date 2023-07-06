@@ -52,7 +52,7 @@ export const ProductGrid = ({ products, handleAddToCart }) => {
                   )
                 }
               >
-                + ADD TO CART
+                + Adicionar ao Carrinho
               </button>
             </div>
 

@@ -79,9 +79,9 @@ fs.readFile('./LuandaMarkers.geojson', 'utf8', (err, data) => {
     console.log(geojson.features.length)
     // Modificar as propriedades desejadas
     
-    geojson.features.forEach((feature, index) =>feature.geometry.coordinates=[feature.geometry.coordinates[1],feature.geometry.coordinates[0]])
+    const newjson=geojson.features.map((feature, index) =>{return {name:feature.properties.name,coordinates:feature.geometry.coordinates}})
     // Converter o objeto JavaScript de volta para uma string .geojson
-    const modifiedGeojson = JSON.stringify(geojson, null, 2);
+    const modifiedGeojson = JSON.stringify(newjson, null, 2);
   
     // Gravar a string modificada de volta no arquivo .geojson
     fs.writeFile('./LuandaMarkers.geojson', modifiedGeojson, 'utf8', (err) => {

@@ -27,7 +27,7 @@ import {
 const Products = () => {
   const dispatch = useDispatch();
 
-  const { products, sortOrder, search, filterCategory, page } = useSelector(
+  const { products,categoryStatic, sortOrder, search, filterCategory, page } = useSelector(
     (store) => store.productsCustomer
   );
 
@@ -36,7 +36,7 @@ const Products = () => {
   }, [sortOrder, search, filterCategory, page]);
 
   const filteredBanners =
-    filterCategory === "All"
+    !(filterCategory === "All")
       ? bannerImages.find((banner) => banner.category === "All")
       : bannerImages.filter((banner) => banner.category === filterCategory);
 
@@ -107,7 +107,7 @@ const Products = () => {
         {/* grid div */}
         <div className="grid md:grid-cols-4 md:space-y-0">
           {/* navigation left */}
-          <ProductNav onClickCat={onClickCat} products={products} />
+          <ProductNav onClickCat={onClickCat} products={products} categoryStatic={categoryStatic}/>
 
           {/* main right */}
           <div className="space-y-5 md:col-span-3">
@@ -137,7 +137,7 @@ const Products = () => {
             {!products.productsData?.length > 0 ? (
               <div className="flex h-80 items-center justify-center">
                 <span className="flex items-center justify-center gap-2">
-                  Loading... please wait <ImSpinner2 className="animate-spin" />
+                  Carregando... Espere <ImSpinner2 className="animate-spin" />
                 </span>
               </div>
             ) : (

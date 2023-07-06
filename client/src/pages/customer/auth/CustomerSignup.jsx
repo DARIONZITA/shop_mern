@@ -28,6 +28,13 @@ export const CustomerSignup = () => {
     }
 
   }
+  const verifyPhone=(e)=>{
+    const numberPhone=e.target.value
+    const isValidPhoneNumber = /^\d+$/.test(numberPhone);
+    if(isValidPhoneNumber){setPhone(numberPhone)}
+
+
+  }
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -78,7 +85,7 @@ export const CustomerSignup = () => {
               type="tel"
               name="numberPhone"
               pattern="(\+244)?9\d{8}"
-              onChange={(e) => setPhone(e.target.value)}
+              onChange={verifyPhone}
               value={phone}
               placeholder="Número de Telefone"
               className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"

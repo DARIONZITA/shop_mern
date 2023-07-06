@@ -29,7 +29,8 @@ const customerSchema = new Schema({
     unique:true 
   },
   pendingOrders:{
-    type:Array,
+    _id: false,
+    type: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Order' }],
     default:[]
   }
   

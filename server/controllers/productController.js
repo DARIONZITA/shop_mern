@@ -89,7 +89,7 @@ const readProducts = async (req, res) => {
     const search = req.query.search || "";
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 9;
-    const maxPrice= parseInt(req.query.maxPrice) || 1000000
+  const maxPrice= parseInt(req.query.maxPrice) || 1000000
 
 
     let category = req.query.category || "All";

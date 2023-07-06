@@ -5,9 +5,10 @@ import Logo from "../assets/logo.jpg";
 import { HiMenuAlt2 } from "react-icons/hi";
 
 import { useDispatch, useSelector } from "react-redux";
-import { adminLogOut } from "../features/auth/adminAuthSlice";
+import { adminLogOut, setWhatShow } from "../features/auth/adminAuthSlice";
+import { readOrder } from "../features/auth/adminAuthSlice"; 
 
-const NavbarAdmin = () => {
+const   NavbarAdmin = () => {
   const [navColor, setNavColor] = useState(false);
   const [nav, setNav] = useState(false);
 
@@ -63,6 +64,10 @@ const NavbarAdmin = () => {
             <ul className="hidden space-x-3 md:flex">
               {admin ? (
                 <li className="space-x-3 font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
+                  
+                  <button onClick={()=>dispatch(setWhatShow('orders'))} className="btn-secondary">Encomendas</button>
+                  <button onClick={()=>dispatch(setWhatShow('products'))} className="btn-secondary">Produtos</button>
+                  <button onClick={()=>dispatch(setWhatShow('coordinates'))} className="btn-secondary">Coordenadas</button>
                   <span>{admin.email}</span>
                   <button onClick={handleLogout}>Logout</button>
                 </li>
