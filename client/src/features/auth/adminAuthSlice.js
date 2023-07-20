@@ -1,13 +1,12 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 import { useDispatch } from "react-redux";
 
-const initialState = {
+const initialState = {  
   whatShow: 'orders',
   signUpStatus: "idle",
   ordersStatus: "idle",
-  
   loading: false,
-  admin: { firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
+  admin: null,// { firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
   errorSignUp: null,
   orders:null,
   errorLogIn: null,
@@ -15,8 +14,9 @@ const initialState = {
 export const orderDone = createAsyncThunk(
   "admin/orderDone",
   async (id, thunkAPI) => {
-     let base_url = "http://localhost:3000/api/orders/done"
 
+    let base_url = "http://localhost:3000/api/orders/done"
+    let {token} = initialState.admin 
     //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
 
     try {
@@ -25,6 +25,7 @@ export const orderDone = createAsyncThunk(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
+           Authorization: `Bearer ${token}`
         },
       });
 
@@ -49,6 +50,7 @@ export const readOrder = createAsyncThunk(
   async (data, thunkAPI) => {
     let page=''
     let done=false
+    const { admin } = thunkAPI.getState().admin
     if(data){
       if(data.page){
         page=`&page=${data.page}`
@@ -66,7 +68,11 @@ export const readOrder = createAsyncThunk(
       base_url=`${base_url}?isDone=${done}${page}`
       console.log(base_url);
 
-      const response = await fetch(base_url);
+      const response = await fetch(base_url,{
+        headers : {
+          Authorization: `Bearer ${admin.token}`
+        } 
+           });
       const data = await response.json();
 
      
@@ -88,9 +94,10 @@ export const readOrder = createAsyncThunk(
 export const adminSignup = createAsyncThunk(
   "admin/adminSignup",
   async (dataObj, thunkAPI) => {
-    // let base_url = "http://localhost:7001/api/admin/signup"
+     const { admin } = thunkAPI.getState().admin
+     let base_url = "http://localhost:3000/api/admin/signup"
 
-    let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
+    //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
 
     try {
       const response = await fetch(base_url, {
@@ -98,6 +105,7 @@ export const adminSignup = createAsyncThunk(
         body: JSON.stringify(dataObj),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${admin.token}`
         },
       });
 
@@ -123,9 +131,9 @@ export const adminSignup = createAsyncThunk(
 export const adminLogin = createAsyncThunk(
   "admin/adminLogin",
   async (dataObj, thunkAPI) => {
-    // let base_url = "http://localhost:7001/api/admin/login"
+     let base_url = "http://localhost:3000/api/admin/login"
 
-    let base_url = "https://goodal-mern.onrender.com/api/admin/login";
+    // let base_url = "https://goodal-mern.onrender.com/api/admin/login";
 
     try {
       const response = await fetch(base_url, {

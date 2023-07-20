@@ -13,8 +13,8 @@ const router = Router();
 
 // SIGNUP
 
-router.post("/signup",customerSignupConfirm)
-router.post("/signup/verifyEmail", customerSignup);
+router.post("/signup/verifyEmail",customerSignupConfirm)
+router.post("/signup", customerSignup);
 // LOGIN
 router.post("/login", customerLogin);
 

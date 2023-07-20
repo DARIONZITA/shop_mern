@@ -14,6 +14,8 @@ import {
   setSearch,
   setSortOrder,
 } from "../../features/admin/product/productAdminSlice";
+import FilterCategory from "../../components/filterCategory";
+import { setWhatShow } from "../../features/auth/adminAuthSlice";
 
 export const AdminProducts = () => {
   const [selectedCategory, setSelectedCategory] = useState("All");
@@ -31,8 +33,9 @@ export const AdminProducts = () => {
     filterCategory,
     currentId,
     loadingDelete,
+    
   } = useSelector((store) => store.productsAdmin);
-
+  const categoryStatic= useSelector((store)=>store.productsCustomer.categoryStatic)
   console.log(products);
 
   useEffect(() => {
@@ -126,41 +129,18 @@ export const AdminProducts = () => {
   }
 
   return (
-    <div className="col-span-2 space-y-5 font-urbanist">
+    <div className="flex">
       {/*  nav */}
-      <div className="space-y-5 rounded-lg border border-zinc-200 bg-green-200 p-5 shadow-md">
+      
+      <div className="space-y-5 w-60 rounded-lg border border-zinc-200 bg-green-700 p-5 shadow-md">
+        
         {/* filter */}
         <ul className="flex justify-center space-x-3 text-base font-bold tracking-wide text-bgcolor3 md:text-lg lg:text-xl">
-          <li
-            className="cursor-pointer rounded-lg bg-all2 py-3 px-5 shadow-lg transition duration-300 ease-in-out hover:bg-all"
-            onClick={() => onClickCat("All")}
-          >
-            All Product
-          </li>
-
-          {products.categories?.map((cat) => (
-            <li
-              key={cat}
-              onClick={() => onClickCat(cat)}
-              className={`cursor-pointer rounded-lg ${
-                cat == "Green Tangerine" && "bg-green_tangerine2"
-              } ${cat == "Apple Aha" && "bg-apple_aha2"} ${
-                cat == "Heart Leaf" && "bg-heart_leaf2"
-              } ${
-                cat == "Apricot Collagen" && "bg-apricot_collagen2"
-              } py-3 px-5 shadow-lg transition duration-300 ease-in-out ${
-                cat == "Green Tangerine" && "hover:bg-green_tangerine"
-              } ${cat == "Apple Aha" && "hover:bg-apple_aha"} ${
-                cat == "Heart Leaf" && "hover:bg-heart_leaf"
-              } ${cat == "Apricot Collagen" && "hover:bg-apricot_collagen"}`}
-            >
-              {cat}
-            </li>
-          ))}
+          <FilterCategory categoryStatic={categoryStatic}/>
         </ul>
 
         {/* dropdown, seacrh, total */}
-        <div className="flex items-center space-x-3">
+        <div className="flex flex-col items-center space-x-3">
           <select
             value={sortOrder}
             onChange={handleSortOrderChange}
@@ -169,8 +149,7 @@ export const AdminProducts = () => {
             <option value="newest">Newest first</option>
             <option value="oldest">Oldest first</option>
           </select>
-
-          <div className="relative font-urbanist">
+          <div className="relative font-urbanist m-4">
             <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center px-3">
               <FiSearch className="h-5 w-5 text-gray-500" />
             </div>
@@ -208,6 +187,10 @@ export const AdminProducts = () => {
               )}
             </>
           )}
+          
+        <section className="w-full grid">
+              <button className="btn-secondary">Ver Produtos {products.stock ? `Esgotados` : `Diponíveis`} </button>
+        </section>
         </div>
       </div>
 
@@ -243,12 +226,21 @@ export const AdminProducts = () => {
               <span className="font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl">
                 {formatPrice(product.price)}
               </span>
+              {/* quantidade em stock */}
+              
+              <span className={`block font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl`}>
+                Estoque : {(product.stock && product.stock != 0) ?`${product.stock} Unidades`  : (<span className="text-red-300">Esgotado</span>)} 
+              </span>
 
               {/*  edit & del */}
+
               <div className="flex items-center justify-center gap-3">
                 <button
                   type="button"
-                  onClick={() => handleEdit(product._id)}
+                  onClick={() =>{
+                    dispatch(setWhatShow('createProduct'))
+                    handleEdit(product._id)
+                  } }
                   className="flex cursor-pointer items-center rounded bg-primary py-1 px-2 text-bgcolor transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary"
                 >
                   <p className="text-base md:text-[16px]">Edit</p>

@@ -1,15 +1,51 @@
 import React, { useEffect, useState,useRef } from 'react';
 import { Icon } from 'leaflet';
-import { MapContainer, TileLayer, Marker,Popup} from 'react-leaflet';
+import { MapContainer, TileLayer, Marker,Popup, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {setMunicipioAndDistrito, deleteDistrito,setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
 
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
+import { AddMark } from './modalMarkAddAdmin.jsx';
+
+function UpMarker() {
+  const [open, setOpen]=useState(true)
+  const handleClose=()=>{
+    setOpen(false)
+  }
+
+  const customIcon = new Icon({
+    iconUrl: '../src/assets/placeholder.png',
+    iconSize: [45, 45],
+    iconAnchor: [32, 32],
+  }); 
+  const [position, setPosition] = useState(null)
+  const map = useMapEvents({
+    dblclick(e) {
+      setOpen(true)
+      console.log("double clicked");
+      const { lat, lng } = e.latlng;
+      setPosition({lat,lng})
+       }
+    })
+  if(position){
+    
+  }
+  return position === null ? null : (
+    <>
+    <Marker opacity={open ? 0.6 : 0.2} position={position} icon={customIcon}>
+      <Popup>Novo ponto aqui</Popup>
+    </Marker>
+    <AddMark open={open} handleClose={handleClose} lat={position.lat} lan={position.lng}/>
+  
+    </>
+  )
+}
 
 
-export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
-     
+export const MapPattern=(props)=>{
+  const admin= props.admin ? true : false 
+  const {showMapa,myCoordinates, handleMarkerClick}=props
   // Defina o ícone personalizado
   const customIcon = new Icon({
     iconUrl: '../src/assets/gps (3).png',
@@ -30,8 +66,7 @@ export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
 
   const {municipio,municipiosData,distrito} = useSelector((store) => store.cart);
   const [locationCenter,setlocationCenter]=useState(patternCenter)
-  const [geojsonData, setGeojsonData] = useState(null);  
-
+  const [geojsonData, setGeojsonData] = useState(null); 
 
   
   const changeMunicipio=(event)=>{
@@ -66,13 +101,10 @@ export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
   }
 
   
+  if(markStatus==='idle' && showMapa){
+      dispatch(getAllMarks())
+    }
   
-  if(markStatus==='idle'){
-      
-        dispatch(getAllMarks())
-      }
-
-
   useEffect(()=>{
     const center = distrito ? distrito : municipio;
     if (center && center.coordinates) {
@@ -162,10 +194,10 @@ export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
                 ref={mapRef} 
                 center={locationCenter.coordinates} 
                 zoom={locationCenter.zoom} 
+                doubleClickZoom={!admin} 
                 style={{height:'50vh', width:'100vw'}}
                 className='fixed bottom-0 left-0 rounded-t-[25%] border-blue-500 border-solid border-2 z-10'
                 >
-
             <TileLayer 
                 url="https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png"
                 />
@@ -173,12 +205,15 @@ export const MapPattern=({showMapa, myCoordinates, handleMarkerClick})=>{
             {myCoordinates && (
                 <Marker position={[myCoordinates.latitude,myCoordinates.longitude] } icon={customIcon}/>
                 )}
+                {
+                  admin && (<UpMarker />)
+                }
 
             {dataMarks?.marksData.map((feature)=>(
                 <Marker 
                 key={feature._id}
                 position={feature.coordinates}
-                eventHandlers={{ click: () => handleMarkerClick(feature.name,feature.coordinates)}}
+                eventHandlers={{ dblclick: () => handleMarkerClick(feature.name,feature._id)}}
                 >
                 <Popup>
                     {feature.name}

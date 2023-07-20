@@ -3,7 +3,7 @@ import { useDispatch, useSelector } from "react-redux";
 
 import { Routes, Route, useLocation, Navigate } from "react-router-dom";
 import { checkAdmin } from "./features/auth/adminAuthSlice";
-import { UpadateOrderPending, checkCustomer } from "./features/auth/customerAuthSlice";
+import {  checkCustomer } from "./features/auth/customerAuthSlice";
 
 
 
@@ -19,7 +19,7 @@ import {
   AdminSharedLayout,
   AdminLoginLayout,
   AdminDashboardLayout,
-  CustomerSignupLayout,
+  CustomerSignupLayout, 
   CustomerLoginLayout,
   CustomerConfirmLayout,
   SettingsLayout,
@@ -28,8 +28,8 @@ import {
 function App() {
   const dispatch = useDispatch();
   const { admin } = useSelector((store) => store.admin);
-  const { customer, customerPending } = useSelector((store) => store.customer);
-
+  const  customer = useSelector((store) => store.customer.customer);
+  const customerPending  = useSelector((store) => store.customer.customerPending);
   const Wrapper = ({ children }) => {
     const location = useLocation();
     useLayoutEffect(() => {
@@ -41,6 +41,7 @@ function App() {
   useEffect(() => {
     dispatch(checkAdmin());
     dispatch(checkCustomer());
+   // dispatch(update)
  
   }, []);
 
@@ -56,7 +57,7 @@ function App() {
 
           <Route
             path="/customer/signup"
-            element={customerPending ? <CustomerConfirmLayout/> : customer ? <Navigate to="/" /> : <CustomerSignupLayout />}
+            element={customerPending ? <CustomerConfirmLayout/> : (customer ? <Navigate to="/" /> : <CustomerSignupLayout />)}
           />
           <Route
             path="/customer/login"
@@ -80,10 +81,10 @@ function App() {
           <Route
             path="/admin/signup"
             element={
-              !admin ? (
+               admin ? (
                 <AdminSignupLayout />
               ) : (
-                <Navigate to="/admin/dashboard" />
+                <Navigate to="/admin/login" />
               )
             }
           />

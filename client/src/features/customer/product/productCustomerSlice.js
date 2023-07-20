@@ -113,9 +113,9 @@ export const readCustomerProducts = createAsyncThunk(
     const { sortOrder, search,filterPrice, filterCategory, page } =
       thunkAPI.getState().productsCustomer;
 
-    // let base_url = "http://localhost:7001/api/products";
+     let base_url = "http://localhost:3000/api/products";
 
-    let base_url = "https://goodal-mern.onrender.com/api/products";
+   // let base_url = "https://goodal-mern.onrender.com/api/products";
 
     try {
   

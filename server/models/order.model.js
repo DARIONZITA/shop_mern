@@ -33,7 +33,6 @@ const orderSchema = new Schema(
        },     
        pricePaid:{
         type: Number,
-        required: true,  
         default:0
        }
     },
@@ -64,5 +63,5 @@ const orderSchema = new Schema(
     
   }
 );
-
-export default mongoose.model("Order", orderSchema);
+const Order = mongoose.model("Order", orderSchema);
+export default Order 

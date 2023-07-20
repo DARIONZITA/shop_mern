@@ -4,7 +4,7 @@ import jwt from "jsonwebtoken";
 // create token function. we can use this function many times
 // userid + secret = token
 const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "3d" });
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "90d" });
 };
 
 // SIGNUP

@@ -1,13 +1,14 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-// const url = "http://localhost:7001/api/products/";
+const url = "http://localhost:3000/api/products/";
 
-const url = "https://goodal-mern.onrender.com/api/products/";
+//const url = "https://goodal-mern.onrender.com/api/products/";
 
 const initialState = {
   productData: {
-    category: "",
+    category: [],
     name: "",
+    stock: "",
     price: "",
     imgOne: "",
     imgTwo: "",
@@ -45,11 +46,13 @@ export const createAdminProduct = createAsyncThunk(
         emptyFields: [],
       });
     }
-
+   
+    const dataProduct={...product,price:Number(product.price),stock:Number(product.stock)}
+    console.log(dataProduct)
     try {
       const response = await fetch(url, {
         method: "POST",
-        body: JSON.stringify(product),
+        body: JSON.stringify(dataProduct),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${admin.token}`,
@@ -64,7 +67,7 @@ export const createAdminProduct = createAsyncThunk(
       } else {
         return thunkAPI.rejectWithValue({
           error: data.error,
-          emptyFields: data.emptyFields,
+          emptyFields: [],
         });
       }
     } catch (error) {
@@ -76,16 +79,18 @@ export const createAdminProduct = createAsyncThunk(
 // READ products
 export const readAdminProducts = createAsyncThunk(
   "productsAdmin/readAdminProducts",
-  async (admin, thunkAPI) => {
+  async (_, thunkAPI) => {
     const { sortOrder, search, filterCategory } =
       thunkAPI.getState().productsAdmin;
+      const { admin } = thunkAPI.getState().admin;
+
 
     // let base_url = "http://localhost:7001/api/products";
 
-    let base_url = "https://goodal-mern.onrender.com/api/products";
+    //let base_url = "https://goodal-mern.onrender.com/api/products";
 
     try {
-      base_url = `${base_url}?sort=${sortOrder}&category=${filterCategory.toString()}&search=${search}`;
+      let base_url = `${url}?sort=${sortOrder}&category=${filterCategory.toString()}&search=${search}`;
 
       console.log(base_url);
 
@@ -225,7 +230,7 @@ const productAdminSlice = createSlice({
         state.productsStatus = "failed";
         state.loadingCreate = false;
         state.error = action.payload.error;
-        state.emptyFields = action.payload.emptyFields;
+        state.emptyFields = [];
       })
 
       // READ products

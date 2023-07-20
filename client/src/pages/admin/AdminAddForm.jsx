@@ -10,6 +10,7 @@ import {
 } from "../../features/admin/product/productAdminSlice";
 
 import { ImSpinner2 } from "react-icons/im";
+import FilterCategory from "../../components/filterCategory";
 
 export const AdminAddForm = () => {
   const dispatch = useDispatch();
@@ -22,13 +23,14 @@ export const AdminAddForm = () => {
     currentId,
   } = useSelector((store) => store.productsAdmin);
   const { admin } = useSelector((store) => store.admin);
+  const categoryStatic = useSelector((store)=> store.productsCustomer.categoryStatic)
 
   // fetch the data that will be edited
   // will populate the form with the data
   useEffect(() => {
     // const url = "http://localhost:7001/api/products/";
 
-    const url = "https://goodal-mern.onrender.com/api/products/";
+    const url = "http://localhost:3000/api/products/";
 
     const fecthUpdatingProduct = async () => {
       const response = await fetch(url + currentId, {
@@ -164,43 +166,33 @@ export const AdminAddForm = () => {
     textarea.style.height = "auto";
     textarea.style.height = textarea.scrollHeight + "px";
   };
+  const onClickCat=(listCat)=>{
+    dispatch(setProductData({...productData,category:listCat}))
+    
+  }
 
   return (
-    <div className="max-h-[820px] overflow-y-auto border border-zinc-200 bg-green-200 p-5 shadow-md rounded-lg">
+    <div className="w-screen grid justify-center overflow-y-auto border border-zinc-200 p-5 shadow-md rounded-lg">
       <form
-        className="col-span-1 flex flex-col items-center gap-5 font-urbanist"
+        className="col-span-1 flex flex-col items-center gap-5 font-urbanist bg-green-200 p-5"
         onSubmit={handleSubmit}
       >
         <h2 className="text-2xl font-bold text-primary md:text-3xl lg:text-4xl">
-          Add a New Product
+          Adicionar um novo Produto
         </h2>
 
         {/* Product Category */}
-        <select
-          name="category"
-          value={productData.category}
-          onChange={handleInputChange}
-          className={
-            emptyFields.includes("category")
-              ? "w-full border-2 border-rose-500 shadow-lg focus:outline-none md:py-2 md:px-3"
-              : "w-full border-2 border-transparent shadow-lg focus:outline-none md:py-2 md:px-3"
-          }
-        >
-          <option value="">Product Category</option>
-          
-          <option value="Green Tangerine">Green Tangerine</option>
-          <option value="Apple Aha">Apple Aha</option>
-          <option value="Heart Leaf">Heart Leaf</option>
-          <option value="Apricot Collagen">Apricot Collagen</option>
-        </select>
-
+        <p>Categorias do produto</p>
+        <FilterCategory categoryStatic={categoryStatic} onClickCat={onClickCat}/>
         {/* Product Name */}
+         {console.log(emptyFields)}
         <input
           type="text"
           name="name"
           value={productData.name}
           onChange={handleInputChange}
           placeholder="Product Name"
+         
           className={
             emptyFields.includes("name")
               ? "w-full border-2 border-rose-500 shadow-lg focus:outline-none md:py-2 md:px-3"
@@ -221,6 +213,20 @@ export const AdminAddForm = () => {
               : "w-full border-2 border-transparent shadow-lg focus:outline-none md:py-2 md:px-3"
           }
         />
+        {/* Product stock */}
+        <input
+          type="number"
+          name="stock"
+          value={productData.stock}
+          onChange={handleInputChange}
+          placeholder="Product Stock"
+          className={
+            emptyFields.includes("stock")
+              ? "w-full border-2 border-rose-500 shadow-lg focus:outline-none md:py-2 md:px-3"
+              : "w-full border-2 border-transparent shadow-lg focus:outline-none md:py-2 md:px-3"
+          }
+        />
+
 
         <input
           type="file"
@@ -254,7 +260,7 @@ export const AdminAddForm = () => {
                 name="detailOne"
                 value={item.detailOne}
                 onChange={(e) => handleDescriptionChange(e, index)}
-                placeholder="Detail One"
+                placeholder="Tema do detalhe"
                 className={
                   emptyFields.includes(`description[${index}].detailOne`)
                     ? "w-full border-2 border-rose-500 shadow-lg focus:outline-none md:py-2 md:px-3"
@@ -268,7 +274,7 @@ export const AdminAddForm = () => {
                 value={item.detailTwo}
                 onInput={adjustHeight}
                 onChange={(e) => handleDescriptionChange(e, index)}
-                placeholder="Detail Two"
+                placeholder="Descrição"
                 className={
                   emptyFields.includes(`description[${index}].detailTwo`)
                     ? "w-full border-2 border-rose-500 shadow-lg focus:outline-none md:py-2 md:px-3"
@@ -283,7 +289,7 @@ export const AdminAddForm = () => {
                 onClick={() => handleRemoveDescription(index)}
                 className="max-w-xs rounded-md bg-red-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-red-400 md:py-2 md:px-3"
               >
-                Remove
+                Remover
               </button>
             )}
           </div>
@@ -294,7 +300,7 @@ export const AdminAddForm = () => {
           onClick={handleAddDescription}
           className="w-full rounded-md bg-blue-300 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-3 md:px-6"
         >
-          Add more Description
+          Adcionar mais descrição
         </button>
 
         {currentId ? (
@@ -313,7 +319,7 @@ export const AdminAddForm = () => {
                 type="submit"
                 className="w-full rounded-md bg-blue-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-3 md:px-6"
               >
-                Update Product
+                Atualizar produto
               </button>
             )}
 
@@ -322,7 +328,7 @@ export const AdminAddForm = () => {
               onClick={() => onCancel()}
               className="w-full rounded-md bg-red-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-red-400 md:py-3 md:px-6"
             >
-              Cancel
+              Cancelar
             </button>
           </>
         ) : (
@@ -341,7 +347,7 @@ export const AdminAddForm = () => {
                 type="submit"
                 className="w-full rounded-md bg-blue-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-3 md:px-6"
               >
-                Ceate Product
+                Criar Produto
               </button>
             )}
 
@@ -350,7 +356,7 @@ export const AdminAddForm = () => {
               onClick={() => onClear()}
               className="w-full rounded-md bg-blue-500 py-2 px-5 font-bold text-primary shadow-md transition duration-300 ease-in hover:bg-blue-400 md:py-3 md:px-6"
             >
-              Clear
+              Apagar
             </button>
           </>
         )}

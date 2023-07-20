@@ -12,7 +12,7 @@ export const RemoveMarkModal=({open,handleClose,name,id})=>{
     const removeMark=()=>{
         
         dispatch(RemoveMark(id))
-        
+        handleClose()
     }
 
     return (
@@ -42,7 +42,7 @@ export const RemoveMarkModal=({open,handleClose,name,id})=>{
                         
                         <button className='btn-primary' onClick={handleClose}>Cancelar</button>
                         <button className='btn-primary bg-red-300 hover:bg-red-700 hover:text-white' onClick={()=>removeMark()}>Apagar</button>
-                    
+                     
                     </div>
                     </div>
                 </div>

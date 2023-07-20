@@ -24,7 +24,7 @@ const createOrder=async(req, res)=>{
     emptyFields.push("priceTotal in price");
   }
   if (!post.coordinates) {
-    emptyFields.puash("coordinates");
+    emptyFields.push("coordinates");
   }
 
   //if (!post.description[0].detailOne) {
@@ -32,7 +32,7 @@ const createOrder=async(req, res)=>{
    //}
   //if (!post.description[1].detailTwo) {
     // emptyFields.push("detailTwo");
-   //}
+   //
 
   post.products.forEach((value, index) => {
     if (!value.productId) {

@@ -3,9 +3,6 @@ import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
 
 const requireAuth = async (req, res, next) => {
-  //if (req.method === "GET") {
-    //return next();
-  //}
 
   // authorization contains the token
   const { authorization } = req.headers;

@@ -5,6 +5,7 @@ import validator from 'validator'
 // image
 import loginphoto from "../../../assets/loginphoto.jpg";
 import { NavLink } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 export const CustomerSignup = () => {
   const [firstName, setFirstName] = useState("");
@@ -107,7 +108,7 @@ export const CustomerSignup = () => {
               disabled={loading}
               className="w-full rounded-md bg-[#c6f6f8] py-2 px-5 font-urbanist font-extrabold text-secondary shadow-md ring-2 ring-[#abecee] transition duration-300 ease-in hover:bg-[#abecee] hover:text-primary md:py-3 md:px-6"
             >
-              Cadastrar
+            {loading ? <CircularProgress />: `Cadastrar`}
             </button>
 
             <div className="flex items-center justify-center space-x-2 font-urbanist text-base font-semibold text-gray-600">

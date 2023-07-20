@@ -26,7 +26,7 @@ const createProduct = async (req, res) => {
     emptyFields.push("stock");
   }
   if (!post.imgOne) {
-    emptyFields.push("imgOne");
+    emptyFields.push("imgOne")
   }
   if (!post.imgTwo) {
     emptyFields.push("imgTwo");
@@ -48,20 +48,20 @@ const createProduct = async (req, res) => {
     }
   });
   if (emptyFields.length > 0) {
-    return res.status(400).json({ error: "Fill in all fields.", emptyFields });
+    return res.status(400).json({ error: "Fill in all fields."+emptyFields, emptyFields });
   }
 
   // adding data to db
   try {
     // Upload an image to Cloudinary
-    const result1 = await cloudinary.uploader.upload(post.imgOne, {
+    const result1 =await cloudinary.v2.uploader.upload(post.imgOne, {
       folder: "shope",
     });
-
-    const result2 = await cloudinary.uploader.upload(post.imgTwo, {
+    console.log(result1)
+    const result2 =await cloudinary.v2.uploader.upload(post.imgTwo, {
       folder: "shope",
     });
-
+    
     const product = await Product.create({
       ...post,
       imgOne: {
@@ -76,7 +76,7 @@ const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error});
   }
 };
 
@@ -89,9 +89,8 @@ const readProducts = async (req, res) => {
     const search = req.query.search || "";
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 9;
-  const maxPrice= parseInt(req.query.maxPrice) || 1000000
-
-
+    const maxPrice = parseInt(req.query.maxPrice) || 1000000
+    const withoutStock = req.query.stock ? 0 : {$ne: 0}
     let category = req.query.category || "All";
 
     const categoryOptions = await Product.distinct("category");
@@ -103,7 +102,8 @@ const readProducts = async (req, res) => {
     const productsData = await Product.find({
       name: { $regex: search, $options: "i" },
       price: { $lte: maxPrice },
-      category: { $in: category }
+      category: { $in: category },
+      stock: withoutStock
     })
       .sort(sortObject)
       .skip(page * limit)
@@ -118,6 +118,7 @@ const readProducts = async (req, res) => {
     const response = {
       error: false,
       total,
+      stock : withoutStock!==0,
       page: page + 1,
       limit,
       categories: categoryOptions,

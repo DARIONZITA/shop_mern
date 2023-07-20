@@ -1,9 +1,12 @@
 import Admin from "../models/adminModel.js";
-import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
+import jwt from "jsonwebtoken";
 
-const adminAuth = async (req, res, next) => {
-  
+const orderAuth = async (req, res, next) => {
+
+  //if (req.method === "GET") {
+    //return next();
+  //}
 
   // authorization contains the token
   const { authorization } = req.headers;
@@ -25,12 +28,18 @@ const adminAuth = async (req, res, next) => {
     // then get the _id from the token
     const { _id } = jwt.verify(token, process.env.SECRET);
     
-    // find the user with the _id on the db
-    // and only get/select the id of the user
-    // attach the user id into the req
-    // so that it can be accesible on other handler functions
-    // this is the ser currently login
-    req.user = await Admin.findOne({ _id }).select("_id");
+    const isAdmin = Admin.findById({_id})
+
+    if(!isAdmin){    
+        const user = await Customer.findOne({ _id });
+        const {idOrder}=req.params
+        const isAuth = user.pendingOrders.some((id)=>id == idOrder)
+        if(!isAuth){
+            return res.status(401).json({ error: "Não autorizadado" });
+        }
+        next()       
+    }
+
     next();
   } catch (error) {
     console.log(error);
@@ -40,12 +49,4 @@ const adminAuth = async (req, res, next) => {
 };
 
 
-const isAdmin = (req, res, next) => {
-  if (req.user.role !== 0) {
-    return res.status(401).json({ error: "must be an admin" });
-  }
-
-  next();
-};
-
-export { adminAuth, isAdmin };
+export { orderAuth };

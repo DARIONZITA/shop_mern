@@ -1,9 +1,10 @@
 import { useState , useEffect} from "react";
 import { useDispatch, useSelector } from "react-redux";
-import { cancelConfirm } from "../../../features/auth/customerAuthSlice";
+import { cancelConfirm, customerConfirm } from "../../../features/auth/customerAuthSlice";
 // image
 import loginphoto from "../../../assets/loginphoto.jpg";
 import { NavLink } from "react-router-dom";
+import { CircularProgress } from "@mui/material";
 
 export const CustomerConfirm = () => {
   const [codeConfirm, setcodeConfirm] = useState("");
@@ -45,7 +46,8 @@ export const CustomerConfirm = () => {
             <button
               disabled={loading}
               className="w-full rounded-md bg-[#c6f6f8] py-2 px-5 font-urbanist font-extrabold text-secondary shadow-md ring-2 ring-[#abecee] transition duration-300 ease-in hover:bg-[#abecee] hover:text-primary md:py-3 md:px-6"
-            >Confirmar
+            >
+              {loading?<CircularProgress />: 'Confirmar'}
             </button>
             <input
               onClick={(e)=>handleCancel()}

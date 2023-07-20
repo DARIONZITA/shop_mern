@@ -1,9 +1,8 @@
 import React, { useEffect, useState,useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import CircularProgress from '@mui/material/CircularProgress';
-import {setPlaceAndfrete, setShowMapa} from "../features/customer/cart/cartSlice.js"
-
-import { useDispatch, useSelector } from "react-redux";
+import {setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
+import { useDispatch } from "react-redux";
 import { MapPattern } from './mapPattern.jsx';
 
 function Map() {
@@ -16,9 +15,7 @@ function Map() {
   const [distance, setDistance]=useState()
   const [isLoading, setIsLoading]=useState(false)
   const [geoMarker, setGeoMarker]= useState()
-
   const [showMapa, setShowMapa]=useState(false)
-
 
   const handleMarkerClick = (placeName, coordinates) => {
     dispatch(setPlaceAndfrete({
@@ -27,7 +24,7 @@ function Map() {
         coordinates
       }
       }));
-   setShowMapa(false)
+      setShowMapa(false)
   };
   const getMycoordinates = () => {
     setIsLoading(true)

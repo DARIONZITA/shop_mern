@@ -35,7 +35,7 @@ AdminSchema.statics.signup = async function (email, password) {
 
   // validation .. check if password is a strong email
   if (!validator.isStrongPassword(password)) {
-    throw Error("Password is weak");
+    throw Error("No minimo 8 letras sendo  maiúsculas , minúscula, número e simbolos");
   }
 
   // find the user that has the same value as the email
@@ -95,5 +95,6 @@ AdminSchema.statics.login = async function (email, password) {
   // if it is match then return the user document
   return admin;
 };
+const Admin=mongoose.model("Admin", AdminSchema);
 
-export default mongoose.model("Admin", AdminSchema);
+export default Admin 

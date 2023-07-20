@@ -8,19 +8,22 @@ import { useDispatch } from 'react-redux';
 import { CreateMarks, getAllMarks } from '../features/auth/customerAuthSlice';
 
 
-export const AddMark=({open,handleClose})=>{
+export const AddMark=(props)=>{
+    
+    const {open,handleClose,lat,lan}=props
     const dispatch=useDispatch()
+    
     const [name,setName]=useState('')
     
-    const [latitude, setLatitude]=useState('')    
+    const [latitude, setLatitude]=useState(lat? lat : '')    
 
-    const [longitude,setLongitude]=useState('')
+    const [longitude,setLongitude]=useState(lan? lan : '')
     
     const create=()=>{
         const data={name,coordinates:[Number(latitude),Number(longitude)]}
         dispatch(CreateMarks({...data}))
-        dispatch(getAllMarks())
-
+       
+        handleClose()
     }
     
     return (

@@ -13,6 +13,10 @@ import {
 
 import { requireAuth } from "../middleware/requireAuth.js";
 
+
+import { adminAuth } from "../middleware/adminAuth.js";
+
+
 const router = Router();
 
 // run this middleware function before the crud operations below
@@ -22,7 +26,7 @@ const router = Router();
 
 // CRUD ////////////////////////
 // CREATE
-router.post("/", createProduct);
+router.post("/",adminAuth, createProduct);
 
 // READ ALL
 router.get("/", readProducts);
@@ -31,12 +35,12 @@ router.get("/", readProducts);
 router.get("/:id", readProduct);
 
 // UPDATE
-router.patch("/:id", updateProduct);
+router.patch("/:id",adminAuth, updateProduct);
 
 router.patch("/addCategory/:id", updateCategory);
 
 // DELETE
-router.delete("/:id", deleteProduct);
+router.delete("/:id",adminAuth, deleteProduct);
 
 
 //getporcategorias

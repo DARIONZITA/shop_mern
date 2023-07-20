@@ -134,18 +134,20 @@ const Products = () => {
             </div>
 
             {/* products grid */}
-            {!products.productsData?.length > 0 ? (
+            {!products.productsData ? (
               <div className="flex h-80 items-center justify-center">
                 <span className="flex items-center justify-center gap-2">
                   Carregando... Espere <ImSpinner2 className="animate-spin" />
                 </span>
               </div>
             ) : (
+              products.productsData.length === 0 ? (<p className="text-lg text-center">Sem Produtos</p>):
+             (
               <ProductGrid
                 products={products}
                 handleAddToCart={handleAddToCart}
               />
-            )}
+            ))}
 
             <ProductPagination
               page={page}

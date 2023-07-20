@@ -11,29 +11,47 @@ import { AdapterDayjs } from '@mui/x-date-pickers/AdapterDayjs';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
 import { useDispatch, useSelector } from 'react-redux'
-import { setDateOrder,setContact } from '../features/customer/cart/cartSlice';
+import { setContact, createOrder, setClearCart, setCloseCart } from '../features/customer/cart/cartSlice';
 import Radio from '@mui/material/Radio';
 import RadioGroup from '@mui/material/RadioGroup';
 import FormControlLabel from '@mui/material/FormControlLabel';
 import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
-import { changeData } from '../features/auth/customerAuthSlice';
+import { UpadateOrderPending, changeData } from '../features/auth/customerAuthSlice';
 import { CircularProgress } from '@mui/material';
+
 
 
 const steps = ['Selecione um ponto de encontro', 'Sugerir a data de entrega', 'Escolher meio de comunicação'];
 
-export default function Steps() {
+export default function Steps({handleCloseModal}) {
   const dispatch = useDispatch()
-  const {cartTotalAmount, frete,selectedPlace,dateOrder,contact}= useSelector(store => store.cart);
+  const {cartTotalAmount,cartItems, frete,selectedPlace,contact}= useSelector(store => store.cart);
   const { customer, loading } = useSelector(
     (store) => store.customer
   );
+  const dataforOrder={
+    products:
+      cartItems.map((product)=>{
+        return {
+          productId: product._id,
+          quantity: product.quantity}
+      })
+      ,
+    frete: frete,
+    prices:{
+      priceTotal: cartTotalAmount
+    },
+    coordinates: [selectedPlace?.placeName,selectedPlace?.coordinates],
+    contact
+
+  }
   const [newNumber, setNewNumber]= useState(customer.numberPhone)
   const [activeStep, setActiveStep] = useState(0);
   const [completed, setCompleted] = useState({});
   const [readOnly,setReadOnly]=useState(true)
   const [isValidNumber,setIsValidNumber]=useState(true)
+  const [dateOrder,setDateOrder]=useState(null)
   const handleChange = (event) => {
     dispatch(setContact({contact:event.target.value}));
     setReadOnly(true)
@@ -60,8 +78,9 @@ export default function Steps() {
   }
 
 
-  const changeOrder=(dateOrder)=>{
-    dispatch(setDateOrder({dateOrder}))
+  const changeOrder=(date)=>{
+
+    setDateOrder(date)
   }
 
   const totalSteps = () => {
@@ -105,13 +124,21 @@ export default function Steps() {
     newCompleted[activeStep] = true;
     setCompleted(newCompleted);
     handleNext();
+    
   };
+  const handleFinish=(dataObj)=>{
+    dispatch(createOrder(dataObj))
+    handleCloseModal()
+
+  
+  }
 
   const handleReset = () => {
     setActiveStep(0);
     setCompleted({});
   };
-  const today=dayjs()
+  const today  =dayjs()
+  const dateStart=today.format('HH') < 17 ? today : today.add(1,'day')
 
   return (
     <Box sx={{ width: '100%' }}>
@@ -128,14 +155,15 @@ export default function Steps() {
         {allStepsCompleted() ? (
           <Fragment>
             <Typography sx={{ mt: 2, mb: 1 }}>
-            Todos os passos completo, Encomenda feita com sucesso
+             <p className='text-center '>Todos os passos completo</p>
             {contact ==='facebook' && (<p className='text-orange-500 text-lg font-semibold text-center'>Não esqueça de nos contactar pelo Facebook, Para que tua encomenda possa ser confirmada</p>)}
             {(contact==='whatsapp' || contact==='chamada') && (<p className='text-green-700 text-lg font-semibold text-center'>Entraremos  em  contacto em breve</p>)}
             </Typography>
             <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
               <Box sx={{ flex: '1 1 auto' }} />
-              <Button >Ok</Button>
               <Button onClick={handleReset}>Cancelar</Button>
+              <Button onClick={()=>handleFinish(dataforOrder)}>Encomendar</Button>
+              
             </Box>
           </Fragment>
         ) : (
@@ -164,7 +192,7 @@ export default function Steps() {
                         <LocalizationProvider dateAdapter={AdapterDayjs}>
                           
                           <DatePicker
-                           minDate={today} 
+                           minDate={dateStart} 
                            label={'Selecione o dia de entrega'} 
                            views={['day']} 
                            value={dateOrder}
@@ -260,9 +288,7 @@ export default function Steps() {
                    className='btn-primary bg-blue-500 text-white hover:bg-blue-700 disabled:bg-gray-600'
                    disabled={(activeStep===0 && !selectedPlace)||(activeStep===1 && !dateOrder)}
                    onClick={handleComplete}>
-                    {completedSteps() === totalSteps() - 1
-                      ? 'Terminar'
-                      : 'Complete o passo'}
+                    Complete o passo
                   </button>
                 ))}
             </Box>

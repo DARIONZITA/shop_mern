@@ -53,7 +53,7 @@ export const AdminSignup = () => {
             >
               Sign Up
             </button>
-            {errorSignUp && <div className="error">{errorSignUp}</div>}
+            {errorSignUp && <div className="error text-red-500">{errorSignUp}</div>}
           </form>
         </div>
       </div>

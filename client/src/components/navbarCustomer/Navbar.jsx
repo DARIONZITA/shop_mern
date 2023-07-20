@@ -4,12 +4,9 @@ import { NavLink, useLocation } from "react-router-dom";
 //materials
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
-import {DialogTitle,DialogContentText,DialogContent,DialogActions,Dialog,TextField,Button,Fade,} from '@mui/material';
-import IconButton from '@mui/material/IconButton';
+import {Button,Fade,} from '@mui/material';
 import Badge from '@mui/material/Badge';
-import NotificationsIcon from '@mui/icons-material/Notifications';
 import CloseIcon from '@mui/icons-material/Close';
-import Popover from '@mui/material/Popover';
 
 import { useDispatch, useSelector } from "react-redux";
 import {
@@ -26,44 +23,19 @@ import { FaSort } from "react-icons/fa";
 import { RiFilterOffFill } from "react-icons/ri";
 import { FiSearch } from "react-icons/fi";
 import { MdOutlineAccountCircle } from "react-icons/md";
-import DeleteIcon from '@mui/icons-material/Delete';
 
 import { Cart } from "../../pages/customer/cart/index.js";
-import { CancelOrder, UpadateOrderPending, changeData, customerLogOut } from "../../features/auth/customerAuthSlice";
+import {  UpadateOrderPending, changeData, customerLogOut } from "../../features/auth/customerAuthSlice";
 import {
   setFilterCategory,
   setSearch,
   setSortOrder,
 } from "../../features/customer/product/productCustomerSlice";
+import CancelMyOrder from "../deleteCustomerOrder";
 
 const Navbar = () => {
   const location = useLocation();
-  //modal confirm
-  const [textConfirm, setTextConfirm] = useState('')
-  const [openConfirm, setOpenConfirm] = useState(null);
-
-  const handleClickOpen = (key,OrderId) => {
-    
-    setOpenConfirm({key,OrderId});
-  };
-
-  const handleCloseConfirm = () => {
-    setOpenConfirm(null);
-    setTextConfirm('')
-  };
-  //modal pending order
-  const [anchorEl, setAnchorEl] = useState(null);
-
-  const handleClick = (event) => {
-    setAnchorEl(event.currentTarget);
-  };
-
-  const handleCloseOrder = () => {
-    setAnchorEl(null);
-  };
-
-  const openOrder = Boolean(anchorEl);
-  const id = openOrder ? 'simple-popover' : undefined;
+ 
   
   // Check if the user is on the products page
   const isProductsPage = location.pathname === "/products";
@@ -77,7 +49,7 @@ const Navbar = () => {
   const [dropdown, setDropdown] = useState(false);
 
   const dispatch = useDispatch();
-  const { cartState, cartTotalQuantity } = useSelector((store) => store.cart);
+  const { cartState, cartTotalQuantity,myOrderStatus } = useSelector((store) => store.cart);
   const { customer, orderPending, ordersStatus} = useSelector((store) => store.customer);
   const { products, search, categoryStatic } = useSelector((store) => store.productsCustomer);
   //change data
@@ -93,6 +65,7 @@ const Navbar = () => {
   const [isValidPhoneNumber,setIsValidatorNumber]=useState(true) 
   const Update=()=>{
     if(showInput==='name'){
+      console.log('oi')
       dispatch(changeData({
         firstName,
         lastName
@@ -217,22 +190,15 @@ const Navbar = () => {
       setNavColor(false);
     }
   };
-  // cancelar encomenda
-  const cancelOrder=(idOrder) => {
-    setOpenConfirm(null);
-    setTextConfirm('')
-    dispatch(CancelOrder(idOrder))
-    window.location.reload(true);
-    
-    
-  }
+  
+
 
   useEffect(()=>{
-    if(ordersStatus=='idle'){
+    if((ordersStatus=='idle' && customer)|| myOrderStatus){
       
       dispatch(UpadateOrderPending())
     }
-  },[ordersStatus,dispatch])
+  },[ordersStatus,dispatch,customer,myOrderStatus])
   useEffect(() => {
     
     window.addEventListener("scroll", changeBackground);
@@ -448,12 +414,12 @@ const Navbar = () => {
                                   handleDropdown();
                                 }
                               }}
-                              className="block w-full px-6 py-2 text-left transition duration-200 ease-in-out hover:text-primary"
+                              className="block w-full text-center transition duration-200 ease-in-out hover:text-primary"
                             >
                               <NavLink
                                 to="/customer/signup"
                                 className={({ isActive }) =>
-                                  isActive ? "text-primary" : null
+                                  isActive ? "text-primary px-6 py-2" : null
                                 }
                               >
                                 Cadastrar
@@ -538,109 +504,9 @@ const Navbar = () => {
                   </Badge>
                   
                 </div>
-                {(orderPending && orderPending.length!==0) && 
+                {(orderPending && orderPending.length!==0 && customer) && 
                 (
-                <>
-                  <IconButton
-                      aria-describedby={id} 
-                      variant="contained" 
-                      onClick={handleClick}
-                      size="large"
-                      aria-label="show 17 new notifications"
-                      color="inherit">
-                      <Badge badgeContent={orderPending.length} color="success">
-                        <NotificationsIcon />
-                      </Badge>
-                 </IconButton>
-                 <Popover
-                    classes='w-96'
-                    id={id}
-                    open={openOrder}
-                    anchorEl={anchorEl}
-                    onClose={handleCloseOrder}
-                    anchorOrigin={{
-                      vertical: 'bottom',
-                      horizontal: 'left',
-                    }}
-                  >
-                    
-                  <div className="w-96 h-auto">
-                    {orderPending.map((oneOrder,k)=>( 
-                    
-                  <div key={`${oneOrder._Id} ${k}`} className="relative m-5 mt-10 bg-slate-200 rounded-md p-2
-                  ">
-                    
-                    <div className="relative">
-                      <span className="absolute -top-3 right-4 z-20">
-                        <IconButton
-                          onClick={() => handleClickOpen(k,oneOrder._Id)}
-                          aria-label="delete" 
-                          color="error">
-                          <DeleteIcon fontSize='large' />
-                        </IconButton>
-                      </span>
-                      <h1 className=" text-center font-semibold text-lg m-2 text-gray-600">Encomenda {k+1}</h1>
-                      
-                    
-                      
-
-                    </div>
-                          
-                        <span className="absolute opacity-70 top-0 left-4 bg-gray-800  rounded-md p-2 m-2 text-lg text-white text-bold z-20">{oneOrder.prices.priceTotal} Kz</span>
-                        <div className=" m-2 p-2 h-32 overflow-y-auto border-solid border-{0.2} border-gray-400 shadow-inner shadow-gray-400 rounded-md" >
-                        
-                          {oneOrder.products.map((product,key)=>(
-                       
-                       
-                        <div key={Math.log10(key)} className="flex justify-between m-4 font-semibold pr-2">
-                       
-                          <span>
-                            {product.productId.name}
-                          </span>
-                          <span>
-                            {product.quantity}
-                          </span>
-                          </div>
-                      
-                        ))}
-                        </div>
-                     </div>
-                     
-                    )
-                  )}
-
-                  </div>
-                  </Popover>
-                  {(openConfirm!==null) && (
-                    <div>
-                    <Dialog open={openConfirm!==null} onClose={handleCloseConfirm}>
-                      <DialogTitle>Cancelar encomenda</DialogTitle>
-                      <DialogContent>
-                        <DialogContentText>
-                          Para cancelares esta encomenda digite <strong>Encomenda {openConfirm.key + 1}</strong>
-                        </DialogContentText>
-                        <TextField
-                          autoFocus
-                          margin="dense"
-                          id="name"
-                          value={textConfirm}
-                          onChange={(e)=>setTextConfirm(e.target.value)}
-                          label="Digite aqui"
-                          type="text"
-                          fullWidth
-                          color="error"
-                          variant="standard"
-                        />
-                      </DialogContent>
-                      <DialogActions>
-                        <Button color="warning" onClick={handleCloseConfirm}>Cancelar</Button>
-                        <Button disabled={textConfirm!==`Encomenda ${openConfirm.key + 1}`} color="warning" onClick={()=>cancelOrder(openConfirm.OrderId)}>Confirmar</Button>
-                      </DialogActions>
-                    </Dialog>
-                  </div>
-                  )}
-                  
-                </>
+                <CancelMyOrder />
                   
                 )
                 }
@@ -656,7 +522,7 @@ const Navbar = () => {
                 className="flex w-full items-center justify-center space-x-2 border-r border-zinc-200 py-4 px-6 lg:px-16"
               >
                 <RiFilterOffFill />
-                <p>Filter</p>
+                <p>Filtro</p>
               </button>
 
               <button
@@ -696,7 +562,7 @@ const Navbar = () => {
                   handleSortNav();
                 }}
               >
-                Newest
+                Recente
               </button>
               <button
                 onClick={() => {
@@ -705,7 +571,7 @@ const Navbar = () => {
                   handleSortNav();
                 }}
               >
-                Oldest
+                Antigo
               </button>
             </div>
           </div>
@@ -715,7 +581,7 @@ const Navbar = () => {
         {filterNav && (
           <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
-              <button onClick={() => onClickCat("All")}>All</button>
+              <button onClick={() => onClickCat("All")}>Todos</button>
        
          
               {products.categories?.map((cat) => (
@@ -739,7 +605,7 @@ const Navbar = () => {
                   }
                   to="/about"
                 >
-                  About
+                  Sobre Nós
                 </NavLink>
               </li>
               <li>
@@ -750,7 +616,7 @@ const Navbar = () => {
                   }
                   to="/products"
                 >
-                  Products
+                  Produtos
                 </NavLink>
               </li>
             </ul>
@@ -765,14 +631,14 @@ const Navbar = () => {
                 <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
                   <li>
                     <div className="flex flex-col">
-                      <span className="text-base">Customer</span>
+                      <span className="text-base">Cliente</span>
                       <span className="text-sm font-medium">
                         {customer.email}
                       </span>
                     </div>
                   </li>
                   <li>
-                    <button onClick={handleLogout}>Logout</button>
+                    <button onClick={handleLogout}>Sair</button>
                   </li>
                 </ul>
               </div>
@@ -795,7 +661,7 @@ const Navbar = () => {
                       }
                       to="/customer/signup"
                     >
-                      Signup
+                      Cadastrar
                     </NavLink>
                   </li>
                   <li>
@@ -810,7 +676,7 @@ const Navbar = () => {
                       }
                       to="/customer/login"
                     >
-                      Login
+                      Entrar
                     </NavLink>
                   </li>
                 </ul>

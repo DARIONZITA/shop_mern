@@ -3,8 +3,9 @@ import toast from "react-hot-toast";
 import { useDispatch } from "react-redux";
 import { UpadateOrderPending } from "../../auth/customerAuthSlice";
 
-const dispatch=useDispatch
+
 const initialState = {
+  myOrderStatus:false,
   cartState: false,
   cartItems: localStorage.getItem("cart")
     ? JSON.parse(localStorage.getItem("cart"))
@@ -13,7 +14,6 @@ const initialState = {
   cartTotalQuantity: 0,
   testQuant: 1,
   contact:'whatsapp',  
-  dateOrder:null,
   central:{
     name:'Sequele',
     coordinates:[-8.889359001463491, 13.484934588357318]
@@ -21,7 +21,6 @@ const initialState = {
   frete:null,
   selectedPlace:null,
   municipio:null,
-  showMapa:false,
   distrito:null,
   municipiosData:[
     ['Luanda',[-8.81325111124297, 13.221118923737603]],
@@ -39,19 +38,21 @@ const initialState = {
 export const createOrder = createAsyncThunk(
   "cart/createOrder",
    async (dataobj,thunkAPI) => {
-    let base_url='http://localhost:7001/api/order/'
+    let {customer}=thunkAPI.getState().customer
+    let base_url='http://localhost:3000/api/orders/create'
+    console.log(dataobj)
     try {
       const response = await fetch(base_url,{
         method: "POST",
         body: JSON.stringify(dataobj),
         headers: {
           "Content-Type": "application/json",
+          Authorization: `Bearer ${customer.token}`
         }
       }) 
       const data = response.json()
       if(response.ok){
-        dispatch(UpadateOrderPending())
-        dispatch(setClearCart)
+        return true
       } else {
         return thunkAPI.rejectWithValue({
           error: data.error,
@@ -109,9 +110,6 @@ const cartSlice = createSlice({
       state.frete=add
 
     },
-    setDateOrder:(state, action) =>{
-      state.dateOrder=action.payload.dateOrder
-    },
     deleteDistrito:(state)=>{
      state.distrito=null
     },
@@ -162,16 +160,13 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
-    setShowMapa: (state, action) => {
-      state.showMapa=action.payload
-    },
     setAddItemToCart: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
       );
 
       console.log(itemIndex);
-
+        
       // -1 more than or equal 0
       if (itemIndex >= 0) {
         state.cartItems[itemIndex].quantity += 1;
@@ -188,7 +183,7 @@ const cartSlice = createSlice({
     setIncreaseItemQTY: (state, action) => {
       const itemIndex = state.cartItems.findIndex(
         (item) => item._id === action.payload._id
-      );
+        );
 
       if (itemIndex >= 0) {
         state.cartItems[itemIndex].quantity += 1;
@@ -258,6 +253,27 @@ const cartSlice = createSlice({
       // state.cartTotalQuantity = totalQuantity;
     },
   },
+  extraReducers: (builder) => {
+    builder
+    
+      .addCase(createOrder.pending, (state) => {
+        state.myOrderStatus = false
+  
+      })
+      .addCase(createOrder.fulfilled, (state, action) => {
+        state.myOrderStatus = true
+        state.cartState = false
+        state.cartItems = [];
+
+        toast.success("Encomenda feita com sucesso");
+  
+        localStorage.setItem("cart", JSON.stringify(state.cartItems));
+
+        })
+      .addCase(createOrder.rejected, (state, action) => {
+        state.myOrderStatus = false
+      })
+    }
  })
 export const {
   setOpenCart,
@@ -270,12 +286,10 @@ export const {
   setGetTotals,
   setPreAdd,
   setPreDecrease,
-  setShowMapa,
   setAddItemToCartTwo,
   setMunicipioAndDistrito,
   deleteDistrito,
   setPlaceAndfrete,
-  setDateOrder,
   setContact
 } = cartSlice.actions;
 export default cartSlice.reducer;

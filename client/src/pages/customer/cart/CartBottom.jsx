@@ -3,7 +3,7 @@ import { useSelector } from "react-redux";
 import ModalOrder from "../../../components/modalorder";
 
 const CartBottom = () => {
-  const { cartTotalAmount } = useSelector((store) => store.cart);
+  const  cartTotalAmount  = useSelector((store) => store.cart.cartTotalAmount);
 
   function formatPrice(price) {
     // Get the user's locale from the browser

@@ -86,14 +86,14 @@ export const OrderAdmin=()=>{
                     {loading ? <CircularProgress /> : orders?.orderData.map((order,k)=>(
                       <aside key={order._id} className="grid bg-cyan-200 text-center justify-center w-96 m-4 p-4 rounded-lg text-lg text-semibold">
                         <h2 className="text-3xl text-bold text-green-600">Encomenda {k+1}</h2>
-                        <p>Nome: {order.user.firstName} {order.user.lastName}</p>
-                        <p>Número de telefone: {order.user.numberPhone}</p>
+                      <p>Nome: {order.user?.firstName} {order.user?.lastName}</p>
+                        <p>Número de telefone: {order.user?.numberPhone}</p>
                     
                         <p>Contacto: {order.contact}</p>
-                        <p>E-mail: {order.user.email}</p>
-                        <p>Ponto de Encontro: {order.coordinates[2]}</p>
+                        <p>E-mail: {order.user?.email}</p>
+                        <p>Ponto de Encontro: {order.coordinates[0]} </p>
                       
-                        <p>Coordenadas: [ {order.coordinates[0]} , {order.coordinates[1]} ]</p>
+                      <p>Coordenadas: [ {order.coordinates[1][0]} , {order.coordinates[1][1]} ]</p>
                          
                         <p>Data de Pedido: 
                           {myDates(order.createdAt)
@@ -145,9 +145,9 @@ export const OrderAdmin=()=>{
                     
                         <p>Contacto: {order.contact}</p>
                         <p>E-mail: {order.user.email}</p>
-                        <p>Ponto de Encontro: {order.coordinates[2]}</p>
+                        <p>Ponto de Encontro: {order.coordinates[0]} </p>
                       
-                        <p>Coordenadas: [ {order.coordinates[0]} , {order.coordinates[1]} ]</p>
+                        <p>Coordenadas: [ {order.coordinates[1][0]} , {order.coordinates[1][1]} ]</p>
                          
                         <p>Data de Pedido: 
                           {myDates(order.createdAt)
