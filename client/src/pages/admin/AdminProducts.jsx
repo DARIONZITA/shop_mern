@@ -40,12 +40,12 @@ export const AdminProducts = () => {
 
   useEffect(() => {
     if (admin) {
-      dispatch(readAdminProducts(admin));
+      dispatch(readAdminProducts());
     }
   }, [sortOrder, search, filterCategory, admin]);
 
   const onClickCat = (cat) => {
-    dispatch(setFilterCategory(cat));
+    dispatch(setFilterCategory({listCat:cat,categoryStatic}));
   };
 
   const handleSortOrderChange = (event) => {
@@ -129,14 +129,14 @@ export const AdminProducts = () => {
   }
 
   return (
-    <div className="flex">
+    <div className="flex flex-wrap md:flex-nowrap">
       {/*  nav */}
       
-      <div className="space-y-5 w-60 rounded-lg border border-zinc-200 bg-green-700 p-5 shadow-md">
+      <div className="space-y-5 w-[95vw] md:w-60 rounded-lg border border-zinc-200 bg-green-700 p-5 shadow-md">
         
         {/* filter */}
         <ul className="flex justify-center space-x-3 text-base font-bold tracking-wide text-bgcolor3 md:text-lg lg:text-xl">
-          <FilterCategory categoryStatic={categoryStatic}/>
+          <FilterCategory categoryStatic={categoryStatic} onClickCat={onClickCat}/>
         </ul>
 
         {/* dropdown, seacrh, total */}
@@ -189,7 +189,14 @@ export const AdminProducts = () => {
           )}
           
         <section className="w-full grid">
-              <button className="btn-secondary">Ver Produtos {products.stock ? `Esgotados` : `Diponíveis`} </button>
+              <button className="btn-secondary" 
+              onClick={()=>{
+                if(products.stock){
+                 dispatch(readAdminProducts(true)) 
+                }else{
+                  dispatch(readAdminProducts())
+                }
+                }}>Ver Produtos {products.stock ? `Esgotados` : `Diponíveis`} </button>
         </section>
         </div>
       </div>
@@ -197,7 +204,7 @@ export const AdminProducts = () => {
       {/* products */}
 
       {!viewProduct ? (
-        <div className="grid max-h-[618px] grid-cols-2 gap-9 overflow-y-auto rounded-lg border border-zinc-200 bg-bgcolor2 p-5 shadow-md md:grid-cols-3">
+        <div className="grid w-[95vw] md:w-auto max-h-[618px] col-span-1 grid-cols-1 sm:grid-cols-2 gap-9  overflow-y-auto rounded-lg border border-zinc-200 bg-bgcolor2 p-5 shadow-md md:grid-cols-3">
           {products.productsData?.map((product) => (
             <div key={product._id} className="space-y-3 text-center ">
               {/*  img */}
@@ -234,7 +241,7 @@ export const AdminProducts = () => {
 
               {/*  edit & del */}
 
-              <div className="flex items-center justify-center gap-3">
+              <div className="flex flex-wrap items-center justify-center gap-3">
                 <button
                   type="button"
                   onClick={() =>{

@@ -1,6 +1,7 @@
 import Admin from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
+import { createTokenAdmin } from "../controllers/adminController.js";
 
 const adminAuth = async (req, res, next) => {
   
@@ -23,8 +24,10 @@ const adminAuth = async (req, res, next) => {
     // verify the token to make sure its not tampered
     // token + secret
     // then get the _id from the token
-    const { _id } = jwt.verify(token, process.env.SECRET);
-    
+    const { _id ,exp} = jwt.verify(token, process.env.SECRET);
+    if(exp <= 60*60*24*7){
+      req.token= createTokenAdmin(_id)
+    }
     // find the user with the _id on the db
     // and only get/select the id of the user
     // attach the user id into the req

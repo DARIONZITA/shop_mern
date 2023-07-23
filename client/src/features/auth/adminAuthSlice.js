@@ -6,7 +6,7 @@ const initialState = {
   signUpStatus: "idle",
   ordersStatus: "idle",
   loading: false,
-  admin: null,// { firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
+  admin: null,
   errorSignUp: null,
   orders:null,
   errorLogIn: null,
@@ -16,7 +16,7 @@ export const orderDone = createAsyncThunk(
   async (id, thunkAPI) => {
 
     let base_url = "http://localhost:3000/api/orders/done"
-    let {token} = initialState.admin 
+    let {admin} = thunkAPI.getState().admin
     //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
 
     try {
@@ -25,7 +25,7 @@ export const orderDone = createAsyncThunk(
         method: "PATCH",
         headers: {
           "Content-Type": "application/json",
-           Authorization: `Bearer ${token}`
+           Authorization: `Bearer ${admin.token}`
         },
       });
 
@@ -74,10 +74,13 @@ export const readOrder = createAsyncThunk(
         } 
            });
       const data = await response.json();
+      if(response.status==401){
+        localStorage.removeItem('admin')
+        
+        thunkAPI.dispatch(adminLogOutAction())
+      }
 
-     
-
-      if (response.ok) { 
+      else if (response.ok) { 
         console.log(data);
         return data;
       } else {
@@ -254,6 +257,12 @@ const adminAuthSlice = createSlice({
         state.errorSignUp = null;
       })
       .addCase(readOrder.fulfilled, (state, action) => {
+        if(action.payload.token){
+          let adminOld=JSON.parse(localStorage.getItem("admin"))
+          adminOld.token=action.payload.token
+          localStorage.setItem("admin", JSON.stringify(adminOld));
+          state.admin=adminOld 
+        }
         state.ordersStatus = "succeeded";
         state.loading = false;
         state.orders = action.payload;

@@ -61,7 +61,7 @@ const CartFilled = ({
             {name}
           </h1>
 
-          <p className="text-base text-primary md:text-2xl">{category}</p>
+          <p className="text-base text-primary md:text-2xl">{category[0]}</p>
 
           <h2 className="text-base font-bold text-primary md:text-2xl">
             {formatPrice(price * quantity)}

@@ -5,12 +5,13 @@ const initialState = {
   ordersStatus: "idle",
   markStatus:"idle",
   loading: false,
-  customer:null,//{ firstName: 'Dario' , lastName: 'Nzita' , numberPhone: 923476534 , email: 'dariozongogarcinzita@gmail.com'},
+  customer:null,
   customerPending: null,
   dataMarks:null,
   orderPending: null,
   errorSignUp: null,
   errorLogIn: null,
+  customerExpired:false
 }
 
 
@@ -153,7 +154,7 @@ export const UpadateOrderPending =  createAsyncThunk(
   "customer/UpdateOrderPending",
   async (_, thunkAPI) => {
     const {customer}= thunkAPI.getState().customer
-    console.log(customer)
+    
     // let base_url = "http://localhost:7001/api/products";
 
     let base_url ="http://localhost:3000/api/customer/myOrders";
@@ -171,14 +172,20 @@ export const UpadateOrderPending =  createAsyncThunk(
       });
       const data = await response.json();
 
-      console.log(data);
+      if(response.status==401){
+        localStorage.removeItem('customer')
+        
+        thunkAPI.dispatch(customerLogOutAction())
 
-      if (response.ok) {
-        return data?.myOrders.pendingOrders;
-      } else {
-        return thunkAPI.rejectWithValue({
-          error: data.error,
-        });}
+      }else{
+
+        if (response.ok) {
+          return data;
+        } else {
+          return thunkAPI.rejectWithValue({
+            error: data.error,
+          });}
+      }
     } catch (error) {
       return thunkAPI.rejectWithValue({ error: error.message });
     }
@@ -364,6 +371,7 @@ const customerAuthSlice = createSlice({
     },
     setCustomer: (state, action) => {
       state.customer = action.payload;
+
     },
     setCustomerPending: (state, action) => {
       state.customerPending = action.payload;
@@ -493,9 +501,22 @@ const customerAuthSlice = createSlice({
         state.orderPending = null;
       })
       .addCase(UpadateOrderPending.fulfilled, (state, action) => {
+        //token user expired
+      
+   
+        //update token user
+       
+        if(action.payload.token){
+          let customerOld=JSON.parse(localStorage.getItem("customer"))
+          customerOld.token=action.payload.token
+          localStorage.setItem("customer", JSON.stringify(customerOld));
+          state.customer=customerOld 
+  
+
+        }
         state.ordersStatus='succeeded'
         state.loading = false;
-        state.orderPending = action.payload;
+        state.orderPending = action.payload.myOrders.pendingOrders;
       })
       .addCase(UpadateOrderPending.rejected, (state, action) => {
         state.ordersStatus='failed'

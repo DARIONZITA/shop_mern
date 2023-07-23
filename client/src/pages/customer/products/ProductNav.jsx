@@ -40,7 +40,7 @@ export const ProductNav = ({ onClickCat, products ,categoryStatic}) => {
     
       return products.categories.includes(categoryName) 
     })
-    resultCategory=resultCategory.map((Category)=>{
+    resultCategory=resultCategory.map((category)=>{
       const subCategories = category[1].filter((subCategory) => {
         return products.categories.includes(subCategory);
       });

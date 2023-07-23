@@ -26,6 +26,7 @@ function Map() {
       }));
       setShowMapa(false)
   };
+  const handleCloseMapa=()=>setShowMapa(false)
   const getMycoordinates = () => {
     setIsLoading(true)
     if (navigator.geolocation) {
@@ -84,13 +85,13 @@ function Map() {
 
   return (
     <>
-    <div className='flex justify-around'>
+    <div className='flex justify-around flex-wrap'>
       <button 
-        className='rounded-lg p-4 bg-blue-400 text-ms' 
+        className='p-4 m-2 bg-blue-600 md:text-base text-sm text-white rounded-lg' 
         onClick={getMycoordinates}>{isLoading? <CircularProgress size={20} color='secondary'/>:`Ponto de encontro automático`}</button>
-      <button className='p-4 bg-neutral-600 text-ms text-white rounded-lg' onClick={()=>setShowMapa(true)}>Ponto de encontro no mapa</button>
+      <button className='p-4 m-2 bg-neutral-600 md:text-base text-sm text-white rounded-lg' onClick={()=>setShowMapa(true)}>Ponto de encontro no mapa</button>
     </div>
-    <MapPattern showMapa={showMapa} myCoordinates={myCoordinates} handleMarkerClick={handleMarkerClick} />
+    <MapPattern showMapa={showMapa} myCoordinates={myCoordinates} handleMarkerClick={handleMarkerClick} handleCloseMapa={handleCloseMapa} />
     </>
 
   );

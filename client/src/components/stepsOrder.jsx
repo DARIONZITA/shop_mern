@@ -1,4 +1,4 @@
-import {useState,Fragment, useRef}  from 'react';
+import {useState,Fragment, useRef, useEffect}  from 'react';
 import Box from '@mui/material/Box';
 import Stepper from '@mui/material/Stepper';
 import Step from '@mui/material/Step';
@@ -25,11 +25,19 @@ import { CircularProgress } from '@mui/material';
 const steps = ['Selecione um ponto de encontro', 'Sugerir a data de entrega', 'Escolher meio de comunicação'];
 
 export default function Steps({handleCloseModal}) {
+
   const dispatch = useDispatch()
   const {cartTotalAmount,cartItems, frete,selectedPlace,contact}= useSelector(store => store.cart);
   const { customer, loading } = useSelector(
     (store) => store.customer
   );
+
+  const [sizeScreen, setSizeScreen] = useState(window.innerWidth);
+
+  const handleSizeScreen = () => {
+    setSizeScreen(window.innerWidth);
+  };
+
   const dataforOrder={
     products:
       cartItems.map((product)=>{
@@ -56,10 +64,14 @@ export default function Steps({handleCloseModal}) {
     dispatch(setContact({contact:event.target.value}));
     setReadOnly(true)
   };
+  const isAnotherNumber=useRef(false)
   const saveNewNumber=()=>{
   if(newNumber){
     if(newNumber.toString().length==9 ){
-      dispatch(changeData({numberPhone:Number(newNumber)}))
+      isAnotherNumber.current=true
+      setReadOnly(true)
+      
+      //dispatch(changeData({numberPhone:Number(newNumber)}))
   
     }
     else {
@@ -72,7 +84,9 @@ export default function Steps({handleCloseModal}) {
     const numberPhone=event.target.value
     const isValidNumberVar = /^\d+$/.test(numberPhone);
     let phoneOnly=numberPhone.replace('+244','')
-    if(isValidNumberVar){setNewNumber(phoneOnly)}
+    if(isValidNumberVar){
+      setNewNumber(phoneOnly)
+    }
     
 
   }
@@ -127,6 +141,9 @@ export default function Steps({handleCloseModal}) {
     
   };
   const handleFinish=(dataObj)=>{
+    if(isAnotherNumber.current){
+      dispatch(changeData({numberPhone:Number(newNumber)}))
+    }
     dispatch(createOrder(dataObj))
     handleCloseModal()
 
@@ -137,12 +154,26 @@ export default function Steps({handleCloseModal}) {
     setActiveStep(0);
     setCompleted({});
   };
+
+  useEffect(() => {
+    // Adiciona o event listener quando o componente é montado
+    window.addEventListener('resize', handleSizeScreen);
+
+    // Remove o event listener quando o componente é desmontado
+    return () => {
+      window.removeEventListener('resize', handleSizeScreen);
+    };
+  }, []); // O segundo parâmetro vazio faz com que o useEffect execute apenas uma vez, após o componente ser montado.
+
+
+
+
   const today  =dayjs()
   const dateStart=today.format('HH') < 17 ? today : today.add(1,'day')
 
   return (
-    <Box sx={{ width: '100%' }}>
-      <Stepper nonLinear activeStep={activeStep}>
+    <Box sx={{ width: '100%' ,maxHeight: '80vh', overflowY: 'auto',overflowX:'hidden'}}>
+      <Stepper nonLinear orientation = { sizeScreen >= 768 ? 'horizontal':"vertical"} activeStep={activeStep}>
         {steps.map((label, index) => (
           <Step key={label} completed={completed[index]}>
             <StepButton color="inherit" onClick={handleStep(index)}>
@@ -246,7 +277,7 @@ export default function Steps({handleCloseModal}) {
                   </>
                   
                 ):(
-                  <p>Número de Telefone: <strong>{customer.numberPhone}</strong> </p>
+                  <p>Número de Telefone: <strong>{isAnotherNumber.current ? newNumber :customer.numberPhone}</strong> </p>
                 )}
                   {readOnly?(<Button onClick={removeReadOnly}>Alterar Número</Button>):
                   (<button className='btn-primary' onClick={saveNewNumber}>{loading ? <CircularProgress />:'Confirmar Número'}</button>)
@@ -265,7 +296,7 @@ export default function Steps({handleCloseModal}) {
                   )}                      
 
             </Typography>
-            <Box sx={{ display: 'flex', flexDirection: 'row', pt: 2 }}>
+            <Box sx={{ display: 'flex', flexDirection: 'row',flexWrap:'wrap', pt: 2 }}>
               <Button
                 color="inherit"
                 disabled={activeStep === 0}
@@ -285,7 +316,7 @@ export default function Steps({handleCloseModal}) {
                   </Typography>
                 ) : (
                   <button
-                   className='btn-primary bg-blue-500 text-white hover:bg-blue-700 disabled:bg-gray-600'
+                   className='btn-primary bg-blue-500 text-white hover:bg-blue-700 disabled:bg-gray-600 w-full md:w-fit'
                    disabled={(activeStep===0 && !selectedPlace)||(activeStep===1 && !dateOrder)}
                    onClick={handleComplete}>
                     Complete o passo

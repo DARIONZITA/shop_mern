@@ -82,9 +82,9 @@ export const OrderAdmin=()=>{
               <>
                 <section className="grid justify-center w-screen">
                   <h2 className="text-center text-2xl font-bold "><span className="text-green-500 bg-slate-900 rounded-full p-5">{orders?.total}</span> Novas Encomendas </h2>
-                  <aside className=" bg-slate-900 w-min p-4 rounded-lg h-screen overflow-y-auto" >
+                  <aside className=" bg-slate-900 w-min max-w-[90vw] md:p-4 rounded-lg h-screen overflow-y-auto" >
                     {loading ? <CircularProgress /> : orders?.orderData.map((order,k)=>(
-                      <aside key={order._id} className="grid bg-cyan-200 text-center justify-center w-96 m-4 p-4 rounded-lg text-lg text-semibold">
+                      <aside key={order._id} className="grid bg-cyan-200 text-center justify-center md:w-96 m-3 md:m-4 p-4 rounded-lg md:text-lg text-semibold">
                         <h2 className="text-3xl text-bold text-green-600">Encomenda {k+1}</h2>
                       <p>Nome: {order.user?.firstName} {order.user?.lastName}</p>
                         <p>Número de telefone: {order.user?.numberPhone}</p>
@@ -137,10 +137,13 @@ export const OrderAdmin=()=>{
               <>
               <section className="grid justify-center w-screen">
                 <h2 className="text-center text-2xl font-bold "><span className="text-green-500 bg-slate-900 rounded-full p-5">{orders?.total}</span> Encomendas feitas </h2>
-                <aside className=" bg-slate-900 w-min p-4 rounded-lg h-screen overflow-y-auto" >
+                <aside className=" bg-slate-900 w-min max-w-[90vw] md:p-4 rounded-lg h-screen overflow-y-auto" >
+                   
                   {loading ? <CircularProgress /> : orders?.orderData.map((order)=>(
-                    <aside className="grid bg-gray-200 text-center justify-center w-96 m-4 p-4 rounded-lg text-lg text-semibold">
-                      <p>Nome: {order.user.firstName} {order.user.lastName}</p>
+                  
+                  <aside key={order._id} className="grid bg-slate-200 text-center justify-center md:w-96 m-3 md:m-4 p-4 rounded-lg md:text-lg text-semibold">
+                   
+                   <p>Nome: {order.user.firstName} {order.user.lastName}</p>
                         <p>Número de telefone: {order.user.numberPhone}</p>
                     
                         <p>Contacto: {order.contact}</p>

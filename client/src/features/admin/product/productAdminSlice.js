@@ -79,7 +79,8 @@ export const createAdminProduct = createAsyncThunk(
 // READ products
 export const readAdminProducts = createAsyncThunk(
   "productsAdmin/readAdminProducts",
-  async (_, thunkAPI) => {
+  async (Notstock, thunkAPI) => {
+    
     const { sortOrder, search, filterCategory } =
       thunkAPI.getState().productsAdmin;
       const { admin } = thunkAPI.getState().admin;
@@ -90,7 +91,7 @@ export const readAdminProducts = createAsyncThunk(
     //let base_url = "https://goodal-mern.onrender.com/api/products";
 
     try {
-      let base_url = `${url}?sort=${sortOrder}&category=${filterCategory.toString()}&search=${search}`;
+      let base_url = `${url}?sort=${sortOrder}${Notstock?'&NoStock=true':''}&category=${filterCategory.toString()}&search=${search}`;
 
       console.log(base_url);
 
@@ -207,6 +208,20 @@ const productAdminSlice = createSlice({
     setClearInputs: (state) => {
       state.productData = initialState.productData;
     },
+    setFilterCategory: (state, action) => {
+      //processo de retirada do pai quando o filho existe
+      let listCat=action.payload.listCat
+      let categoryStatic=action.payload.categoryStatic
+      categoryStatic.map((element)=>{
+        const fatherExist = listCat.includes(element[0])
+        const sonExist=element[1].some((v)=>listCat.includes(v))
+        if(fatherExist && sonExist){
+          //eliminando o pai
+          listCat=listCat.filter((value)=>value!==element[0])
+        }
+      }) 
+      state.filterCategory = listCat;
+    }
   },
   extraReducers: (builder) => {
     builder

@@ -5,10 +5,20 @@ import { useDispatch } from "react-redux";
 import { useEffect, useState } from 'react';
 import { setFilterCategory } from '../features/customer/product/productCustomerSlice';
 
-const FilterCategory=({ onClickCat, products ,categoryStatic})=>{
-    const [listCat,setListCat] = useState([])
+const FilterCategory=({ onClickCat, products ,categoryStatic,listCategory})=>{
+    
+    const [listCat,setListCat] = useState(listCategory ? listCategory : [])
     const dispatch = useDispatch()
-  
+
+    useEffect(()=>{
+      if(listCategory && listCategory.length !== 0){
+        
+        setListCat(listCategory)
+
+      }
+      },[listCategory])
+
+
     useEffect(()=>{
       if(onClickCat){
         onClickCat(listCat)
@@ -32,7 +42,8 @@ const FilterCategory=({ onClickCat, products ,categoryStatic})=>{
                 <FormControlLabel  
                 value={data[0]} 
                 control={
-                  <Checkbox 
+                  <Checkbox
+                    checked={listCat.includes(data[0])} 
                     onChange={(e)=>{
                         if(e.target.checked){
                           setListCat((prev)=>[...prev,data[0]])
@@ -52,7 +63,8 @@ const FilterCategory=({ onClickCat, products ,categoryStatic})=>{
                     <FormControlLabel  
                       value={item} 
                       control={
-                        <Checkbox 
+                        <Checkbox
+                          checked={listCat.includes(item)}
                           onChange={(e)=>{
                             if(e.target.checked){
                               setListCat((prev)=>[...prev,item])

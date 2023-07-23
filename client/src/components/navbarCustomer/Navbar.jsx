@@ -1,16 +1,17 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
 import { NavLink, useLocation } from "react-router-dom";
 
 //materials
 import Backdrop from '@mui/material/Backdrop';
 import Modal from '@mui/material/Modal';
-import {Button,Fade,} from '@mui/material';
+import {Button,Fade, Menu, MenuItem,} from '@mui/material';
 import Badge from '@mui/material/Badge';
 import CloseIcon from '@mui/icons-material/Close';
 
 import { useDispatch, useSelector } from "react-redux";
 import {
   setCloseCart,
+  setMyOrderStatusFalse,
   setOpenCart,
 } from "../../features/customer/cart/cartSlice";
 
@@ -32,6 +33,7 @@ import {
   setSortOrder,
 } from "../../features/customer/product/productCustomerSlice";
 import CancelMyOrder from "../deleteCustomerOrder";
+import FilterCategory from "../filterCategory";
 
 const Navbar = () => {
   const location = useLocation();
@@ -59,13 +61,18 @@ const Navbar = () => {
   const [lastName, setLastName]=useState(customer?.lastName)
   //modal user
   const [open, setOpen] = useState(false);
-  const handleOpen = () => setOpen(true);
+  const handleOpen = () =>{
+    setOpen(true);
+    console.log('clicou')
+  } 
   const handleClose = () => setOpen(false);
   const inputStyle='bg-gray-300 outline-indigo-300 p-2 m-3 rounded-sm'
   const [isValidPhoneNumber,setIsValidatorNumber]=useState(true) 
+  const headerRef=useRef()
+
   const Update=()=>{
     if(showInput==='name'){
-      console.log('oi')
+      
       dispatch(changeData({
         firstName,
         lastName
@@ -86,14 +93,7 @@ const Navbar = () => {
    
   }
   // mobile dropdown
-  const handleDropdown = () => {
-    setDropdown(!dropdown);
 
-    setMobileNav(false); // hide mobile nav when filter nav is shown
-    setSearchNav(false);
-    setFilterNav(false); // hide filter nav when mobile nav is shown
-    setSortNav(false); // hide sort nav when mobile nav is shown
-  };
 
   // mobile nav
   const handleMobileNav = () => {
@@ -149,6 +149,20 @@ const Navbar = () => {
 
     handleFilterNav();
   };
+  //modal menu cutomer mobile
+  const [anchorElCustomer, setAnchorElCustomer] = React.useState(null);
+  const openCustomer=Boolean(anchorElCustomer)
+  const handleDropdown = (mobile) => {
+    mobile ? setAnchorElCustomer(headerRef.current) : setDropdown(!dropdown);
+
+    setMobileNav(false); // hide mobile nav when filter nav is shown
+    setSearchNav(false);
+    setFilterNav(false); // hide filter nav when mobile nav is shown
+    setSortNav(false); // hide sort nav when mobile nav is shown
+  };
+  const handleCloseCustomer = () => {
+    setAnchorElCustomer(null);
+  };
 
   const handleSearchChange = (event) => {
     dispatch(setSearch(event.target.value));
@@ -197,8 +211,9 @@ const Navbar = () => {
     if((ordersStatus=='idle' && customer)|| myOrderStatus){
       
       dispatch(UpadateOrderPending())
+      dispatch(setMyOrderStatusFalse())
     }
-  },[ordersStatus,dispatch,customer,myOrderStatus])
+  },[ordersStatus,customer,myOrderStatus])
   useEffect(() => {
     
     window.addEventListener("scroll", changeBackground);
@@ -212,15 +227,17 @@ const Navbar = () => {
     dispatch(customerLogOut());
   };
 
+
   return (
     <>
       <header
+        ref={headerRef}
         className={`${
           navColor ? "border-b border-zinc-200 bg-bgcolor" : "bg-bgcolor2"
         } fixed z-40 w-full transition duration-200 ease-in-out`}
       >
-        <nav className="container mx-auto ">
-          <div className="flex items-center justify-between  py-4 px-6 lg:px-16">
+        <nav className="container mx-auto">
+          <div className="flex items-center justify-between py-4 px-6 lg:px-16">
             <div className="flex items-center justify-center space-x-3 md:hidden">
               {/* mobile nav logo*/}
               <div
@@ -231,9 +248,7 @@ const Navbar = () => {
               </div>
 
               {/* mobile search logo*/}
-              <div onClick={handleSearchNav} className="cursor-pointer text-xl">
-                <FiSearch />
-              </div>
+              
             </div>
 
             {/* website logo */}
@@ -262,14 +277,14 @@ const Navbar = () => {
                 {customer ? (
                   <li className="font-urbanist font-bold text-zinc-600">
                     <button
-                      onClick={handleDropdown}
+                      onClick={()=>handleDropdown(false)}
                       className="flex items-center space-x-0.5 transition duration-200 ease-in-out hover:text-primary"
                     >
                       <span>{customer.firstName}</span>
                       <IoIosArrowDown />
                     </button>
 
-                    {dropdown && (
+                    {(dropdown || openCustomer) && (
                       <div
                         className={`absolute z-10 mt-6 rounded-md shadow-md bg-${
                           navColor ? "bgcolor2" : "bgcolor"
@@ -298,7 +313,7 @@ const Navbar = () => {
                                   }}
                                 >
                                   <Fade in={open}>
-                                    <div className='w-screen h-screen grid justify-center absolute content-center'>
+                                    <div className=' text-center w-screen h-screen grid justify-center absolute content-center'>
                                       <div className='grid p-6 bg-white border-black border-solid border-2 h-min max-w-2xl rounded-md justify-center'>
                                       <button onClick={handleClose} className='justify-self-end'><CloseIcon /></button>
                                       <h2 className='text-2xl m-2 text-center font-bold text-white bg-gray-800 rounded-md'>
@@ -308,7 +323,7 @@ const Navbar = () => {
                                       {showInput==='name' && (
                                         <>
                                         <label 
-                                          className="text-center"
+                                          className=""
                                           htmlFor="firstName">
                                             Primeiro:  
                                             <input 
@@ -388,7 +403,7 @@ const Navbar = () => {
                     <li className="space-x-2 font-urbanist font-bold text-zinc-600">
                    
                       <button
-                        onClick={handleDropdown}
+                        onClick={()=>handleDropdown(true)}
                         className={`${
                           location.pathname === "/customer/signup" ||
                           location.pathname === "/customer/login"
@@ -486,36 +501,31 @@ const Navbar = () => {
            
               <div className="flex items-center justify-center space-x-3 md:space-x-0">
                 {/* mobile account logo*/}
-                <div
-                  onClick={handleDropdown}
-                  className="cursor-pointer text-2xl md:hidden"
-                >
-                  <MdOutlineAccountCircle />
-                </div>
-
+                
                 {/* mobile cart logo */}
                 <div
-                  onClick={handleCartNav}
                   className="relative flex cursor-pointer items-center justify-end text-xl text-zinc-600 hover:text-primary"
                 >
-                  <Badge badgeContent={cartTotalQuantity} color="primary">
+                  <Badge onClick={handleCartNav} badgeContent={cartTotalQuantity} color="primary">
                      <HiOutlineShoppingBag size={25} />
 
                   </Badge>
-                  
-                </div>
-                {(orderPending && orderPending.length!==0 && customer) && 
-                (
+                  {(orderPending && orderPending.length!==0 && customer) && 
+                 (
                 <CancelMyOrder />
                   
                 )
                 }
+           
+                </div>
                 </div>
             </div>
           </div>
 
           {/* filter and sort nav */}
           {isProductsPage && (
+            <> 
+
             <div className="flex border-t border-zinc-200 text-sm md:hidden">
               <button
                 onClick={handleFilterNav}
@@ -533,6 +543,11 @@ const Navbar = () => {
                 <FaSort />
               </button>
             </div>
+            <div onClick={handleSearchNav} className="cursor-pointer bg-slate-100 text-xl md:hidden p-2 flex justify-end">
+                 <FiSearch size={'2rem'} />
+              </div>
+            </>
+           
           )}
         </nav>
 
@@ -582,22 +597,35 @@ const Navbar = () => {
           <div className="container mx-auto border-t border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <div className="flex flex-col space-y-3">
               <button onClick={() => onClickCat("All")}>Todos</button>
-       
-         
-              {products.categories?.map((cat) => (
-                <button key={cat} onClick={() => onClickCat(cat)}>
-                  {cat}
-                </button>
-              ))}
+              <FilterCategory categoryStatic={categoryStatic}/>
             </div>
           </div>
         )}
 
         {/* mobile menu */}
         {mobileNav && (
-          <div className="container mx-auto border-t border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+          <div className=" container mx-auto border-t border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
-              <li>
+              <li 
+                  onClick={handleDropdown}
+                   className="cursor-pointer w-full flex p-2">
+              <span
+                  className="cursor-pointer text-2xl md:hidden"
+                >
+                   <MdOutlineAccountCircle/>
+                </span>
+                {customer ? (
+                  <p className="pl-3">
+                  {customer.firstName} {customer.lastName}
+                </p>
+                ):(
+                  <p className="pl-3">
+                    Conta
+                  </p>
+                )}
+              </li>
+              <hr />
+              <li className="p-2">
                 <NavLink
                   onClick={handleMobileNav}
                   className={({ isActive }) =>
@@ -608,7 +636,7 @@ const Navbar = () => {
                   Sobre Nós
                 </NavLink>
               </li>
-              <li>
+              <li className="p-2">
                 <NavLink
                   onClick={handleMobileNav}
                   className={({ isActive }) =>
@@ -626,8 +654,41 @@ const Navbar = () => {
         {/* mobile account */}
         {customer ? (
           <>
-            {dropdown && (
-              <div className="container mx-auto border-t border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+            {openCustomer && (
+              <Menu
+              id="basic-menu"
+              anchorEl={anchorElCustomer}
+              open={openCustomer}
+              onClose={handleCloseCustomer}
+              MenuListProps={{
+                'aria-labelledby': 'basic-button',
+              }}
+            >
+              
+             <div className=" w-[85vw] sm:w-[100vw] mx-auto border-t border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
+             
+              <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
+                  <li>
+                    <div className="flex flex-col">
+                      <span className="text-base">Cliente</span>
+                      <span className="text-sm font-medium">
+                        {customer.email}
+                      </span>
+                    </div>
+                  </li>
+                  <li className="flex justify-center m-2">
+                    
+                   <button onClick={handleOpen} className="btn-secondary ">Detalhes</button>
+ 
+                  </li>
+                  <li>
+                    <button onClick={handleLogout}>Sair da Conta</button>
+                  </li>
+                </ul>
+              </div>
+            </Menu>
+          
+            )/*(
                 <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
                   <li>
                     <div className="flex flex-col">
@@ -637,12 +698,17 @@ const Navbar = () => {
                       </span>
                     </div>
                   </li>
+                  <li className="flex w-full justify-center m-2">
+                    
+                   <button onClick={handleOpen} className="btn-secondary ">Detalhes</button>
+ 
+                  </li>
                   <li>
-                    <button onClick={handleLogout}>Sair</button>
+                    <button onClick={handleLogout}>Sair da Conta</button>
                   </li>
                 </ul>
               </div>
-            )}
+        )*/}
           </>
         ) : (
           <>

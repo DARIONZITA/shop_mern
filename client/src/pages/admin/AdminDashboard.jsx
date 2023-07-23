@@ -14,7 +14,7 @@ export const AdminDashboard = () => {
 
   
   return (
-    <main className="flex w-full bg-bgcolor md:min-h-screen items-center">
+    <main className="flex w-full bg-bgcolor min-h-screen items-center">
           {
             whatShow==='orders' && (
               <OrderAdmin />
@@ -28,7 +28,7 @@ export const AdminDashboard = () => {
 
           {
             whatShow==='products' && (
-              <div className="container mx-auto py-16 px-6 lg:px-16">
+              <div className="container mx-auto py-16 lg:px-16">
                 <div className="mt-10 grid">
                     <button className="btn-primary absolute right-6 bg-green-300 " onClick={()=>dispatch(setWhatShow('createProduct'))}>Criar novo Produto</button>
                 

@@ -30,6 +30,7 @@ function App() {
   const { admin } = useSelector((store) => store.admin);
   const  customer = useSelector((store) => store.customer.customer);
   const customerPending  = useSelector((store) => store.customer.customerPending);
+  
   const Wrapper = ({ children }) => {
     const location = useLocation();
     useLayoutEffect(() => {
@@ -37,11 +38,18 @@ function App() {
     }, [location.pathname]);
     return children;
   };
+  console.log(customer)
 
   useEffect(() => {
-    dispatch(checkAdmin());
-    dispatch(checkCustomer());
-   // dispatch(update)
+    if(!customer){
+      
+     dispatch(checkCustomer())
+    }
+    if(!admin){
+      
+      dispatch(checkAdmin());;
+  
+    } // dispatch(update)
  
   }, []);
 

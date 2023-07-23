@@ -1,6 +1,7 @@
 import User from "../models/adminModel.js";
 import jwt from "jsonwebtoken";
 import Customer from "../models/customerModel.js";
+import { createToken } from "../controllers/customerController.js";
 
 const requireAuth = async (req, res, next) => {
 
@@ -22,11 +23,17 @@ const requireAuth = async (req, res, next) => {
     // verify the token to make sure its not tampered
     // token + secret
     // then get the _id from the token
-    const { _id } = jwt.verify(token, process.env.SECRET);
+    const { _id ,exp} = jwt.verify(token, process.env.SECRET);
+
+    const agora = Math.floor(Date.now() / 1000)
+    if(exp - agora <= 60 * 60 * 24 * 7){
+      
+      req.token= createToken(_id)
+    }
     
     // find the user with the _id on the db
     // and only get/select the id of the user
-    // attach the user id into the req
+    // attach the user id into the re
     // so that it can be accesible on other handler functions
     // this is the ser currently login
     req.user = await Customer.findOne({ _id }).select("_id");

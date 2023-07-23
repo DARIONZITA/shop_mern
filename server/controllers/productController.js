@@ -1,6 +1,6 @@
  import mongoose from "mongoose";
 import Product from "../models/productModel.js";
-import cloudinary from "../utils/cloudinary.js";
+import cloudinary from "../utils/cloudinary.cjs";
 import {updateProducts} from "../servers/product.service.js"
 // CREATE
 const createProduct = async (req, res) => {
@@ -54,11 +54,10 @@ const createProduct = async (req, res) => {
   // adding data to db
   try {
     // Upload an image to Cloudinary
-    const result1 =await cloudinary.v2.uploader.upload(post.imgOne, {
+    const result1 =await cloudinary.uploader.upload(post.imgOne, {
       folder: "shope",
-    });
-    console.log(result1)
-    const result2 =await cloudinary.v2.uploader.upload(post.imgTwo, {
+    })
+    const result2 =await cloudinary.uploader.upload(post.imgTwo, {
       folder: "shope",
     });
     
@@ -76,7 +75,7 @@ const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-    res.status(400).json({ error: error});
+    res.status(400).json({ error: error.mes});
   }
 };
 
@@ -90,8 +89,8 @@ const readProducts = async (req, res) => {
     const page = parseInt(req.query.page) - 1 || 0;
     const limit = parseInt(req.query.limit) || 9;
     const maxPrice = parseInt(req.query.maxPrice) || 1000000
-    const withoutStock = req.query.stock ? 0 : {$ne: 0}
-    let category = req.query.category || "All";
+    const withoutStock = req.query.NoStock ? {$lte:0} : {$gt: 0}
+    let category = req.query.category || "All"
 
     const categoryOptions = await Product.distinct("category");
 
@@ -118,7 +117,7 @@ const readProducts = async (req, res) => {
     const response = {
       error: false,
       total,
-      stock : withoutStock!==0,
+      stock : req.query.NoStock ? false : true,
       page: page + 1,
       limit,
       categories: categoryOptions,

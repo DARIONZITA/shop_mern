@@ -215,6 +215,11 @@ const cartSlice = createSlice({
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
+    setMyOrderStatusFalse: (state) => {
+      state.myOrderStatus=false
+
+
+    },
     setClearCart: (state) => {
       state.cartItems = [];
 
@@ -285,6 +290,7 @@ export const {
   setDecreaseItemQTY,
   setGetTotals,
   setPreAdd,
+  setMyOrderStatusFalse,
   setPreDecrease,
   setAddItemToCartTwo,
   setMunicipioAndDistrito,

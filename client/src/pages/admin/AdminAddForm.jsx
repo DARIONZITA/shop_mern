@@ -183,9 +183,8 @@ export const AdminAddForm = () => {
 
         {/* Product Category */}
         <p>Categorias do produto</p>
-        <FilterCategory categoryStatic={categoryStatic} onClickCat={onClickCat}/>
+        <FilterCategory categoryStatic={categoryStatic} onClickCat={onClickCat} listCategory={productData.category}/>
         {/* Product Name */}
-         {console.log(emptyFields)}
         <input
           type="text"
           name="name"

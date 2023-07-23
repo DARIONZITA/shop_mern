@@ -10,8 +10,8 @@ import jwt from "jsonwebtoken";
 
 // create token function. we can use this function many times
 // userid + secret = token
-const createToken = (_id) => {
-  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: "90d" });
+export const createToken = (_id) => {
+  return jwt.sign({ _id }, process.env.SECRET, { expiresIn: '30d'});
 };
 
 // SIGNUP
@@ -123,6 +123,7 @@ const customerUpadate = async(req,res)=>{
 
 const MyOrders = async(req, res)=>{
   const userId= req.user
+  const token= req.token ? req.token : false
   const myOrders= await Customer.findById(userId).select('pendingOrders')
     .populate({
       path: 'pendingOrders',
@@ -134,7 +135,7 @@ const MyOrders = async(req, res)=>{
       }
     })
 
-  res.send({myOrders})
+  res.send({myOrders,token})
 }
 
 export {

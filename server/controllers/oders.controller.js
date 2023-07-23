@@ -74,10 +74,11 @@ const getAllOrders=async(req, res) => {
     try {
         const sortObject =
           req.query.sort === "oldest" ? { createdAt: 1 } : { createdAt: -1 };
-    
+
         const page = parseInt(req.query.page) - 1 || 0;
         const limit = parseInt(req.query.limit) || 6;
         const { user, product, isDone } = req.query;
+        const token = req.token ? req.token : false
 
         // Crie um objeto de filtro vazio inicialmente
         const filter = {};
@@ -124,6 +125,7 @@ const getAllOrders=async(req, res) => {
         const response = {
           error: false,
           isDone: filter.isDone ,
+          token,
           total,
           page: page + 1,
           limit,

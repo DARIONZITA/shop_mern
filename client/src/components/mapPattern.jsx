@@ -3,7 +3,7 @@ import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker,Popup, useMapEvents} from 'react-leaflet';
 import 'leaflet/dist/leaflet.css';
 import {setMunicipioAndDistrito, deleteDistrito,setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
-
+import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
@@ -45,7 +45,7 @@ function UpMarker() {
 
 export const MapPattern=(props)=>{
   const admin= props.admin ? true : false 
-  const {showMapa,myCoordinates, handleMarkerClick}=props
+  const {showMapa,myCoordinates, handleMarkerClick,handleCloseMapa}=props
   // Defina o ícone personalizado
   const customIcon = new Icon({
     iconUrl: '../src/assets/gps (3).png',
@@ -135,10 +135,16 @@ export const MapPattern=(props)=>{
     
     return(
         <>
-            <div className={municipio && 'fixed top-20 grid justify-center w-full left-0 m-4 z-10'}>
+         
+            <div className={(municipio && showMapa) && 'fixed top-5 md:top-20 grid justify-center w-full left-0 md:m-4 z-10 bg-gray-200 md:bg-transparent p-2 rounded-sm'}>
+           {(!admin && showMapa && municipio)&& (
+           <button className='top-0 right-0 text-right flex justify-end' onClick={()=>handleCloseMapa()}>
+             <CloseIcon />
+            </button>              
+            )}
             {showMapa && (
             
-            <label className='font-bold text-center text-lg block '>
+            <label className='font-bold text-center md:text-lg block '>
             <select onChange={changeMunicipio} className='p-3 rounded-md text-center'>
                 <option disabled selected value> -- Selecione o Município -- </option>
 
@@ -157,7 +163,7 @@ export const MapPattern=(props)=>{
             )}
             
             {(geojsonData && municipio && showMapa) && (
-            <label className='font-bold text-center text-lg block '>
+            <label className='font-bold text-center md:text-lg block '>
             
             <select 
                 className='p-3 rounded-md text-center m-4' 
@@ -181,7 +187,7 @@ export const MapPattern=(props)=>{
                     )
                 })}
             </select>
-            <p className='text-white bg-zinc-900 rounded-sm text-lg font-semibold m-2'>Selecione um ponto de encontro</p>
+            <p className='text-white bg-zinc-900 rounded-sm md:text-lg font-semibold m-2 text-center p-2'>Selecione um ponto de encontro</p>
             </label>
             )
             }
@@ -195,7 +201,7 @@ export const MapPattern=(props)=>{
                 center={locationCenter.coordinates} 
                 zoom={locationCenter.zoom} 
                 doubleClickZoom={!admin} 
-                style={{height:'50vh', width:'100vw'}}
+                style={{height:'60vh', width:'100vw'}}
                 className='fixed bottom-0 left-0 rounded-t-[25%] border-blue-500 border-solid border-2 z-10'
                 >
             <TileLayer 

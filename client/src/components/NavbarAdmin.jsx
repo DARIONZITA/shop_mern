@@ -109,6 +109,15 @@ const   NavbarAdmin = () => {
             }
           >
             <ul className="container mx-auto space-y-3 py-3 px-6 lg:px-16">
+              <li>
+                <button onClick={()=>dispatch(setWhatShow('orders'))} className="btn-secondary">Encomendas</button>
+              </li>
+              <li>
+                <button onClick={()=>dispatch(setWhatShow('products'))} className="btn-secondary">Produtos</button>
+              </li>
+              <li>
+                <button onClick={()=>dispatch(setWhatShow('coordinates'))} className="btn-secondary">Coordenadas</button>
+              </li>  
               <li className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
                 <NavLink
                   onClick={handleNav}

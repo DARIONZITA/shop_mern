@@ -73,7 +73,7 @@ export default function CancelMyOrder(){
                       </Badge>
                  </IconButton>
                  <Popover
-                    classes='w-96'
+            
                     id={id}
                     open={openOrder}
                     anchorEl={anchorEl}
@@ -84,30 +84,32 @@ export default function CancelMyOrder(){
                     }}
                   >
                     
-                  <div className="w-96 h-auto">
+                  <div className="grid w-96 max-w-full p-4 max-h-[70vh]">
                     {orderPending.map((oneOrder,k)=>( 
                     
-                  <div key={`${oneOrder._id} ${k}`} className="relative m-5 mt-10 bg-slate-200 rounded-md p-2
-                  ">
+                  <div key={`${oneOrder._id} ${k}`} className="relative p-2 m-4  bg-slate-200 rounded-md">
                     
                     <div className="relative">
-                      <span className="absolute -top-3 right-4 z-20">
+                      <span className="absolute -top-3 right-0 md:right-4 z-20">
                         <IconButton
                           onClick={() => handleClickOpen(k,oneOrder._id)}
                           aria-label="delete" 
                           color="error">
-                          <DeleteIcon fontSize='large' />
+                          <DeleteIcon fontSize='medium' />
                         </IconButton>
                       </span>
-                      <h1 className=" text-center font-semibold text-lg m-2 text-gray-600">Encomenda {k+1}</h1>
+                      <h1 className=" text-center font-semibold text-lg m-2 text-gray-600 pt-8 md:pt-0">
+                        <hr /> 
+                        Encomenda {k+1}
+                      </h1>
                       
                     
                       
 
                     </div>
                           
-                        <span className="absolute opacity-70 top-0 left-4 bg-gray-800  rounded-md p-2 m-2 text-lg text-white text-bold z-20">{oneOrder.prices.priceTotal} Kz</span>
-                        <div className=" m-2 p-2 h-32 overflow-y-auto border-solid border-{0.2} border-gray-400 shadow-inner shadow-gray-400 rounded-md" >
+                        <span className="absolute opacity-70 top-0 left-0 md:left-4 bg-gray-800  rounded-md p-2 m-2 md:text-lg text-white text-bold z-20">{oneOrder.prices.priceTotal} Kz</span>
+                        <div className=" max-h-32 overflow-y-auto border-solid border-[0.2] border-gray-400 shadow-inner shadow-gray-400 rounded-md" >
                         
                           {oneOrder.products.map((product,key)=>(
                        
