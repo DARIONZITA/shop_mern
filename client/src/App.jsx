@@ -41,6 +41,7 @@ function App() {
   console.log(customer)
 
   useEffect(() => {
+    
     if(!customer){
       
      dispatch(checkCustomer())

@@ -105,19 +105,27 @@ export const OrderAdmin=()=>{
                             .reduce((element,value,key)=>
                             key!=3?` ${element} - ${value}`:`${element}`)}</p>
                         <div className="rounded-lg h-30 overflow-y-auto bg-slate-800 text-white">
-                          {order.products.map((product)=>(
-                            <aside className="border-green-800 border-solid border-2">
-                              <p>Produto: {product.productId.name}</p>
-                      
-                              <p>{product.productId.price} Kz</p>
-                              <p>Quantidade: {product.quantity}</p>
+                          {order.products && order.products.map((product)=>(
+                             <>
+                             {
+                                product.productId && (
+                                  <aside className="border-green-800 border-solid border-2">
+                                  <p>Produto: {product.productId.name}</p>
                           
-                            </aside>
+                                  <p>{product.productId.price} Kz</p>
+                                  <p>Quantidade: {product.quantity}</p>
+                              
+                                  </aside>
+                                )
+                              }
+                            </>
                           )
                           )}
                         </div>
                         <p>frete: {order.frete} kz</p>
                         <p>Preço Total: {order.prices.priceTotal} Kz</p>
+                        
+                        <p>Valor Total: {order.prices.priceTotal + order.frete} Kz</p>
                         
                         <div className="flex justify-between w-full">
                           <button className="btn-primary bg-red-400 m-2 hover:bg-red-800 hover:text-white" onClick={()=>handleClickOpen('cancel',k+1,order._id)}>Cancelar</button>
@@ -163,18 +171,31 @@ export const OrderAdmin=()=>{
                             key!=3?` ${element} - ${value}`:`${element}`)}</p>
                         <div className="rounded-lg h-30 overflow-y-auto bg-slate-800 text-white">
                           {order.products.map((product)=>(
-                            <aside className="border-green-800 border-solid border-2">
-                              <p>Produto: {product.productId.name}</p>
-                      
-                              <p>{product.productId.price} Kz</p>
-                              <p>Quantidade: {product.quantity}</p>
+                          <>
+                           {
+                              product.productId && (
+                                <aside className="border-green-800 border-solid border-2">
+                                <p>Produto: {product.productId.name}</p>
+                        
+                                <p>{product.productId.price} Kz</p>
+                                <p>Quantidade: {product.quantity}</p>
+                            
+                                </aside>
+                              )
+                            }
+                          </>
+                           
+                           )
+                           
                           
-                            </aside>
                           )
-                          )}
+                          }
                         </div>
                         <p>frete: {order.frete} kz</p>
                         <p>Preço Total: {order.prices.priceTotal} Kz</p>
+                        
+                        <p>Valor Total: {order.prices.priceTotal + order.frete} Kz</p>
+                        
                         
                     </aside>
                   ))}

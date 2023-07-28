@@ -53,13 +53,14 @@ const createProduct = async (req, res) => {
 
   // adding data to db
   try {
-    // Upload an image to Cloudinary
-    const result1 =await cloudinary.uploader.upload(post.imgOne, {
-      folder: "shope",
+    // Upload an image to Cloudinar
+    const result1 =await cloudinary.v2.uploader.upload(post.imgOne, {
+      folder: "shope"
     })
-    const result2 =await cloudinary.uploader.upload(post.imgTwo, {
-      folder: "shope",
-    });
+  
+    const result2 =await cloudinary.v2.uploader.upload(post.imgTwo, {
+      folder: "shope"
+    })
     
     const product = await Product.create({
       ...post,
@@ -75,7 +76,7 @@ const createProduct = async (req, res) => {
 
     res.status(201).json(product);
   } catch (error) {
-    res.status(400).json({ error: error.mes});
+    res.status(400).json({ error: error});
   }
 };
 
@@ -149,15 +150,31 @@ const readProduct = async (req, res) => {
 
     res.status(200).json(product);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+     res.status(400).json({ error: error.message });
   }
 };
 
+const readProductIfStocks = async (req, res) => {
+  try {
+    const {ids} = req.query
+    const ArrIds=ids.split(',')
+    const productsData = await Product.find({
+      stock: { $gt : 0 } 
+    },'_id stock')
+
+    const productsOk = productsData.filter((product) => ArrIds.includes((product._id).toString()))
+
+
+    res.status(200).json({products:productsOk.map((product)=>product._id),stock: productsOk.map((product)=>product.stock)});
+  } catch (error) {
+    res.status(400).json({ message: error.message });
+  }
+};
 // UPDATE
 const updateProduct = async (req, res) => {
   const { id } = req.params;
   const post = req.body;
-
+  
   if (!mongoose.Types.ObjectId.isValid(id)) {
     return res.status(400).json({ error: "id is not valid" });
   }
@@ -185,7 +202,7 @@ const updateProduct = async (req, res) => {
   }
 
   post.description?.forEach((desc, index) => {
-    console.log('passou')
+
     if (desc.detailOne) {
       Fields.push(`description[${index}].detailOne`);
     }
@@ -209,16 +226,24 @@ const updateProduct = async (req, res) => {
       return res.status(400).json({ error: "product not found" });
     }
   
-
+  
     if (post.imgOne) {
       const imgId1 = currentProduct.imgOne.public_id;
-
+      
       // if the current image is same as the image in the input
       //  we will upload a new 
+    
     if(post.imgOne.public_id){
       if (imgId1 !== post.imgOne.public_id ) {
         if (imgId1) {
-            await cloudinary.uploader.destroy(imgId1);
+            await cloudinary.uploader.destroy(imgId1); 
+            const newImage1 = await cloudinary.uploader.upload(post.imgOne, {
+              folder: "shope",
+            });
+            data.imgOne = {
+              public_id: newImage1.public_id,
+              url: newImage1.secure_url,
+            };
           }
         }
     }
@@ -226,14 +251,9 @@ const updateProduct = async (req, res) => {
     
 
         // Upload an image to Cloudinary
-        const newImage1 = await cloudinary.uploader.upload(post.imgOne, {
-          folder: "shope",
-        });
+      
 
-        data.imgOne = {
-          public_id: newImage1.public_id,
-          url: newImage1.secure_url,
-        };
+       
       }
     
 
@@ -243,18 +263,19 @@ const updateProduct = async (req, res) => {
         if (imgId2 !== post.imgTwo.public_id) {
             if (imgId2) {
               await cloudinary.uploader.destroy(imgId2);
+              const newImage2 = await cloudinary.uploader.upload(post.imgTwo, {
+                folder: "shope",
+              });
+              data.imgTwo = {
+                public_id: newImage2.public_id,
+                url: newImage2.secure_url,
+              };
             }}}
           
 
         // Upload an image to Cloudinary
-        const newImage2 = await cloudinary.uploader.upload(post.imgTwo, {
-          folder: "shope",
-        });
 
-        data.imgTwo = {
-          public_id: newImage2.public_id,
-          url: newImage2.secure_url,
-        };
+        
       }
     
 
@@ -283,7 +304,7 @@ const updateCategory = async(req, res)=>{
     const product = await Product.findByIdAndUpdate({_id: id},{$push:{category:newCategory}}, { new: true });
     res.status(200).json(product);
   } catch (error) {
-    res.status(400).json({ error: error.message });
+    res.status(400).json({ error: error });
   }
 } 
 
@@ -327,4 +348,5 @@ export {
   updateProduct,
   updateCategory,
   deleteProduct,
+  readProductIfStocks
 };

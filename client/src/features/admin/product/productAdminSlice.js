@@ -118,17 +118,20 @@ export const updateAdminProduct = createAsyncThunk(
   "productsAdmin/updateAdminProduct",
   async (dataObj, thunkAPI) => {
     const { admin } = thunkAPI.getState().admin;
-
+    let product = dataObj.productData
+    let dataProduct={...product,price:Number(product.price),stock:Number(product.stock)}
+    console.log(JSON.stringify(dataProduct),dataObj.currentId)
     if (!admin) {
       return thunkAPI.rejectWithValue({
         error: "User is not logged in.",
       });
     }
-
+    let base_url=`${url}${dataObj.currentId}`
     try {
-      const response = await fetch(url + dataObj.currentId, {
+    
+      const response = await fetch(base_url, {
         method: "PATCH",
-        body: JSON.stringify(dataObj.productData),
+        body: JSON.stringify(dataProduct),
         headers: {
           "Content-Type": "application/json",
           Authorization: `Bearer ${admin.token}`,
@@ -136,14 +139,15 @@ export const updateAdminProduct = createAsyncThunk(
       });
 
       const data = await response.json();
-
+      
       if (response.ok) {
         thunkAPI.dispatch(setClearInputs());
         return data;
       } else {
         return thunkAPI.rejectWithValue({
           error: data.error,
-          emptyFields: data.emptyFields,
+          emptyFields: [],
+         
         });
       }
     } catch (error) {
@@ -157,7 +161,7 @@ export const deleteAdminProduct = createAsyncThunk(
   "productsAdmin/deleteAdminProduct",
   async (id, thunkAPI) => {
     const { admin } = thunkAPI.getState().admin;
-
+    
     if (!admin) {
       return;
     }
@@ -166,6 +170,7 @@ export const deleteAdminProduct = createAsyncThunk(
       const response = await fetch(url + id, {
         method: "DELETE",
         headers: {
+          "Content-Type": "application/json",
           Authorization: `Bearer ${admin.token}`,
         },
       });
@@ -282,7 +287,7 @@ const productAdminSlice = createSlice({
         state.productsStatus = "failed";
         state.loadingUpdate = false;
         state.error = action.payload.error;
-        state.emptyFields = action.payload.emptyFields;
+        state.emptyFields = [];
       })
 
       // DELETE product
@@ -293,6 +298,7 @@ const productAdminSlice = createSlice({
       .addCase(deleteAdminProduct.fulfilled, (state, action) => {
         state.productsStatus = "succeeded";
         state.loadingDelete = false;
+
         state.products.productsData = state.products.productsData.filter(
           (product) => product._id !== action.payload._id
         );

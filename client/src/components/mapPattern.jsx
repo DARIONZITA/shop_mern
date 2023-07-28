@@ -219,7 +219,7 @@ export const MapPattern=(props)=>{
                 <Marker 
                 key={feature._id}
                 position={feature.coordinates}
-                eventHandlers={{ dblclick: () => handleMarkerClick(feature.name,feature._id)}}
+                eventHandlers={{ dblclick: () => handleMarkerClick(feature.name,feature.coordinates,feature._id)}}
                 >
                 <Popup>
                     {feature.name}

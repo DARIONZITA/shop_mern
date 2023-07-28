@@ -19,6 +19,7 @@ import FormControl from '@mui/material/FormControl';
 import FormLabel from '@mui/material/FormLabel';
 import { UpadateOrderPending, changeData } from '../features/auth/customerAuthSlice';
 import { CircularProgress } from '@mui/material';
+import { readCustomerProducts } from '../features/customer/product/productCustomerSlice';
 
 
 
@@ -42,7 +43,7 @@ export default function Steps({handleCloseModal}) {
     products:
       cartItems.map((product)=>{
         return {
-          productId: product._id,
+          productId: product,
           quantity: product.quantity}
       })
       ,

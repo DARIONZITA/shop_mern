@@ -20,7 +20,7 @@ export const MarksAdmin=()=>{
   const [dataRemove,setDataRemove]= useState()
 
 
-  const handleMarkerClick = (placeName, id) => {
+  const handleMarkerClick = (placeName,coordinates, id) => {
     setDataRemove({placeName, id, open: true})
   };
   const handleCloseRemoveOnMapa = () => {

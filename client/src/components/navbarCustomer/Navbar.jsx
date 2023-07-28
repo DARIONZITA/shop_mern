@@ -10,6 +10,7 @@ import CloseIcon from '@mui/icons-material/Close';
 
 import { useDispatch, useSelector } from "react-redux";
 import {
+  checkProductsCart,
   setCloseCart,
   setMyOrderStatusFalse,
   setOpenCart,
@@ -28,6 +29,7 @@ import { MdOutlineAccountCircle } from "react-icons/md";
 import { Cart } from "../../pages/customer/cart/index.js";
 import {  UpadateOrderPending, changeData, customerLogOut } from "../../features/auth/customerAuthSlice";
 import {
+  readCustomerProducts,
   setFilterCategory,
   setSearch,
   setSortOrder,
@@ -51,9 +53,9 @@ const Navbar = () => {
   const [dropdown, setDropdown] = useState(false);
 
   const dispatch = useDispatch();
-  const { cartState, cartTotalQuantity,myOrderStatus } = useSelector((store) => store.cart);
+  const { cartItems,cartState, cartTotalQuantity,myOrderStatus,checkCartStatus } = useSelector((store) => store.cart);
   const { customer, orderPending, ordersStatus} = useSelector((store) => store.customer);
-  const { products, search, categoryStatic } = useSelector((store) => store.productsCustomer);
+  const { products, search, categoryStatic,page } = useSelector((store) => store.productsCustomer);
   //change data
   const [showInput,setShowInput]= useState(null)
   let [number, setNumber] = useState(customer?.numberPhone)
@@ -63,7 +65,6 @@ const Navbar = () => {
   const [open, setOpen] = useState(false);
   const handleOpen = () =>{
     setOpen(true);
-    console.log('clicou')
   } 
   const handleClose = () => setOpen(false);
   const inputStyle='bg-gray-300 outline-indigo-300 p-2 m-3 rounded-sm'
@@ -204,12 +205,23 @@ const Navbar = () => {
       setNavColor(false);
     }
   };
-  
-
+  useEffect(()=>{
+    if(((cartTotalQuantity != 0))){
+     
+     dispatch(checkProductsCart({ids: cartItems.map((item) => item._id)}))
+    }
+  },[products])
+  useEffect(()=>{
+       if(((cartTotalQuantity != 0) && (!checkCartStatus))){
+        
+        dispatch(checkProductsCart({ids: cartItems.map((item) => item._id)}))
+      }
+  },[cartTotalQuantity])
 
   useEffect(()=>{
-    if((ordersStatus=='idle' && customer)|| myOrderStatus){
-      
+    if((ordersStatus == 'idle' && customer) || myOrderStatus){
+        
+      dispatch(readCustomerProducts());
       dispatch(UpadateOrderPending())
       dispatch(setMyOrderStatusFalse())
     }
@@ -403,7 +415,7 @@ const Navbar = () => {
                     <li className="space-x-2 font-urbanist font-bold text-zinc-600">
                    
                       <button
-                        onClick={()=>handleDropdown(true)}
+                        onClick={()=>handleDropdown()}
                         className={`${
                           location.pathname === "/customer/signup" ||
                           location.pathname === "/customer/login"
@@ -415,7 +427,7 @@ const Navbar = () => {
                         <IoIosArrowDown />
                       </button>
 
-                      {dropdown && (
+                      {(dropdown || openCustomer) && (
                         <div
                           className={`absolute z-10 mt-6 rounded-md shadow-md bg-${
                             navColor ? "bgcolor2" : "bgcolor"
@@ -607,7 +619,7 @@ const Navbar = () => {
           <div className=" container mx-auto border-t border-b border-zinc-200 py-3 px-6 md:hidden lg:px-16">
             <ul className="font-urbanist font-bold text-zinc-600 transition duration-200 ease-in-out hover:text-primary">
               <li 
-                  onClick={handleDropdown}
+                  onClick={()=>handleDropdown(customer? false : true)}
                    className="cursor-pointer w-full flex p-2">
               <span
                   className="cursor-pointer text-2xl md:hidden"

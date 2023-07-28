@@ -110,6 +110,7 @@ const initialState = {
 export const readCustomerProducts = createAsyncThunk(
   "productsCustomer/readCustomerProducts",
   async (_, thunkAPI) => {
+   
     const { sortOrder, search,filterPrice, filterCategory, page } =
       thunkAPI.getState().productsCustomer;
 
@@ -177,14 +178,16 @@ const productCustomerSlice = createSlice({
         state.productsStatus = "loading";
       })
       .addCase(readCustomerProducts.fulfilled, (state, action) => {
-        state.productsStatus = "succeeded";
-        state.products = action.payload;
-        state.error = null;
+          state.productsStatus = "succeeded";
+          state.products = action.payload;
+          state.error = null;
+    
       })
       .addCase(readCustomerProducts.rejected, (state, action) => {
         state.productsStatus = "failed";
         state.error = action.payload.error;
-      });
+      })
+     
   },
 });
 

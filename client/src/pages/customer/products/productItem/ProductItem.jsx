@@ -22,8 +22,9 @@ import {
 
 const ProductItem = () => {
   const { state } = useLocation();
+
   const { item } = state;
-  const { _id, category, name, price, imgOne, imgTwo } = item;
+  const { _id, category, name, price, imgOne, imgTwo, stock } = item;
 
   const { cartItems, testQuant } = useSelector((store) => store.cart);
   const dispatch = useDispatch();
@@ -37,7 +38,7 @@ const ProductItem = () => {
   console.log(cartItems);
 
   const handleIncrease = () => {
-    dispatch(setPreAdd());
+    dispatch(setPreAdd({stock}));
   };
 
   const handleDecrease = () => {
@@ -60,7 +61,7 @@ const ProductItem = () => {
   }
 
   const handleAddToCart = () => {
-    const items = { _id, category, name, price, imgOne, imgTwo };
+    const items = { _id, category, name, price, imgOne, imgTwo, stock };
 
     dispatch(setAddItemToCartTwo(items));
   };

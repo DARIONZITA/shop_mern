@@ -9,6 +9,7 @@ import {
   updateProduct,
   updateCategory,
   deleteProduct,
+  readProductIfStocks
 } from "../controllers/productController.js";
 
 import { requireAuth } from "../middleware/requireAuth.js";
@@ -31,11 +32,14 @@ router.post("/",adminAuth, createProduct);
 // READ ALL
 router.get("/", readProducts);
 
+// READ ARRAY STOCK
+router.get("/checkProducts",readProductIfStocks )
+
 // READ ONE
 router.get("/:id", readProduct);
 
 // UPDATE
-router.patch("/:id",adminAuth, updateProduct);
+router.patch("/:id",adminAuth, updateProduct)
 
 router.patch("/addCategory/:id", updateCategory);
 

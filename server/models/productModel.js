@@ -19,7 +19,7 @@ const productSchema = new Schema(
     stock: {
       type: Number,
       required: true,
-      min:0
+      
     },
     imgOne: {
       public_id: {

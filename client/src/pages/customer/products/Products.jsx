@@ -30,11 +30,14 @@ const Products = () => {
   const { products,categoryStatic, sortOrder, search, filterCategory, page } = useSelector(
     (store) => store.productsCustomer
   );
-
+  const myOrderStatus = useSelector(
+    (store) => store.cart.myOrderStatus
+  );
+  
   useEffect(() => {
     dispatch(readCustomerProducts());
   }, [sortOrder, search, filterCategory, page]);
-
+  
   const filteredBanners =
     !(filterCategory === "All")
       ? bannerImages.find((banner) => banner.category === "All")
@@ -67,8 +70,8 @@ const Products = () => {
     dispatch(setSearch(event.target.value));
   };
 
-  const handleAddToCart = (_id, category, name, price, imgOne, imgTwo) => {
-    const items = { _id, category, name, price, imgOne, imgTwo };
+  const handleAddToCart = (_id, category, name, price, imgOne, imgTwo, stock) => {
+    const items = { _id, category, name, price, imgOne, imgTwo ,stock};
 
     dispatch(setAddItemToCart(items));
   };

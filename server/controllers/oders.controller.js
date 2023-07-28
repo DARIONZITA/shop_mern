@@ -53,12 +53,12 @@ const createOrder=async(req, res)=>{
       user: _id,
       ...post
     })
-    const order=await Order.findById(orderCreated._id).populate('user').populate('products.productId')
+    const order=await Order.findById(orderCreated._id).populate('user')
     if(!order){
       return res.status(400).send({error: "error to create,try again"})
     }
     post.products.forEach(async(value) =>{
-        await updateProducts(value.productId,{ $inc: {stock: -value.quantity } })   
+        await updateProducts(value.productId._id,{ $inc: {stock: -value.quantity } })   
     })
     await addPendingOrder(_id,order._id)
     sendInAdminEmail(order)
@@ -88,7 +88,7 @@ const getAllOrders=async(req, res) => {
         filter.user = user;
         }
         if (product) {
-        filter['products.productId'] = product;
+        filter['products.productId._id'] = product;
         }
         if (isDone) {
         filter.isDone = isDone === 'true';
@@ -100,15 +100,7 @@ const getAllOrders=async(req, res) => {
         const orderData = await Order.find(
           filter
         )
-              .populate(
-                {
-                  path: 'products.productId',
-                  model: 'Product',
-                  select:'name price'
-              
-                }
-              )
-            .populate(
+        .populate(
               {
               path: 'user',
               select: 'firstName lastName email numberPhone'      
@@ -167,7 +159,7 @@ const cancelOrder=async(req, res)=>{
     const order = await Order.findByIdAndRemove(idOrder);
     if(!order){return res.status(400).json({ error: "Error, try again" });}
     order.products.forEach(async(value) =>{
-      await updateProducts(value.productId,{ $inc: {stock: value.quantity } })   
+      await updateProducts(value.productId._id,{ $inc: {stock: value.quantity } })   
     })    
     await removePendingOrder(order.user,idOrder)
 

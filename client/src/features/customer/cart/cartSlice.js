@@ -5,7 +5,8 @@ import { UpadateOrderPending } from "../../auth/customerAuthSlice";
 
 
 const initialState = {
-  myOrderStatus:false,
+  myOrderStatus: false,
+  checkCartStatus: false,
   cartState: false,
   cartItems: localStorage.getItem("cart")
     ? JSON.parse(localStorage.getItem("cart"))
@@ -64,6 +65,38 @@ export const createOrder = createAsyncThunk(
     }
    }
 )
+
+
+export const checkProductsCart = createAsyncThunk(
+  "cart/checkProductsCart",
+  async (dataObj, thunkAPI) => {
+     const dataStr=dataObj.ids.reduce((total,value)=>`${total},${value}`)
+
+     let base_url = "http://localhost:3000/api/products/checkProducts?ids=";
+
+   // let base_url = "https://goodal-mern.onrender.com/api/products";
+
+    try {
+  
+
+
+      console.log(base_url + dataStr);
+      console.log(dataStr)
+      const response = await fetch(base_url + dataStr,{
+        method:'GET'
+      });
+      const data = await response.json();
+      console.log(data)
+
+      if (response.ok) {
+    
+        return  data
+      }
+    } catch (error) {
+      return thunkAPI.rejectWithValue({ error: error });
+    }
+  }
+);
 
 const distanceToCenter = (coordinates,state ) => {
   return ((state.central.coordinates[0]-coordinates[0])**2+(state.central.coordinates[1]-coordinates[1])**2)**1/2
@@ -126,15 +159,23 @@ const cartSlice = createSlice({
 
       if (itemIndex >= 0) {
         if (state.testQuant > 0) {
-          state.cartItems[itemIndex].quantity += state.testQuant;
+          if(state.cartItems[itemIndex].quantity < state.cartItems[itemIndex].stock){
+          
+            state.cartItems[itemIndex].quantity += state.testQuant;;
+            toast.success("Carrinho atualizado");;
+            }else{
+                  
+                state.cartItems[itemIndex].quantity = state.cartItems[itemIndex].stock;
+                toast.error("Não há mais em estoque");
+            }
         }
 
-        toast.success("Cart Updated");
+        
       } else {
         const temp = { ...action.payload, quantity: state.testQuant };
         state.cartItems.push(temp);
 
-        toast.success(`${action.payload.name} added to your Cart`);
+      toast.success(`${action.payload.name} Adicionado ao seu carrinho`);
       }
 
       state.testQuant = 1;
@@ -142,10 +183,18 @@ const cartSlice = createSlice({
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
     setPreAdd: (state, action) => {
-      state.testQuant += 1;
+      const { stock } = action.payload
+      if(state.testQuant < stock){
+        
+        state.testQuant += 1;
+        toast.success("Quantidade do Item Aumentada");
 
-      toast.success("Item quantity increased");
-
+      }else{
+                  
+        state.testQuant = stock;
+        toast.error("Não há mais em estoque");
+      }
+    
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
     setPreDecrease: (state, action) => {
@@ -155,7 +204,7 @@ const cartSlice = createSlice({
 
       if (state.cartItems[itemIndex].quantity > 1) {
         state.testQuant -= 1;
-        toast.success("Item quantity decreased");
+        toast.success("Quantidade do Item Diminuida");
       }
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
@@ -165,17 +214,22 @@ const cartSlice = createSlice({
         (item) => item._id === action.payload._id
       );
 
-      console.log(itemIndex);
-        
       // -1 more than or equal 0
       if (itemIndex >= 0) {
+        if(state.cartItems[itemIndex].quantity < state.cartItems[itemIndex].stock){
+          
         state.cartItems[itemIndex].quantity += 1;
-        toast.success("Item quantity increased");
+        toast.success("Quantidade do Item Aumentada");
+        }else{
+              
+            state.cartItems[itemIndex].quantity = state.cartItems[itemIndex].stock;
+            toast.error("Não há mais em estoque");
+        }
       } else {
         const temp = { ...action.payload, quantity: 1 };
         state.cartItems.push(temp);
 
-        toast.success(`${action.payload.name} added to your Cart`);
+        toast.success(`${action.payload.name} adcionado ao seu carrinho`);
       }
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
@@ -186,8 +240,16 @@ const cartSlice = createSlice({
         );
 
       if (itemIndex >= 0) {
-        state.cartItems[itemIndex].quantity += 1;
-        toast.success("Item quantity increased");
+        if(state.cartItems[itemIndex].quantity < state.cartItems[itemIndex].stock){
+          
+          state.cartItems[itemIndex].quantity += 1;
+          toast.success("Quantidade do Item Aumentada");
+          }else{
+                
+              state.cartItems[itemIndex].quantity = state.cartItems[itemIndex].stock;
+              toast.error("Não há mais em estoque");
+          }
+     
       }
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
@@ -199,7 +261,7 @@ const cartSlice = createSlice({
 
       if (state.cartItems[itemIndex].quantity > 1) {
         state.cartItems[itemIndex].quantity -= 1;
-        toast.success("Item quantity decreased");
+        toast.success("Quantidade do Item Diminuida");
       }
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
@@ -211,7 +273,7 @@ const cartSlice = createSlice({
 
       state.cartItems = removeItem;
 
-      toast.success(`${action.payload.name} removed from your Cart`);
+      toast.success(`${action.payload.name} removido do seu carrinho`);
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
@@ -223,7 +285,7 @@ const cartSlice = createSlice({
     setClearCart: (state) => {
       state.cartItems = [];
 
-      toast.success("Cart Cleared");
+      toast.success("Carrinho Apagado");
 
       localStorage.setItem("cart", JSON.stringify(state.cartItems));
     },
@@ -269,7 +331,6 @@ const cartSlice = createSlice({
         state.myOrderStatus = true
         state.cartState = false
         state.cartItems = [];
-
         toast.success("Encomenda feita com sucesso");
   
         localStorage.setItem("cart", JSON.stringify(state.cartItems));
@@ -278,6 +339,48 @@ const cartSlice = createSlice({
       .addCase(createOrder.rejected, (state, action) => {
         state.myOrderStatus = false
       })
+      .addCase(checkProductsCart.fulfilled, (state, action) => {
+          const { products, stock } = action.payload
+          state.checkCartStatus = true //chamando para checKar o carrinho apenas uma no inicio e quando produtos são atualizados
+        //se não estiver em stock remove e atualiza
+         const removeItems  = state.cartItems.every((item)=>products.includes(item._id))
+         if(!removeItems){
+          state.cartItems = state.cartItems.filter((item) => products.includes(item._id))
+          localStorage.setItem("cart", JSON.stringify(state.cartItems))
+         }
+         //se o stock mudar, mude é atualize
+         const changeStock = state.cartItems.every((item)=>{
+          
+          const positionIndex = products.indexOf(item._id)
+          if(positionIndex != -1){
+            return stock[positionIndex] === item.stock
+          }
+          return true
+        })
+        if(!changeStock){
+
+          state.cartItems=state.cartItems.map((item)=>{
+            const positionIndex = products.indexOf(item._id)
+              if(positionIndex != -1){
+                if(stock[positionIndex] !== item.stock){
+                  item.stock=stock[positionIndex]
+                  if(item.quantity > stock[positionIndex]){
+                
+                    item.quantity=stock[positionIndex] 
+                  }
+                }
+              }
+              return item
+            })
+            
+          localStorage.setItem("cart", JSON.stringify(state.cartItems))
+    
+        }
+        
+      })
+      .addCase(checkProductsCart.rejected, (state, action) => {
+        console.log(action.payload)
+      });
     }
  })
 export const {

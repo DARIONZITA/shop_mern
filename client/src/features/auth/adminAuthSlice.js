@@ -75,7 +75,6 @@ export const readOrder = createAsyncThunk(
            });
       const data = await response.json();
       if(response.status==401){
-        localStorage.removeItem('admin')
         
         thunkAPI.dispatch(adminLogOutAction())
       }

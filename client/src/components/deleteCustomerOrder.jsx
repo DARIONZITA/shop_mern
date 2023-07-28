@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 
 
 import { CancelOrder } from "../features/auth/customerAuthSlice";
+import { readCustomerProducts } from "../features/customer/product/productCustomerSlice";
 
 
 export default function CancelMyOrder(){
@@ -37,7 +38,7 @@ export default function CancelMyOrder(){
     const id = openOrder ? 'simple-popover' : undefined;
     const cancelOrder=(idOrder) => { 
         dispatch(CancelOrder(idOrder))
-        
+        dispatch(readCustomerProducts())
         setOpenConfirm(null);
         setTextConfirm('')     
       }
@@ -112,9 +113,9 @@ export default function CancelMyOrder(){
                         <div className=" max-h-32 overflow-y-auto border-solid border-[0.2] border-gray-400 shadow-inner shadow-gray-400 rounded-md" >
                         
                           {oneOrder.products.map((product,key)=>(
-                       
-                       
-                        <div key={Math.log10(key)} className="flex justify-between m-4 font-semibold pr-2">
+                          <>
+                          {product.productId && (
+                          <div key={Math.log10(key)} className="flex justify-between m-4 font-semibold pr-2">
                        
                           <span>
                             {product.productId.name}
@@ -123,7 +124,9 @@ export default function CancelMyOrder(){
                             {product.quantity}
                           </span>
                           </div>
-                      
+                        )}
+                          </>
+                        
                         ))}
                         </div>
                      </div>

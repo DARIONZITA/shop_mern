@@ -48,7 +48,8 @@ export const ProductGrid = ({ products, handleAddToCart }) => {
                     item.name,
                     item.price,
                     item.imgOne,
-                    item.imgTwo
+                    item.imgTwo,
+                    item.stock
                   )
                 }
               >
@@ -65,7 +66,8 @@ export const ProductGrid = ({ products, handleAddToCart }) => {
                     item.name,
                     item.price,
                     item.imgOne,
-                    item.imgTwo
+                    item.imgTwo,
+                    item.stock
                   )
                 }
                 className="h-6 w-6 cursor-pointer rounded bg-gray-700 p-1 text-bgcolor transition-all duration-100 ease-in-out hover:bg-gray-800 active:scale-90 active:bg-gray-800"
