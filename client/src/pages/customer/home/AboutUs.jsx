@@ -4,7 +4,7 @@ import Button from "../../../components/Button";
 import { aboutUsImages } from "../../../assets/home/aboutUs/aboutUsImages";
 
 import { AiOutlineArrowRight, AiOutlineArrowLeft } from "react-icons/ai";
-import { GoPrimitiveDot } from "react-icons/go";
+import { GoDot } from "react-icons/go";
 
 import { Link } from "react-router-dom";
 import { useDispatch, useSelector } from "react-redux";
@@ -106,7 +106,7 @@ const AboutUs = () => {
 
               <div className="flex items-center space-x-3">
                 {aboutUsImages.map((item) => (
-                  <GoPrimitiveDot
+                  <GoDot
                     key={item.id}
                     onClick={() => dispatch(setCurrImg({ currImg: item.id }))}
                     className={
