@@ -21,7 +21,7 @@ const CartTop = ({ handleCartNav }) => {
           />
         </button>
         <h1 className="font-bold text-primary">
-          Your Cart ({cartTotalQuantity} Items)
+          Seu carrinho ({cartTotalQuantity} Items)
         </h1>
       </div>
 
@@ -29,7 +29,7 @@ const CartTop = ({ handleCartNav }) => {
         onClick={handleClearCart}
         className="cursor-pointer rounded bg-primary py-1 px-2 text-sm text-white transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary md:text-base"
       >
-        Clear Cart
+        Limpar carrinho
       </h1>
     </div>
   );

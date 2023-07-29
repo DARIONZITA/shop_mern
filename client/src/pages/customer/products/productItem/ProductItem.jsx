@@ -105,14 +105,14 @@ const ProductItem = () => {
             </p>
 
             <span className="inline-block font-gotu text-lg text-secondary md:text-2xl lg:text-3xl">
-              {formatPrice(item.price)}
+              {item.price} Kz
             </span>
 
             <div className="flex items-center justify-between space-x-4 md:justify-start">
               <Button
                 navigateTo="/products"
                 btnStyle="btn-primary"
-                text="Back"
+                text="Voltar"
               />
 
               <div className="flex w-min items-center justify-start border border-zinc-300">
@@ -136,7 +136,7 @@ const ProductItem = () => {
               </div>
 
               <button onClick={handleAddToCart} className="btn-secondary">
-                Add to cart
+                Adcionar ao carrinho
               </button>
             </div>
 
@@ -149,35 +149,9 @@ const ProductItem = () => {
                     "text-pink-600 underline decoration-2 underline-offset-8 hover:text-pink-600"
                   }`}
                 >
-                  Description
+                  Descrição
                 </li>
-                <li
-                  onClick={() => setActiveSection("ingredients")}
-                  className={`${productNavItemClass} ${
-                    activeSection === "ingredients" &&
-                    "text-pink-600 underline decoration-2 underline-offset-8 hover:text-pink-600"
-                  }`}
-                >
-                  Ingredients
-                </li>
-                <li
-                  onClick={() => setActiveSection("howtouse")}
-                  className={`${productNavItemClass} ${
-                    activeSection === "howtouse" &&
-                    "text-pink-600 underline decoration-2 underline-offset-8 hover:text-pink-600"
-                  }`}
-                >
-                  How To Use
-                </li>
-                <li
-                  onClick={() => setActiveSection("share")}
-                  className={`${productNavItemClass} ${
-                    activeSection === "share" &&
-                    "text-pink-600 underline decoration-2 underline-offset-8 hover:text-pink-600"
-                  }`}
-                >
-                  Share
-                </li>
+                
               </ul>
 
               {detailSection}

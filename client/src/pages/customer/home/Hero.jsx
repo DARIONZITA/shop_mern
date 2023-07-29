@@ -19,7 +19,7 @@ const Hero = () => {
   useEffect(() => {
     const timer = setTimeout(() => {
       slideNext();
-    }, 2500);
+    }, 5000);
 
     return () => clearTimeout(timer);
   });

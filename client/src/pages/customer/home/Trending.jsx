@@ -10,8 +10,7 @@ const Trending = () => {
           {/* text */}
           <div className="text-center md:px-48">
             <h1 className="font-gotu text-2xl font-bold text-primary md:text-4xl md:leading-relaxed">
-              Curated Korean Skincare, from top shelf items to trending new
-              arrivals.
+            Desde os principais itens de prateleira até os novos lançamentos.
             </h1>
           </div>
 
@@ -20,7 +19,7 @@ const Trending = () => {
             {/* 1st */}
             <div className="group relative col-span-2 row-span-4 flex h-72 items-center justify-center overflow-hidden md:h-[592px]">
               <span className="absolute z-20 font-gotu text-2xl font-bold text-bgcolor2 md:text-4xl">
-                Back in Stock
+              Suave hidratação
               </span>
 
               <div className="absolute inset-0 z-10">
@@ -37,7 +36,7 @@ const Trending = () => {
             {/* 2nd */}
             <div className="group relative col-span-2 row-span-2 flex h-72 items-center justify-center overflow-hidden">
               <span className="absolute z-20 font-gotu text-2xl font-bold text-bgcolor2 md:text-4xl">
-                On Sale
+              Pele radiante
               </span>
 
               <div className="absolute inset-0 z-10">
@@ -54,7 +53,7 @@ const Trending = () => {
             {/* 3rd */}
             <div className="group relative col-span-2 row-span-2 flex h-72 items-center justify-center overflow-hidden">
               <span className="absolute z-20 font-gotu text-2xl font-bold text-bgcolor2 md:text-4xl">
-                Trending Now
+              Novas tendências
               </span>
 
               <div className="absolute inset-0 z-10">

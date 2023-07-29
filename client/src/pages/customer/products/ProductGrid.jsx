@@ -83,7 +83,7 @@ export const ProductGrid = ({ products, handleAddToCart }) => {
 
           <div className="flex items-center justify-center">
             <span className="font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl">
-              {formatPrice(item.price)}
+              {item.price} Kz
             </span>
           </div>
         </div>

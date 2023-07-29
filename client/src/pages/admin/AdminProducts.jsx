@@ -122,7 +122,7 @@ export const AdminProducts = () => {
     // Format the price value using the user's locale and currency
     const formattedPrice = Number(price).toLocaleString(userLocale, {
       style: "currency",
-      currency: "USD",
+      currency: "AOA",
     });
 
     return formattedPrice;

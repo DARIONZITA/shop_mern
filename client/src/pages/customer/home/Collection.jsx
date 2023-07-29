@@ -21,11 +21,11 @@ const Collection = () => {
           {/* text div */}
           <div className="space-y-6 text-center">
             <h1 className="font-urbanist text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
-              Goodal Collection
+            Catálogo diverso de produtos
             </h1>
 
             <p className="font-gotu text-lg text-secondary md:text-2xl lg:text-3xl">
-              Highly effective, simply natural.
+            Produtos que fornecem resultados visíveis, como pele mais radiante, cabelos mais saudáveis ​​ou uma aparência rejuvenescida. 
             </p>
           </div>
 
@@ -71,7 +71,7 @@ const Collection = () => {
                       <Button
                         navigateTo="/products"
                         btnStyle="btn-card"
-                        text="View Collection"
+                        text="Ver Produtos "
                       />
                     </div>
                   </SwiperSlide>

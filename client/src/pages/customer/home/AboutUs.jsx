@@ -50,7 +50,7 @@ const AboutUs = () => {
           {/* text div */}
           <div className="col-span-2 w-full space-y-4">
             <p className="text-base font-bold text-secondary md:text-xl">
-              ABOUT US
+              Sobre nós
             </p>
 
             <div className="space-y-5 md:space-y-8">
@@ -59,24 +59,27 @@ const AboutUs = () => {
               </h1>
 
               <p className="text-base text-secondary md:text-lg">
-                Living a life where nature and people coexist. Goodal provides
-                simple solutions using unique and natural ingredients from
-                nature.
+              Viver uma vida onde a natureza e as pessoas coexistem.
+               A Goodal oferece soluções simples usando ingredientes
+                naturais e únicos da natureza.
+
+             
               </p>
 
               <p className="text-base text-secondary md:text-lg">
-                When you shop with goodal, it’s like spending time with a good
-                friend, a friend who knows her skincare and always has great
-                recommendations. Our online store is carefully merchandised to
-                make your experience effortless and enjoyable, with in-depth
-                product descriptions and detailed images that let you know
-                exactly what you’re getting.
+                 Quando você compra com a goodal, é como passar um tempo
+                 com uma boa amiga, uma amiga que conhece seus cuidados
+                  com a pele e sempre tem ótimas recomendações. Nossa loja
+                   online é cuidadosamente comercializada para tornar sua 
+                   experiência fácil e agradável, com descrições detalhadas 
+                   de produtos e imagens detalhadas que permitem que você saiba 
+                   exatamente o que está recebendo.
               </p>
 
               <Button
                 navigateTo="/about"
                 btnStyle="btn-primary"
-                text="Brand Story"
+                text="História da Loja"
               />
             </div>
           </div>

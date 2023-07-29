@@ -10,33 +10,33 @@ import { CgLockUnlock } from "react-icons/cg";
 const Follow = () => {
   const shipping = [
     {
-      name: "FREE US SHIPPING",
-      desc: "On $50+ US orders. Worldwide shipping available.",
+      name: "Entrega rápida e segura",
+      desc: "Trabalhamos com parceiros confiáveis ​​para garantir que seus perfumes cheguem com segurança até você.",
       icon: <BsBox className="h-6 w-6" />,
     },
     {
-      name: "SECURE PAYMENT",
-      desc: "Your payment information is processed securely.",
+      name: "Pagamento Presencial",
+      desc: "A sua segurança é a nossa prioridade! Na hora da entrega presencial, garantimos um processo de pagamento seguro e sem preocupações.",
       icon: <CgLockUnlock className="h-6 w-6" />,
     },
     {
-      name: "CONTACT US",
-      desc: "E-mail us at good@all.com",
+      name: "Contacte-nos",
+      desc: "E-mail : good@all.com / Telefone : 923 476 534",
       icon: <AiOutlineMail className="h-6 w-6" />,
     },
   ];
 
   return (
-    <section className="flex w-full items-center bg-bgcolor2 md:min-h-screen">
+    <section className="flex w-full items-center bg-bgcolor2 md:min-h-screen justify-center">
       <div className="container mx-auto py-16 px-6 lg:px-16">
         <div className="space-y-6 text-center md:space-y-12">
           {/* text div */}
           <h1 className="font-gotu text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
-            Follow us @goodal
+            Segue nos @goodal
           </h1>
 
           {/* grid div */}
-          <div className="grid grid-cols-2 gap-4 md:grid-cols-6">
+          <div className="grid grid-cols-1 gap-4 md:grid-cols-3">
             {followImages.map((item) => (
               <div key={item.id} className="group relative h-40 md:h-48">
                 <div className="transition duration-200 ease-in md:opacity-0 md:group-hover:opacity-100">

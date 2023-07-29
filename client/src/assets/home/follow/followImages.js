@@ -12,22 +12,10 @@ export const followImages = [
   },
   {
     id: 1,
-    img: two,
-  },
-  {
-    id: 2,
     img: three,
   },
   {
-    id: 3,
-    img: four,
-  },
-  {
-    id: 4,
+    id: 2,
     img: five,
-  },
-  {
-    id: 5,
-    img: six,
   },
 ];

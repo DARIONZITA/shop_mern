@@ -14,28 +14,29 @@ const About = () => {
             Good for ALL
           </h1>
           <p className="flex w-4/5 flex-col space-y-6 text-center font-gotu text-lg text-secondary md:text-2xl lg:text-3xl">
-            <span>Goodal stands for "good + all".</span>
+            <span>Goodal da junção de "good + all".</span>
             <span>
-              We believe in making good skincare products that are good for all.
-              Good skincare should be simple, not complicated or overwhelming.
+              Acreditamos em fazer bons produtos para a pele que são bons para todos.
+              Bons cuidados com a pele devem ser simples, não complicados ou esmagadores.
             </span>
 
             <span>
-              Goodal harvested plants that grew in diverse enviromental change
-              in season. With modern technology, we carefully filtering out
-              impurities by slowly boiling raw materials and extracting only
-              fresh active ingredients.
+            Goodal colheu plantas que cresceram em diversas mudanças ambientais
+               em temporada. Com tecnologia moderna, filtramos cuidadosamente
+               impurezas fervendo lentamente as matérias-primas e extraindo apenas
+               ingredientes ativos frescos.
             </span>
           </p>
         </div>
 
         <div className="flex justify-center">
           <video
-            className="rounded-xl shadow-2xl md:w-4/5 "
+            className="rounded-xl shadow-md md:w-4/5  max-h-screen"
             src={goodal}
             autoPlay
             loop
             muted
+
           />
         </div>
 

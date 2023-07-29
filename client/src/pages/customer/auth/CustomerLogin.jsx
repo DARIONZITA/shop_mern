@@ -28,7 +28,7 @@ export const CustomerLogin = () => {
             onSubmit={handleSubmit}
           >
             <h3 className="mb-3 font-urbanist text-xl font-bold text-primary md:text-3xl">
-              Please login to your account
+              Por favor, faça login na sua conta
             </h3>
 
             <input
@@ -46,24 +46,24 @@ export const CustomerLogin = () => {
               onChange={(e) => setPassword(e.target.value)}
               value={password}
               placeholder="Password"
-              className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg"
+              className="w-full border border-gray-300 py-3 px-5 shadow-md focus:outline-none md:py-4 md:px-6 md:text-lg "
             />
 
             <button
               disabled={loading}
-              className="w-full rounded-md bg-[#c6f6f8] py-2 px-5 font-urbanist font-extrabold text-secondary shadow-md ring-2 ring-[#abecee] transition duration-300 ease-in hover:bg-[#abecee] hover:text-primary md:py-3 md:px-6"
+              className="w-full  rounded-md bg-[#c6f6f8] py-2 px-5 font-urbanist font-extrabold text-secondary shadow-md ring-2 ring-[#abecee] transition duration-300 ease-in hover:bg-[#abecee] hover:text-primary md:py-3 md:px-6"
             >
-              LOGIN
+              Entrar
             </button>
 
             <div className="flex items-center justify-center space-x-2 font-urbanist text-base font-semibold text-gray-600">
-              <h4>New customer?</h4>
+              <h4>Novo cliente?</h4>
 
               <NavLink
                 to="/customer/signup"
                 className="underline transition duration-300 ease-in hover:text-primary"
               >
-                Create an account
+                Cria uma Conta
               </NavLink>
             </div>
 

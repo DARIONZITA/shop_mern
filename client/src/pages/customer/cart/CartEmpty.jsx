@@ -4,7 +4,7 @@ const CartEmpty = () => {
   return (
     <div className="flex justify-center">
       <h2 className="font-urbanist text-2xl font-bold text-primary">
-        Your Cart is empty
+        Seu carrinho está vazio
       </h2>
     </div>
   );

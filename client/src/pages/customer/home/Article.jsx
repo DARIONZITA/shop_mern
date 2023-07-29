@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 
 import Button from "../../../components/Button";
 import { IoIosArrowBack, IoIosArrowForward } from "react-icons/io";
@@ -13,8 +13,18 @@ import { Navigation } from "swiper";
 import "swiper/css";
 import "swiper/css/pagination";
 import "swiper/css/navigation";
+import { useDispatch, useSelector } from "react-redux";
+import { readCustomerProducts } from "../../../features/customer/product/productCustomerSlice";
+import { Link } from "react-router-dom";
 
 const Article = () => {
+  const dispatch = useDispatch()
+  const products = useSelector(
+    (store) => store.productsCustomer.products
+  );
+  useEffect(()=>{
+    dispatch(readCustomerProducts())
+  },[])
   return (
     <section className="flex w-full items-center bg-bgcolor md:min-h-screen">
       <div className="container mx-auto py-16 px-6 lg:px-16">
@@ -22,13 +32,13 @@ const Article = () => {
           {/* text div */}
           <div className="flex flex-col items-start justify-between gap-3 md:flex-row md:items-center md:gap-0">
             <h1 className="font-gotu text-4xl font-bold text-primary md:text-5xl lg:text-6xl">
-              On the Blog
+              Produtos recentes
             </h1>
 
             <Button
-              navigateTo="/about"
+              navigateTo="/products"
               btnStyle="btn-primary"
-              text="See more articles"
+              text="Ver mais produtos"
             />
           </div>
 
@@ -57,34 +67,50 @@ const Article = () => {
                 },
               }}
             >
-              {articleImages.map((item) => (
+              {products.productsData?.map((item) => (
                 <SwiperSlide key={item.id}>
-                  <div className="flex flex-col items-center space-y-7 p-5">
-                    <img
-                      className="h-60 w-full object-cover object-center shadow-lg"
-                      src={item.img}
-                      alt={item.img}
-                    />
+                  <div className="grid">
+                  <Link
+                          to={`/products/${item.name.toLowerCase().replace(/\s+/g, "-")}`}
+                          state={{ item }}
+                        >
+                  <div key={item._id} className="space-y-3 text-center bg-gray-100 rounded-lg shadow-sm m-2 shadow-black">
+                  
+                    <div className="relative">
+                      <div className="group relative grid h-44 justify-center md:h-80">
+                        
+                          <img
+                            className="absolute inset-0 h-full m-auto  object-cover transition duration-500 ease-in-out group-hover:opacity-0 "
+                            src={item.imgOne.url}
+                            alt={item.name}
+                          />
 
-                    <div className="space-y-7">
-                      <h3 className="font-urbanist text-xl font-bold text-primary">
-                        {item.name}
-                      </h3>
+                          <img
+                            className="absolute inset-0 h-full m-auto w-full rounded-lg object-cover opacity-0 shadow-xl transition duration-500 ease-in-out group-hover:opacity-100 "
+                            src={item.imgTwo.url}
+                            alt={item.name}
+                          />
+                       
 
-                      <p className="text-base text-secondary line-clamp-3 md:text-lg">
-                        When you shop with goodal, it’s like spending time with
-                        a good friend, a friend who knows her skincare and
-                        always has great recommendations. Our online store is
-                        carefully merchandised to make your experience
-                        effortless and enjoyable, with in-depth product
-                        descriptions and detailed images that let you know
-                        exactly what you’re getting.
-                      </p>
+                       
+                      </div>
 
-                      <button className="text-sm font-bold text-secondary underline underline-offset-4 transition duration-300 ease-in hover:text-primary md:text-base">
-                        READ MORE
-                      </button>
+                     
                     </div>
+          
+                    <div className="flex h-14 items-center justify-center">
+                      <p className="font-urbanist text-base text-secondary md:text-lg lg:text-xl">
+                        {item.name}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center justify-center">
+                      <span className="font-urbanist text-base font-bold text-secondary md:text-lg lg:text-xl">
+                        {item.price} Kz
+                      </span>
+                    </div>
+                  </div>
+                  </Link>
                   </div>
                 </SwiperSlide>
               ))}

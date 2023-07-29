@@ -4,8 +4,8 @@ export const ProductBanner = ({ filteredBanners }) => {
   return (
     <>
       {filteredBanners.category === "All" ? (
-        <div className="relative flex items-center justify-end pt-28 md:pt-14">
-          <h1 className="absolute mr-6 font-urbanist text-lg font-bold uppercase text-primary sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-52 lg:text-5xl">
+        <div className="relative flex md:items-center items-end justify-end pt-28 md:pt-14">
+          <h1 className="absolute mr-6 font-urbanist text-white text-lg font-bold uppercase sm:mr-5 sm:text-3xl md:mr-6 md:text-4xl lg:mr-52 lg:text-5xl">
             {filteredBanners.name}
           </h1>
 
