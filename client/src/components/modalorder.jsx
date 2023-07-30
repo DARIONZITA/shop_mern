@@ -40,7 +40,7 @@ import {Link} from 'react-router-dom'
               })
               )
             }
-            to='/customer/login'>
+            to="/customer/login">
             <button 
               
               className='rounded bg-blue-600 py-2 px-3 text-sm text-white transition-all duration-100 ease-in-out hover:bg-secondary active:scale-90 active:bg-secondary md:text-base' 
