@@ -1,13 +1,15 @@
 import React, { useEffect, useState,useRef } from 'react';
 import { Icon } from 'leaflet';
 import { MapContainer, TileLayer, Marker,Popup, useMapEvents} from 'react-leaflet';
+import markerIconPng from "leaflet/dist/images/marker-icon.png"
+import {Icon} from 'leaflet'
 import 'leaflet/dist/leaflet.css';
 import {setMunicipioAndDistrito, deleteDistrito,setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
 import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
-import imageIcon from '../src/assets/gps (3).png'
+import imageIcon from '../src/assets/gps.png'
 function UpMarker() {
   const [open, setOpen]=useState(true)
   const handleClose=()=>{
@@ -219,6 +221,7 @@ export const MapPattern=(props)=>{
                 <Marker 
                 key={feature._id}
                 position={feature.coordinates}
+                icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})}
                 eventHandlers={{ dblclick: () => handleMarkerClick(feature.name,feature.coordinates,feature._id)}}
                 >
                 <Popup>
