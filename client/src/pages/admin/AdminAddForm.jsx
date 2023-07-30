@@ -30,7 +30,7 @@ export const AdminAddForm = () => {
   useEffect(() => {
     // const url = "http://localhost:7001/api/products/";
 
-    const url = "http://localhost:3000/api/products/";
+    const url = "https://shop-backend-zejv.onrender.com/api/products/";
 
     const fecthUpdatingProduct = async () => {
       const response = await fetch(url + currentId, {

@@ -40,7 +40,7 @@ export const createOrder = createAsyncThunk(
   "cart/createOrder",
    async (dataobj,thunkAPI) => {
     let {customer}=thunkAPI.getState().customer
-    let base_url='http://localhost:3000/api/orders/create'
+    let base_url='https://shop-backend-zejv.onrender.com/api/orders/create'
     console.log(dataobj)
     try {
       const response = await fetch(base_url,{
@@ -72,7 +72,7 @@ export const checkProductsCart = createAsyncThunk(
   async (dataObj, thunkAPI) => {
      const dataStr=dataObj.ids.reduce((total,value)=>`${total},${value}`)
 
-     let base_url = "http://localhost:3000/api/products/checkProducts?ids=";
+     let base_url = "https://shop-backend-zejv.onrender.com/api/products/checkProducts?ids=";
 
    // let base_url = "https://goodal-mern.onrender.com/api/products";
 

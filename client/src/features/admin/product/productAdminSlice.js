@@ -1,6 +1,6 @@
 import { createSlice, createAsyncThunk } from "@reduxjs/toolkit";
 
-const url = "http://localhost:3000/api/products/";
+const url = "https://shop-backend-zejv.onrender.com/api/products/";
 
 //const url = "https://goodal-mern.onrender.com/api/products/";
 

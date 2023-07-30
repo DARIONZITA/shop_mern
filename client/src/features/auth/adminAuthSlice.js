@@ -15,7 +15,7 @@ export const orderDone = createAsyncThunk(
   "admin/orderDone",
   async (id, thunkAPI) => {
 
-    let base_url = "http://localhost:3000/api/orders/done"
+    let base_url = "https://shop-backend-zejv.onrender.com/api/orders/done"
     let {admin} = thunkAPI.getState().admin
     //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
 
@@ -60,7 +60,7 @@ export const readOrder = createAsyncThunk(
       }
     }
 
-     let base_url = "http://localhost:3000/api/orders/getAll";
+     let base_url = "https://shop-backend-zejv.onrender.com/api/orders/getAll";
 
    // let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
 
@@ -97,7 +97,7 @@ export const adminSignup = createAsyncThunk(
   "admin/adminSignup",
   async (dataObj, thunkAPI) => {
      const { admin } = thunkAPI.getState().admin
-     let base_url = "http://localhost:3000/api/admin/signup"
+     let base_url = "https://shop-backend-zejv.onrender.com/api/admin/signup"
 
     //let base_url = "https://goodal-mern.onrender.com/api/admin/signup";
 
@@ -133,7 +133,7 @@ export const adminSignup = createAsyncThunk(
 export const adminLogin = createAsyncThunk(
   "admin/adminLogin",
   async (dataObj, thunkAPI) => {
-     let base_url = "http://localhost:3000/api/admin/login"
+     let base_url = "https://shop-backend-zejv.onrender.com/api/admin/login"
 
     // let base_url = "https://goodal-mern.onrender.com/api/admin/login";
 

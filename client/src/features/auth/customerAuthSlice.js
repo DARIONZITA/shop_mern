@@ -20,7 +20,7 @@ export const CreateMarks = createAsyncThunk(
   "customer/CreateMarks",
   async (datap, thunkAPI) => {
      const { admin } = thunkAPI.getState().admin
-     let base_url = "http://localhost:3000/api/marks/add";
+     let base_url = "https://shop-backend-zejv.onrender.com/api/marks/add";
 
     //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
 
@@ -55,7 +55,7 @@ export const getAllMarks = createAsyncThunk(
     let search= data ? `?search=${data.search}` : ''
 
 
-     let base_url = "http://localhost:3000/api/marks/getAll";
+     let base_url = "https://shop-backend-zejv.onrender.com/api/marks/getAll";
 
     //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
 
@@ -84,7 +84,7 @@ export const RemoveMark = createAsyncThunk(
   "customer/RemoveMark",
   async (markId, thunkAPI) => {
     const { admin } = thunkAPI.getState().admin
-    let base_url = "http://localhost:3000/api/marks/cancel";
+    let base_url = "https://shop-backend-zejv.onrender.com/api/marks/cancel";
 
     //let base_url ="https://goodal-mern.onrender.com/api/orders/cancel";
     
@@ -121,7 +121,7 @@ export const CancelOrder = createAsyncThunk(
     let user = admin ? admin : customer 
     // let base_url = "http://localhost:7001/api/products";
 
-    let base_url ="http://localhost:3000/api/orders/cancel/"+ orderId;
+    let base_url ="https://shop-backend-zejv.onrender.com/api/orders/cancel/"+ orderId;
 
     try {
       
@@ -157,7 +157,7 @@ export const UpadateOrderPending =  createAsyncThunk(
     
     // let base_url = "http://localhost:7001/api/products";
 
-    let base_url ="http://localhost:3000/api/customer/myOrders";
+    let base_url ="https://shop-backend-zejv.onrender.com/api/customer/myOrders";
 
     try {
       
@@ -197,7 +197,7 @@ export const changeData = createAsyncThunk(
     const {customer}= thunkAPI.getState().customer
     // let base_url = "http://localhost:7001/api/customer/signup"
    
-    let base_url ="http://localhost:3000/api/customer/update";
+    let base_url ="https://shop-backend-zejv.onrender.com/api/customer/update";
 
     try {
       const response = await fetch(base_url, {
@@ -233,7 +233,7 @@ export const customerSignup = createAsyncThunk(
   async (dataObj, thunkAPI) => {
     // let base_url = "http://localhost:7001/api/customer/signup"
 
-    let base_url = "http://localhost:3000/api/customer/signup";
+    let base_url = "https://shop-backend-zejv.onrender.com/api/customer/signup";
     console.log(dataObj)
     try {
       const response = await fetch(base_url, {
@@ -266,7 +266,7 @@ export const customerConfirm = createAsyncThunk(
   async (dataObj, thunkAPI) => {
     // let base_url = "http://localhost:7001/api/customer/signup"
 
-    let base_url = "http://localhost:3000/api/customer/signup/verifyEmail";
+    let base_url = "https://shop-backend-zejv.onrender.com/api/customer/signup/verifyEmail";
 
     try {
       const response = await fetch(base_url, {
@@ -302,7 +302,7 @@ export const customerLogin = createAsyncThunk(
   async (dataObj, thunkAPI) => {
     // let base_url = "http://localhost:7001/api/customer/login"
 
-    let base_url = "http://localhost:3000/api/customer/login";
+    let base_url = "https://shop-backend-zejv.onrender.com/api/customer/login";
 
     try {
       const response = await fetch(base_url, {
