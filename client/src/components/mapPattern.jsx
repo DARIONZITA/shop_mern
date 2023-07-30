@@ -8,8 +8,8 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
-import imageIcon from '../src/assets/gps.png'
-import imageIcon2 from '../src/assets/placeholder.png'
+import imageIcon from '../assets/gps.png'
+import imageIcon2 from '../assets/placeholder.png'
 
 function UpMarker() {
   const [open, setOpen]=useState(true)
