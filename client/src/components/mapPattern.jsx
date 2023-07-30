@@ -10,6 +10,8 @@ import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
 import imageIcon from '../src/assets/gps.png'
+import imageIcon2 from '../src/assets/placeholder.png'
+
 function UpMarker() {
   const [open, setOpen]=useState(true)
   const handleClose=()=>{
@@ -17,7 +19,7 @@ function UpMarker() {
   }
 
   const customIcon = new Icon({
-    iconUrl: '../src/assets/placeholder.png',
+    iconUrl: imageIcon2,
     iconSize: [45, 45],
     iconAnchor: [32, 32],
   }); 
