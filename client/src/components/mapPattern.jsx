@@ -7,7 +7,7 @@ import CloseIcon from '@mui/icons-material/Close';
 import { useDispatch, useSelector } from "react-redux";
 import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
-
+import imageIcon from '../src/assets/gps (3).png'
 function UpMarker() {
   const [open, setOpen]=useState(true)
   const handleClose=()=>{
@@ -48,7 +48,7 @@ export const MapPattern=(props)=>{
   const {showMapa,myCoordinates, handleMarkerClick,handleCloseMapa}=props
   // Defina o ícone personalizado
   const customIcon = new Icon({
-    iconUrl: '../src/assets/gps (3).png',
+    iconUrl: imageIcon,
     iconSize: [45, 55],
     iconAnchor: [32, 41],
   }); 
