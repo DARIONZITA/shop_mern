@@ -74,7 +74,7 @@ const Article = () => {
                           to={`/products/${item.name.toLowerCase().replace(/\s+/g, "-")}`}
                           state={{ item }}
                         >
-                  <div key={item._id} className="space-y-3 text-center bg-gray-100 rounded-lg shadow-sm m-2 shadow-black">
+                  <div key={item._id} className="space-y-3 text-center bg-transparent rounded-lg shadow-sm m-2 ">
                   
                     <div className="relative">
                       <div className="group relative grid h-44 justify-center md:h-80">
