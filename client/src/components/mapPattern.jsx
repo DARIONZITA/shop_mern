@@ -125,7 +125,7 @@ export const MapPattern=(props)=>{
   },[changeMunicipio])
   useEffect(() => {
     
-    fetch('./LuandaMarkers.geojson')
+    fetch('../LuandaMarkers.geojson')
       .then(response => response.json())
       .then(data => {
         setGeojsonData(data.features);

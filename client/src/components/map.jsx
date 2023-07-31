@@ -4,6 +4,7 @@ import CircularProgress from '@mui/material/CircularProgress';
 import {setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
 import { useDispatch, useSelector } from "react-redux";
 import { MapPattern } from './mapPattern.jsx';
+import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 
 function Map() {
   
@@ -18,7 +19,7 @@ function Map() {
   const [isLoading, setIsLoading]=useState(false)
   const geoMarker=dataMarks? dataMarks.marksData : [] 
   const [showMapa, setShowMapa]=useState(false)
-
+  
   const handleMarkerClick = (placeName, coordinates) => {
     dispatch(setPlaceAndfrete({
       selectedPlace:{
@@ -56,7 +57,7 @@ function Map() {
    
       const minDistance=distance.reduce((a,b)=>Math.min(a,b))
       const minPosition=distance.indexOf(minDistance)
-      handleMarkerClick(geoMarker[minPosition].properties.name,geoMarker[minPosition].geometry.coordinates)
+      handleMarkerClick(geoMarker[minPosition].name,geoMarker[minPosition].coordinates)
     }
     
   },[distance])
@@ -64,10 +65,13 @@ function Map() {
   
   
   useEffect(()=>{
+    if(markStatus==='idle'){
+      dispatch(getAllMarks())
+    }
     if(geoMarker && myCoordinates){  
       
       setDistance(geoMarker.map((feature,key)=>{
-        return ((feature.geometry.coordinates[0]-myCoordinates.latitude)**2+(feature.geometry.coordinates[1]-myCoordinates.longitude)**2)**1/2
+        return ((feature.coordinates[0]-myCoordinates.latitude)**2+(feature.coordinates[1]-myCoordinates.longitude)**2)**1/2
       }))
       }
   },[myCoordinates])
