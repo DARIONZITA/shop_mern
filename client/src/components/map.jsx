@@ -2,7 +2,7 @@ import React, { useEffect, useState,useRef } from 'react';
 import 'leaflet/dist/leaflet.css';
 import CircularProgress from '@mui/material/CircularProgress';
 import {setPlaceAndfrete} from "../features/customer/cart/cartSlice.js"
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { MapPattern } from './mapPattern.jsx';
 
 function Map() {
@@ -10,11 +10,13 @@ function Map() {
       
   const dispatch = useDispatch();
 
+  
+  const {loading,dataMarks,markStatus}= useSelector(store => store.customer);
 
   const [myCoordinates, setMyCoordinates] = useState(null);
   const [distance, setDistance]=useState()
   const [isLoading, setIsLoading]=useState(false)
-  const [geoMarker, setGeoMarker]= useState()
+  const geoMarker=dataMarks? dataMarks.marksData : [] 
   const [showMapa, setShowMapa]=useState(false)
 
   const handleMarkerClick = (placeName, coordinates) => {
@@ -58,18 +60,7 @@ function Map() {
     }
     
   },[distance])
-  useEffect(() => {
-    
-    fetch('../LuandaMarkers.geojson')
-      .then(response => response.json())
-      .then(data => {
-        setGeoMarker(data.features)
-      })
-      .catch(error => {
-        console.log('Error fetching GeoJSON:', error);
-      });
-    
-  }, [])
+
   
   
   useEffect(()=>{

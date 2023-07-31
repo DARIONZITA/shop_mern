@@ -10,6 +10,7 @@ import { getAllMarks } from '../features/auth/customerAuthSlice.js';
 import { AddMark } from './modalMarkAddAdmin.jsx';
 import imageIcon from '../assets/gps.png'
 import imageIcon2 from '../assets/placeholder.png'
+import iconShadow from "leaflet/dist/images/marker-shadow.png";
 
 function UpMarker() {
   const [open, setOpen]=useState(true)
@@ -124,7 +125,7 @@ export const MapPattern=(props)=>{
   },[changeMunicipio])
   useEffect(() => {
     
-    fetch('../LuandaMarkers.geojson')
+    fetch('./LuandaMarkers.geojson')
       .then(response => response.json())
       .then(data => {
         setGeojsonData(data.features);
@@ -169,7 +170,7 @@ export const MapPattern=(props)=>{
             <label className='font-bold text-center md:text-lg block '>
             
             <select 
-                className='p-3 rounded-md text-center m-4' 
+                className='p-3 rounded-md text-center m-4 bg-slate-200 text-blue-600' 
                 value={distrito ? (JSON.stringify({ name: distrito.name, coordinates: distrito.coordinates})):'main'} 
                 onChange={changeDistrito}>
                 
@@ -222,10 +223,10 @@ export const MapPattern=(props)=>{
                 <Marker 
                 key={feature._id}
                 position={feature.coordinates}
-                icon={new Icon({iconUrl: markerIconPng, iconSize: [25, 41], iconAnchor: [12, 41]})}
+                icon={new Icon({iconUrl: markerIconPng,popupAnchor: [1, -34], iconSize: [25, 40],shadowUrl: iconShadow, iconAnchor: [12, 41]})}
                 eventHandlers={{ dblclick: () => handleMarkerClick(feature.name,feature.coordinates,feature._id)}}
                 >
-                <Popup>
+                <Popup >
                     {feature.name}
                 </Popup>
                 </Marker> )

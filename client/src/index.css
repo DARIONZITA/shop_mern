@@ -22,7 +22,7 @@
   display: none;
 } */
 @layer base {
-  
+
   tr:nth-child(even) {
     @apply bg-gray-300
   }
