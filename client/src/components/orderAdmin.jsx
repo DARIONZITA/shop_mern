@@ -63,7 +63,7 @@ export const OrderAdmin=()=>{
   }
 },[orders,loading])
   useEffect(()=>{
-    console.log(whatOrder)
+
     if(whatOrder==='new' && ordersStatus==='idle'){   
       dispatch(readOrder())
       }

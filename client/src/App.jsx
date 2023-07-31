@@ -38,7 +38,7 @@ function App() {
     }, [location.pathname]);
     return children;
   };
-  console.log(customer)
+
 
   useEffect(() => {
     

@@ -48,7 +48,7 @@ export const createAdminProduct = createAsyncThunk(
     }
    
     const dataProduct={...product,price:Number(product.price),stock:Number(product.stock)}
-    console.log(dataProduct)
+ 
     try {
       const response = await fetch(url, {
         method: "POST",
@@ -102,8 +102,6 @@ export const readAdminProducts = createAsyncThunk(
       });
       const data = await response.json();
 
-      console.log(data);
-
       if (response.ok) {
         return data;
       }
@@ -120,7 +118,7 @@ export const updateAdminProduct = createAsyncThunk(
     const { admin } = thunkAPI.getState().admin;
     let product = dataObj.productData
     let dataProduct={...product,price:Number(product.price),stock:Number(product.stock)}
-    console.log(JSON.stringify(dataProduct),dataObj.currentId)
+   
     if (!admin) {
       return thunkAPI.rejectWithValue({
         error: "User is not logged in.",

@@ -129,7 +129,7 @@ export const readCustomerProducts = createAsyncThunk(
       const response = await fetch(base_url);
       const data = await response.json();
 
-      console.log(data);
+
 
       if (response.ok) {
     

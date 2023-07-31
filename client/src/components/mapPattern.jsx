@@ -11,7 +11,7 @@ import { AddMark } from './modalMarkAddAdmin.jsx';
 import imageIcon from '../assets/gps.png'
 import imageIcon2 from '../assets/placeholder.png'
 import iconShadow from "leaflet/dist/images/marker-shadow.png";
-
+import datajson from '../data/LuandaMarkers.js'
 function UpMarker() {
   const [open, setOpen]=useState(true)
   const handleClose=()=>{
@@ -27,7 +27,7 @@ function UpMarker() {
   const map = useMapEvents({
     dblclick(e) {
       setOpen(true)
-      console.log("double clicked");
+    
       const { lat, lng } = e.latlng;
       setPosition({lat,lng})
        }
@@ -70,9 +70,8 @@ export const MapPattern=(props)=>{
 
   const {municipio,municipiosData,distrito} = useSelector((store) => store.cart);
   const [locationCenter,setlocationCenter]=useState(patternCenter)
-  const [geojsonData, setGeojsonData] = useState(null); 
+  const geojsonData = datajson[0].features; 
 
-  
   const changeMunicipio=(event)=>{
       const {name,coordinates}=JSON.parse(event.target.value)
       const Mzoom= (name=='Icolo e Bengo')||(name=='Quissama') ? 10 : 12
@@ -125,10 +124,10 @@ export const MapPattern=(props)=>{
   },[changeMunicipio])
   useEffect(() => {
     
-    fetch('./src/data/LuandaMarkers.geojson')
+    fetch('./LuandaMarkers.geojson')
       .then(response => response.json())
       .then(data => {
-        setGeojsonData(data.features);
+        ///setGeojsonData(data.features);
     
       })
       .catch(error => {

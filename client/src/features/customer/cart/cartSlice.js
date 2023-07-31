@@ -80,13 +80,13 @@ export const checkProductsCart = createAsyncThunk(
   
 
 
-      console.log(base_url + dataStr);
-      console.log(dataStr)
+      console.log(base_url);
+  
       const response = await fetch(base_url + dataStr,{
         method:'GET'
       });
       const data = await response.json();
-      console.log(data)
+      
 
       if (response.ok) {
     
@@ -379,7 +379,7 @@ const cartSlice = createSlice({
         
       })
       .addCase(checkProductsCart.rejected, (state, action) => {
-        console.log(action.payload)
+ 
       });
     }
  })

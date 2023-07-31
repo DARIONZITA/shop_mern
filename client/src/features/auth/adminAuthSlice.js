@@ -32,7 +32,7 @@ export const orderDone = createAsyncThunk(
       const data = await response.json();
 
       if (response.ok) {
-        console.log(data)
+       
         return data;
       } else {
         return thunkAPI.rejectWithValue({
@@ -80,7 +80,7 @@ export const readOrder = createAsyncThunk(
       }
 
       else if (response.ok) { 
-        console.log(data);
+    
         return data;
       } else {
         return thunkAPI.rejectWithValue({

@@ -137,7 +137,7 @@ export const CancelOrder = createAsyncThunk(
       });  
       
       const data = await response.json();
-      console.log(data)
+   
       if (response.ok) {
       
         return true;
@@ -211,7 +211,7 @@ export const changeData = createAsyncThunk(
       });
 
       const data = await response.json();
-      console.log(data)
+
       if (response.ok) {
         
       
